@@ -1,0 +1,205 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[left=0.5in,right=0.5in,top=0.5in,bottom=0.5in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{fontawesome}
+\usepackage{multicol}
+
+% --- Color Definitions ---
+\definecolor{headercolor}{RGB}{0,0,0}
+\definecolor{linkcolor}{RGB}{0,102,204}
+
+% --- Hyperlink Setup ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=linkcolor,
+    urlcolor=linkcolor
+}
+
+% --- Section Formatting ---
+\titleformat{\section}{\large\bfseries\color{headercolor}}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{8pt}{4pt}
+
+\titleformat{\subsection}{\bfseries}{}{0em}{}
+\titlespacing{\subsection}{0pt}{4pt}{2pt}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+% --- HEADER ---
+\begin{center}
+    {\Huge\bfseries Hitanshu Sahu}\\[4pt]
+    {\Large Product Designer | WordPress Ecosystem Specialist}\\[8pt]
+    \small
+    \faPhone\ +91-9696449295 \quad | \quad
+    \faEnvelope\ \href{mailto:phantomcluster17@gmail.com}{phantomcluster17@gmail.com} \quad | \quad
+    \faMapMarker\ Kanpur, Uttar Pradesh, India \quad | \quad
+    \faGlobe\ \href{https://behance.net/phantomcluster}{behance.net/phantomcluster}
+\end{center}
+
+\vspace{6pt}
+
+% --- PROFESSIONAL SUMMARY ---
+\section*{PROFESSIONAL SUMMARY}
+I'm a tech-obsessed Product Designer with over 7 years of experience designing intuitive, scalable UI/UX systems for \textit{complex SaaS platforms} and the \textbf{WordPress ecosystem}. Specialist in creating \textbf{Starter Templates}, optimizing \textbf{Gutenberg/Elementor} workflows, and translating technical requirements into human-centered solutions. Known for an accessibility-first mindset, strategic thinking, and the ability to balance user delight with engineering constraints in fast-paced environments.
+
+% --- WORK EXPERIENCE ---
+\section*{WORK EXPERIENCE}
+
+\subsection*{\large\textbf{SomeTechWork} \hfill Dec 2025 -- Present}
+\textit{Product Designer \& Frontend Designer}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2pt]
+    \item Developed product blueprints and translated client requirements into clear, user-centered UI/UX designs.
+    \item Designed and implemented front-end pages in \textbf{WordPress} using \textbf{Elementor} and \textbf{Gutenberg}, ensuring visual consistency and usability.
+    \item Ensured responsive design across devices and screen sizes, optimizing layouts for performance and clarity.
+    \item Applied accessibility best practices (WCAG-aligned) to deliver inclusive, compliant user experiences.
+\end{itemize}
+
+\vspace{6pt}
+
+\subsection*{\large\textbf{Eclectic} \hfill Mar 2025 -- Present}
+\textit{Product Designer \& Social Media Designer}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2pt]
+    \item Created comprehensive product blueprints to define structure, flows, and design direction across features.
+    \item Led the app redesign using a scalable \textbf{Design System}, supporting multi-region requirements and localization, built and maintained in Figma.
+    \item Leveraged AI tools to accelerate and enhance graphic design workflows, improving speed and creative output.
+    \item Designed motion graphics and visual content for digital platforms using After Effects and AI-assisted tools such as Gemini and Loveart.
+\end{itemize}
+
+\subsection*{WPMU DEV \hfill May 2022 -- Sep 2024}
+\textit{Product Designer, Remote}
+
+\textbf{Design System V3}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2pt]
+    \item Spearheaded a scalable atomic design system in Figma with accessibility baked in.
+    \item Built a monochrome mode in alignment with \textbf{WordPress standards} for white-label use.
+    \item Balanced futuristic visual direction with practical resource constraints.
+\end{itemize}
+
+\textbf{Smush Plugin (1M $\to$ 2M+ Installs)}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2pt]
+    \item Redesigned key flows for image compression, introducing background scanning.
+    \item Launched Ultra Compression with a seamless upgrade funnel, boosting Pro conversions.
+\end{itemize}
+
+\textbf{Hummingbird V3 Redesign}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2pt]
+    \item Streamlined onboarding into a single-screen setup; reduced bounce rate.
+    \item Added automation and filter controls to Delay JS and Critical CSS flows.
+\end{itemize}
+
+\textbf{Snapshot V3 UX Overhaul}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2pt]
+    \item Enabled modular backup restore (files or DB), reducing restore time errors. Created intuitive design for the Snapshot.
+    \item Simplified dashboard UX and improved error prevention UI logic.
+\end{itemize}
+
+\textbf{Dashboard V3 Redesign}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2pt]
+    \item Led complete overhaul of the WPMU DEV dashboard with a user-first focus.
+    \item Designed and documented reusable component libraries across plugin and membership flows.
+    \item Improved navigation clarity and addressed long-standing usability gaps.
+    \item Used Maze to test interactive prototypes and GPT to synthesize user feedback into design variations.
+\end{itemize}
+
+\newpage
+
+\subsection*{\large\textbf{Searchmetrics} \hfill May 2021 -- Jan 2022}
+\textit{SaaS Videos, Brand Guidelines, Remote}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2pt]
+    \item Produced engaging animations demonstrating the SaaS platform's data-driven capabilities and how each feature (including the API) works together to deliver insights.
+    \item Designed graphics and brochures that aligned with brand objectives and highlighted core sales points.
+    \item Created awards designs for select clients, celebrating their successes while strengthening brand loyalty.
+    \item Worked closely with the marketing team to develop promotional materials, supporting various campaigns and feature launches.
+\end{itemize}
+
+\vspace{6pt}
+
+\subsection*{\large\textbf{Ideajam} \hfill Aug 2021 -- Jan 2022}
+\textit{UI/UX Designer}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2pt]
+    \item Led a Kanban/task-management SaaS redesign, boosting collaboration and idea generation. Leveraged user feedback to remove bottlenecks and create a more intuitive experience.
+    \item Built the product with white-labeling in mind, ensuring it can be easily adapted to different brands without sacrificing consistency.
+    \item Created a fresh design system from scratch, providing a unified look and feel across the platform while maintaining flexibility for future updates and customizations.
+\end{itemize}
+
+\vspace{6pt}
+
+\subsection*{\large\textbf{Themeisle} \hfill Jul 2018 -- May 2021}
+\textit{Starter Template Designer (Neve Theme)}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2pt]
+    \item Designed \textbf{50+ diverse layouts} for Neve Theme, ensuring compatibility and performance optimization.
+    \item Conducted thorough research on niche requirements, focusing on typography and color for cohesive design.
+    \item Delivered layouts that maintained Neve's performance standards while enhancing user experience.
+\end{itemize}
+
+% --- CORE STRENGTHS ---
+\section*{CORE STRENGTHS}
+\begin{multicols}{2}
+\begin{itemize}[leftmargin=*, noitemsep, topsep=2pt]
+    \item Design Systems (Atomic)
+    \item \textbf{Starter Templates}
+    \item \textbf{WordPress (Gutenberg/Elementor)}
+    \item UX Strategy \& Psychology
+    \item Generative AI / LLMs
+    \item Prompt Engineering
+    \item User Flow Mapping
+    \item Wireframes \& 3D Design
+    \item Accessibility (WCAG)
+    \item UI Optimization
+    \item Interaction Design
+    \item Animation
+    \item Motion UI
+    \item Agile Collaboration
+    \item SaaS Product Design
+    \item Developer Handoff
+\end{itemize}
+\end{multicols}
+
+% --- TOOLS ---
+\section*{TOOLS}
+\textbf{Design:} Figma, Miro, Maze, Illustrator, Spline\\
+\textbf{WordPress:} Elementor, Gutenberg, Beaver Builder (Familiar)\\
+\textbf{Motion/Video:} Adobe Premiere, After Effects\\
+\textbf{AI Workflow:} Gemini, GPT, Loveart
+
+% --- EDUCATION ---
+\section*{EDUCATION}
+
+\subsection*{Master in Computer Application \hfill 2014 -- 2017}
+AKTU University
+
+\subsection*{Bachelor in Computer Application \hfill 2011 -- 2014}
+CSJM University
+
+% --- CERTIFICATIONS ---
+\section*{CERTIFICATIONS}
+
+\subsection*{Google Generative AI \& Prompting Specializations \hfill 2025}
+\textit{Google Cloud Skills Boost} \\
+Includes Prompt Design in Vertex AI, Image Generation, MLOps, and Large Language Models.
+
+\vspace{4pt}
+
+\subsection*{Foundations of User Experience (UX) Design \hfill 2025}
+\textit{Google}
+
+\vspace{4pt}
+
+\subsection*{UX/UI Design \& Psychology Certifications \hfill 2022 -- 2025}
+\textit{Uxcel} \\
+Includes UX Design Psychology, 3D Design Foundations, Accessibility, and UI Components.
+
+% --- COMMUNITY ---
+\section*{COMMUNITY ORGANIZING}
+Google Developer Group, Kanpur FOSS, WordPress
+
+% --- LANGUAGES ---
+\section*{LANGUAGES}
+English, Hindi
+
+\end{document}
