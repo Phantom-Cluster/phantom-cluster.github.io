@@ -49,7 +49,7 @@
 		onmousemove={handleMouseMove}
 		onmouseleave={handleMouseLeave}
 		role="presentation"
-		class="w-full max-w-[1320px] h-16 md:h-18 rounded-full flex items-center justify-between px-6 md:px-8 border pointer-events-auto transition-all duration-300 apple-liquid-glass shadow-lg shadow-black/5 dark:shadow-black/25 relative overflow-hidden"
+		class="w-full max-w-[1320px] h-16 md:h-18 rounded-full flex items-center justify-between px-6 md:px-8 border pointer-events-auto transition-all duration-300 bg-white/40 backdrop-blur-2xl saturate-[1.8] border-white/40 shadow-lg shadow-black/5 relative overflow-hidden interactive-glow"
 	>
 		
 		<!-- Logo (Left) -->
@@ -183,69 +183,19 @@
 		animation: spin-once 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 	}
 
-	/* Speciular Apple Liquid Glass Bar styling */
-	.apple-liquid-glass {
-		background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.68) 75%);
-		backdrop-filter: blur(36px) saturate(240%) contrast(98%) brightness(102%);
-		-webkit-backdrop-filter: blur(36px) saturate(240%) contrast(98%) brightness(102%);
-		border: 1px solid rgba(255, 255, 255, 0.45);
-		box-shadow: 
-			inset 0 1.5px 0.5px rgba(255, 255, 255, 0.95), /* Crisp top specular lighting */
-			inset 0 -1.5px 0.5px rgba(0, 0, 0, 0.03),     /* Crisp bottom shading */
-			0 1px 2px rgba(0, 0, 0, 0.03),                /* Ultra-sharp edge */
-			0 12px 30px -4px rgba(0, 0, 0, 0.04);          /* Smooth ambient spread shadow */
-		transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
-	}
-
-	.apple-liquid-glass:hover {
-		border-color: rgba(255, 255, 255, 0.65);
-		box-shadow: 
-			inset 0 1.5px 0.5px rgba(255, 255, 255, 1),
-			inset 0 -1.5px 0.5px rgba(0, 0, 0, 0.04),
-			0 2px 4px rgba(0, 0, 0, 0.02),
-			0 16px 36px -4px rgba(0, 0, 0, 0.06);
-		transform: scale(1.005);
-	}
-
-	.apple-liquid-glass::before {
+	/* Interactive mouse glow */
+	.interactive-glow::before {
 		content: '';
 		position: absolute;
 		inset: 0;
 		background: radial-gradient(
-			300px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-			rgba(255, 255, 255, 0.42),
+			250px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+			rgba(255, 255, 255, 0.7),
 			transparent 80%
 		);
 		opacity: var(--opacity, 0);
 		transition: opacity 0.4s ease;
 		pointer-events: none;
 		z-index: 0;
-	}
-
-	:global(.dark) .apple-liquid-glass {
-		background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.03), rgba(9, 9, 11, 0.82) 80%);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		box-shadow: 
-			inset 0 1.5px 0.5px rgba(255, 255, 255, 0.16), /* Crisp top edge light reflection */
-			inset 0 -1.5px 0.5px rgba(0, 0, 0, 0.45),      /* Deep bottom shadow */
-			0 1px 2px rgba(0, 0, 0, 0.15),                 /* Sharp shadow */
-			0 12px 36px -4px rgba(0, 0, 0, 0.4);           /* Deep ambient spread */
-	}
-
-	:global(.dark) .apple-liquid-glass:hover {
-		border-color: rgba(255, 255, 255, 0.18);
-		box-shadow: 
-			inset 0 1.5px 0.5px rgba(255, 255, 255, 0.24),
-			inset 0 -1.5px 0.5px rgba(0, 0, 0, 0.45),
-			0 2px 4px rgba(0, 0, 0, 0.3),
-			0 16px 40px -4px rgba(0, 0, 0, 0.55);
-	}
-
-	:global(.dark) .apple-liquid-glass::before {
-		background: radial-gradient(
-			300px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
-			rgba(255, 255, 255, 0.09),
-			transparent 80%
-		);
 	}
 </style>

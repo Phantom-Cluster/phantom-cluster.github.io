@@ -1,25 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import TubesBackground from '$lib/components/TubesBackground.svelte';
-	import { onMount } from 'svelte';
 	import { Mail } from 'lucide-svelte';
-
-	let timeString = $state("");
-
-	onMount(() => {
-		const updateTime = () => {
-			timeString = new Date().toLocaleTimeString('en-US', {
-				timeZone: 'Asia/Kolkata',
-				hour: '2-digit',
-				minute: '2-digit',
-				second: '2-digit',
-				hour12: true
-			});
-		};
-		updateTime();
-		const interval = setInterval(updateTime, 1000);
-		return () => clearInterval(interval);
-	});
 </script>
 
 <!-- Repurposed visual card sits on a light gray section, creating massive visual contrast -->
@@ -54,7 +36,7 @@
 						<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
 						<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
 					</span>
-					<span>Kanpur • {timeString || '11:08:30 PM'} (IST)</span>
+					<span>Featured product</span>
 				</div>
 				
 				<div class="bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-xs font-bold text-primary uppercase tracking-wider">
