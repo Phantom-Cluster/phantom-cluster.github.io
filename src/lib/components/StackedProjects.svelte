@@ -26,8 +26,8 @@
 			const tl = gsap.timeline({
 				scrollTrigger: {
 					trigger: nextTrigger,
-					start: 'top 75%', // starts animating exactly as the next trigger begins to slide on top of this one
-					end: `top ${100 + (i + 1) * 24}px`, // completes animating precisely when the next card/trigger reaches its sticky position
+					start: 'top 75%',
+					end: () => `top ${window.innerWidth >= 1024 ? 100 + (i + 1) * 24 : 60 + (i + 1) * 16}px`,
 					scrub: true,
 					invalidateOnRefresh: true
 				}
@@ -117,8 +117,8 @@
 		{#each projects as project, i}
 			<!-- The absolute visual masterpiece project card container:
 			     Using native CSS sticky sibling elements to stack them physically on scroll -->
-			<div class="project-stack-card w-full rounded-[2.5rem] p-8 md:p-12 text-white border border-white/10 shadow-2xl shadow-black/80 flex flex-col justify-between transition-[border-color,box-shadow] duration-500 sticky {cardThemes[i].bg} mb-[35vh] group {cardThemes[i].cardShadow}"
-			     style="height: 70vh; max-height: 580px; min-height: 480px; top: {100 + i * 24}px; z-index: {i + 10};">
+			<div class="project-stack-card w-full rounded-[2.5rem] p-8 md:p-12 text-white border border-white/10 shadow-2xl shadow-black/80 flex flex-col justify-between transition-[border-color,box-shadow] duration-500 sticky {cardThemes[i].bg} mb-[15vh] lg:mb-[35vh] h-auto lg:h-[70vh] min-h-[480px] lg:max-h-[580px] group {cardThemes[i].cardShadow}"
+			     style="--stack-offset: {i}; z-index: {i + 10};">
 				
 				<!-- Ambient dynamic overlay simulating 3D shadow cast -->
 				<div class="card-overlay absolute inset-0 bg-[#0c0c0e] rounded-[2.5rem] opacity-0 pointer-events-none z-20"></div>
@@ -242,5 +242,12 @@
 		transform-style: preserve-3d;
 		outline: none !important;
 		-webkit-tap-highlight-color: transparent;
+		top: calc(60px + var(--stack-offset) * 16px);
+	}
+	
+	@media (min-width: 1024px) {
+		.project-stack-card {
+			top: calc(100px + var(--stack-offset) * 24px);
+		}
 	}
 </style>
