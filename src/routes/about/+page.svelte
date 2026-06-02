@@ -214,15 +214,21 @@
 			</div>
 		</div>
 
-		<!-- Infinite Marquee -->
-		<div class="w-full overflow-hidden relative select-none mt-12 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-			<div class="flex gap-4 whitespace-nowrap animate-marquee w-max">
-				{#each Array(4) as _}
-					{#each ['Atomic Design Systems', 'Starter Templates', 'WordPress Gutenberg/Elementor', 'User Flow Mapping', 'Animation', 'Motion UI', 'Developer Handoff'] as strength}
-						<div class="px-6 py-3 border border-white/10 rounded-full text-sm font-semibold tracking-wide text-neutral-300 bg-white/5 backdrop-blur-sm shadow-sm">
-							{strength}
+		<!-- Core Strengths -->
+		<div class="max-w-5xl mx-auto mt-32 mb-16 px-6 text-center">
+			<h2 class="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 mb-12">Core Strengths</h2>
+			<div class="flex flex-wrap justify-center gap-3 md:gap-4">
+				{#each ['Design Systems (Atomic)', 'Starter Templates', 'WordPress (Gutenberg/Elementor)', 'UX Strategy & Psychology', 'Generative AI / LLMs', 'Prompt Engineering', 'User Flow Mapping', 'Wireframes & 3D Design', 'Accessibility (WCAG)', 'UI Optimization', 'Interaction Design', 'Animation', 'Motion UI', 'Agile Collaboration', 'SaaS Product Design', 'Developer Handoff'] as strength}
+					<div class="group relative inline-flex items-center justify-center p-[1px] rounded-full overflow-hidden transition-all duration-300">
+						<!-- Default subtle border -->
+						<div class="absolute inset-0 bg-neutral-200 group-hover:bg-transparent transition-colors duration-300"></div>
+						<!-- Animated border on hover -->
+						<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#f97316_360deg)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+						<!-- Inner background -->
+						<div class="relative bg-white px-5 md:px-6 py-2 md:py-2.5 rounded-full w-full h-full flex items-center justify-center transition-colors">
+							<span class="text-sm font-medium tracking-tight text-neutral-600 group-hover:text-primary transition-colors duration-300">{strength}</span>
 						</div>
-					{/each}
+					</div>
 				{/each}
 			</div>
 		</div>
@@ -251,11 +257,5 @@
 </div>
 
 <style>
-	@keyframes marquee {
-		0% { transform: translateX(0); }
-		100% { transform: translateX(-50%); }
-	}
-	.animate-marquee {
-		animation: marquee 30s linear infinite;
-	}
+	/* Styles specific to About page if needed */
 </style>
