@@ -139,8 +139,8 @@
 				</div>
 
 				<!-- Metrics Card widget stays black for massive visual contrast -->
-				<div class="metrics-card-wrapper h-full" style="perspective: 1200px;">
-					<div class="metrics-tilt-card bg-neutral-950 border border-white/5 rounded-[2.5rem] p-10 lg:p-14 flex flex-col gap-12 md:gap-16 hover:border-primary/20 transition-colors duration-300 shadow-2xl h-full" style="transform-style: preserve-3d;">
+				<div class="metrics-card-wrapper self-start" style="perspective: 1200px;">
+					<div class="metrics-tilt-card bg-neutral-950 border border-white/5 rounded-[2.5rem] p-10 lg:p-14 flex flex-col gap-12 md:gap-16 hover:border-primary/20 transition-colors duration-300 shadow-2xl" style="transform-style: preserve-3d;">
 						<span class="text-primary font-mono text-xs uppercase tracking-widest block mb-4 md:mb-8" style="transform: translateZ(30px);">Metrics & Impact</span>
 						<div class="space-y-8" style="transform: translateZ(50px);">
 							<div>
