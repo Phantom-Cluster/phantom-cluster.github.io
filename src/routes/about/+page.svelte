@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { afterNavigate } from '$app/navigation';
 	import { gsap } from 'gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { Star, ExternalLink, ArrowRight } from 'lucide-svelte';
@@ -16,11 +15,14 @@
 	let pageWrapperEl: HTMLElement;
 
 	let ctx: gsap.Context;
+	let initTimeout: NodeJS.Timeout;
 
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
 
-		ctx = gsap.context(() => {
+		// Delay initialization by 700ms to guarantee SvelteKit page transitions have finished
+		initTimeout = setTimeout(() => {
+			ctx = gsap.context(() => {
 
 		// Calculate exact distance for the FLIP landing
 		const getDistance = () => {
@@ -57,7 +59,7 @@
 			y: -50,
 			ease: 'none',
 			scrollTrigger: {
-				trigger: '#about-hero',
+				trigger: h1El.closest('section'),
 				start: 'top top',
 				end: 'bottom center',
 				scrub: true
@@ -73,7 +75,7 @@
 				stagger: 0.1,
 				ease: 'none',
 				scrollTrigger: {
-					trigger: '#about-manifesto',
+					trigger: manifestoEl.closest('section'),
 					start: 'top center',
 					end: 'bottom center',
 					scrub: true
@@ -87,16 +89,12 @@
 			{ y: 12, rotation: 8, duration: 2, yoyo: true, repeat: -1, ease: "sine.inOut", stagger: 0.5 }
 		);
 		}); // End gsap context
+		}, 700);
 	});
 
 	onDestroy(() => {
+		clearTimeout(initTimeout);
 		if (ctx) ctx.revert();
-	});
-
-	afterNavigate(() => {
-		setTimeout(() => {
-			ScrollTrigger.refresh();
-		}, 700);
 	});
 </script>
 
