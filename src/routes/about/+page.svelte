@@ -7,6 +7,7 @@
 	let cardEl: HTMLElement;
 	let h1El: HTMLElement;
 	let manifestoEl: HTMLElement;
+	let pageWrapperEl: HTMLElement;
 
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
@@ -29,6 +30,12 @@
 		.to(h1El, {
 			opacity: 0.05,
 			z: -50,
+			color: '#ffffff',
+			ease: 'none'
+		}, 0)
+		.to(pageWrapperEl, {
+			backgroundColor: '#0a0a0c',
+			color: '#ffffff',
 			ease: 'none'
 		}, 0);
 
@@ -55,10 +62,10 @@
 	<title>About | Hitanshu Sahu</title>
 </svelte:head>
 
-<div class="bg-[#0a0a0c] text-white min-h-screen">
+<div bind:this={pageWrapperEl} class="bg-[#f4f4f6] text-neutral-900 min-h-screen">
 	<!-- Phase 2: Hero Section -->
 	<section id="about-hero" class="relative min-h-screen flex items-center justify-center overflow-hidden" style="perspective: 1500px;">
-		<h1 bind:this={h1El} class="absolute z-0 text-center font-black uppercase text-[#f4f4f4] whitespace-nowrap" style="font-size: clamp(4rem, 12vw, 14rem); letter-spacing: -0.05em; transform-style: preserve-3d;">
+		<h1 bind:this={h1El} class="absolute z-0 text-center font-black uppercase text-neutral-900 whitespace-nowrap" style="font-size: clamp(4rem, 12vw, 14rem); letter-spacing: -0.05em; transform-style: preserve-3d;">
 			<Star class="absolute -top-10 -left-10 w-8 h-8 text-primary" />
 			Product / <br/> Designer
 			<Star class="absolute -bottom-10 -right-10 w-8 h-8 text-primary" />
@@ -67,12 +74,12 @@
 		<div class="relative z-10 w-full max-w-[300px] md:max-w-md aspect-[4/5]" style="perspective: 1500px;">
 			<div bind:this={cardEl} class="w-full h-full relative" style="transform-style: preserve-3d;">
 				<!-- Front Face -->
-				<div class="absolute inset-0 rounded-3xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.6)] border border-white/10" style="backface-visibility: hidden;">
-					<img src="/527DDCBC-EBF7-4AD8-AEB8-1F3087FDB9E1.JPG" alt="Hitanshu Sahu Profile" class="w-full h-full object-cover" />
+				<div class="absolute inset-0 rounded-3xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.15)] border border-neutral-900/10" style="backface-visibility: hidden;">
+					<img src="/527DDCBC-EBF7-4AD8-AEB8-1F3087FDB9E1.JPG" alt="Hitanshu Sahu Profile" class="w-full h-full object-cover grayscale" />
 				</div>
 				<!-- Back Face -->
-				<div class="absolute inset-0 rounded-3xl bg-[#121318] flex items-center justify-center border border-white/5 shadow-[0_40px_80px_rgba(0,0,0,0.6)]" style="backface-visibility: hidden; transform: rotateX(180deg);">
-					<span class="text-primary font-mono text-sm tracking-widest bg-primary/10 px-6 py-2 rounded-full border border-primary/20">ENCRYPTED</span>
+				<div class="absolute inset-0 rounded-3xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.6)] border border-white/10" style="backface-visibility: hidden; transform: rotateX(180deg);">
+					<img src="/527DDCBC-EBF7-4AD8-AEB8-1F3087FDB9E1.JPG" alt="Hitanshu Sahu Profile Color" class="w-full h-full object-cover" />
 				</div>
 			</div>
 		</div>
