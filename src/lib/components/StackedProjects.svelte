@@ -177,9 +177,7 @@
 				
 				<div class="card-overlay absolute inset-0 bg-[#0c0c0e] rounded-[2.5rem] opacity-0 pointer-events-none z-20"></div>
 				
-				<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10 overflow-hidden rounded-[2.5rem]" aria-hidden="true">
-					<div class="absolute -inset-[100%] bg-gradient-to-tr from-transparent via-white/8 to-transparent -translate-x-[50%] -translate-y-[50%] group-hover:translate-x-[50%] group-hover:translate-y-[50%] transition-transform duration-1000 ease-out"></div>
-				</div>
+				<!-- Specular glass reflection sheen sweep removed due to rendering artifacts -->
 
 				<div 
 					class="absolute right-[5%] bottom-[10%] w-[40%] h-[40%] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-[100px] pointer-events-none z-10" 
