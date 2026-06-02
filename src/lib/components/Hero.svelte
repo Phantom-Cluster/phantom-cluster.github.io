@@ -34,6 +34,103 @@
 			duration: 0.6,
 			ease: 'power3.out'
 		}, "-=0.5");
+
+		// --- Pills Physics ---
+		const pills = document.querySelectorAll('.hero-pill');
+		const cleanups: (() => void)[] = [];
+		
+		pills.forEach((pill) => {
+			const inner = pill.querySelector('.hero-pill-inner');
+			if (!inner) return;
+
+			// Idle State: Continuous floating
+			// Y-axis: ±4px with 3.5s cycle (half cycle = 1.75s)
+			// X-axis: ±2px with 4.2s cycle (half cycle = 2.1s)
+			const idleX = gsap.fromTo(inner, 
+				{ x: -2 }, 
+				{ x: 2, duration: 2.1, ease: 'sine.inOut', repeat: -1, yoyo: true }
+			);
+			
+			const idleY = gsap.fromTo(inner, 
+				{ y: -4 }, 
+				{ y: 4, duration: 1.75, ease: 'sine.inOut', repeat: -1, yoyo: true }
+			);
+
+			let isHovered = false;
+
+			const handleMouseMove = (e: MouseEvent) => {
+				const rect = pill.getBoundingClientRect();
+				
+				// 60px expanded bounding box
+				const isNear = 
+					e.clientX > rect.left - 60 &&
+					e.clientX < rect.right + 60 &&
+					e.clientY > rect.top - 60 &&
+					e.clientY < rect.bottom + 60;
+
+				if (isNear) {
+					if (!isHovered) {
+						isHovered = true;
+						idleX.pause();
+						idleY.pause();
+					}
+
+					const pillCenterX = rect.left + rect.width / 2;
+					const pillCenterY = rect.top + rect.height / 2;
+					
+					// Vector from cursor TO pill center (repulsion)
+					const repelX = pillCenterX - e.clientX;
+					const repelY = pillCenterY - e.clientY;
+					
+					const dist = Math.sqrt(repelX * repelX + repelY * repelY) || 1;
+					
+					const maxPush = 15;
+					const intensity = Math.max(0, 1 - (dist / 120));
+					const targetX = (repelX / dist) * maxPush * intensity;
+					const targetY = (repelY / dist) * maxPush * intensity;
+
+					// Spring easing approximation
+					gsap.to(pill, {
+						x: targetX,
+						y: targetY,
+						duration: 0.4,
+						ease: "power2.out",
+						overwrite: "auto"
+					});
+
+				} else {
+					if (isHovered) {
+						isHovered = false;
+						
+						// Return to idle origin
+						gsap.to(pill, {
+							x: 0,
+							y: 0,
+							duration: 0.8,
+							ease: "elastic.out(1, 0.4)",
+							overwrite: "auto",
+							onComplete: () => {
+								if (!isHovered) {
+									idleX.resume();
+									idleY.resume();
+								}
+							}
+						});
+					}
+				}
+			};
+
+			window.addEventListener('mousemove', handleMouseMove);
+			cleanups.push(() => {
+				window.removeEventListener('mousemove', handleMouseMove);
+				idleX.kill();
+				idleY.kill();
+			});
+		});
+
+		return () => {
+			cleanups.forEach(fn => fn());
+		};
 	});
 </script>
 
@@ -67,32 +164,36 @@
 
 	<!-- MAIN HEADLINE: Centered, geometric Cal-Sans display typography with custom inline visual clips -->
 	<h1 class="hero-headline-centered text-center text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-[-0.04em] leading-[1.1] text-neutral-900 max-w-[20ch] mx-auto select-none">
-		Effortless 
+		Engineered 
 		<!-- Inline Rounded Image Clip 1 -->
-		<span class="inline-block align-middle mx-1 md:mx-2 rounded-full border border-neutral-200 w-[2.2em] h-[1.1em] overflow-hidden bg-neutral-200 shadow-sm">
-			<img 
-				src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=250" 
-				alt="Sleek interface" 
-				class="w-full h-full object-cover"
-			/>
+		<span class="hero-pill inline-block align-middle mx-1 md:mx-2 will-change-transform z-20 relative">
+			<span class="hero-pill-inner block rounded-full border border-neutral-200 w-[2.2em] h-[1.1em] overflow-hidden bg-neutral-200 shadow-sm will-change-transform">
+				<img 
+					src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=250" 
+					alt="Sleek interface" 
+					class="w-full h-full object-cover pointer-events-none"
+				/>
+			</span>
 		</span> 
 		<span class="text-primary">Design</span> 
-		<br class="hidden sm:inline" />
-		for 
+		<br class="hidden lg:inline" />
+		for Ambitious
 		<!-- Inline Rounded Image Clip 2 -->
-		<span class="inline-block align-middle mx-1 md:mx-2 rounded-full border border-neutral-200 w-[2.2em] h-[1.1em] overflow-hidden bg-neutral-200 shadow-sm">
-			<img 
-				src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=250" 
-				alt="Creative work desk" 
-				class="w-full h-full object-cover"
-			/>
+		<span class="hero-pill inline-block align-middle mx-1 md:mx-2 will-change-transform z-20 relative">
+			<span class="hero-pill-inner block rounded-full border border-neutral-200 w-[2.2em] h-[1.1em] overflow-hidden bg-neutral-200 shadow-sm will-change-transform">
+				<img 
+					src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=250" 
+					alt="Creative work desk" 
+					class="w-full h-full object-cover pointer-events-none"
+				/>
+			</span>
 		</span> 
-		Your Product
+		Products.
 	</h1>
 
 	<!-- Tagline details matching exact Agero wording, colored in readable dark neutral -->
 	<p class="hero-desc-centered text-center text-neutral-600 text-sm sm:text-base md:text-lg leading-relaxed max-w-[55ch] mx-auto font-medium mt-8 mb-10">
-		I make it easy for product teams to build, launch, and scale with clean, conversion-focused designs — no delays, no drama.
+		I architect clean, conversion-focused design systems that allow product teams to build, launch, and scale rapidly.
 	</p>
 
 	<!-- Centered CTA Trigger pill button, popping in vibrant brand orange with glowing shadow -->
