@@ -33,7 +33,8 @@
 					start: 'top 75%',
 					end: () => `top ${window.innerWidth >= 1024 ? 100 + (i + 1) * 24 : 60 + (i + 1) * 16}px`,
 					scrub: true,
-					invalidateOnRefresh: true
+					invalidateOnRefresh: true,
+					anticipatePin: 1
 				}
 			});
 
@@ -121,7 +122,6 @@
 			role: 'Product Designer',
 			services: ['SaaS Dashboard Design', 'Atomic Figma Variables', 'White-Label Monochrome Mode'],
 			btnClass: 'hover:bg-primary hover:border-primary hover:shadow-[0_0_20px_rgba(245,53,0,0.45)]',
-			cardShadow: 'hover:border-white/20 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.95),0_0_50px_rgba(245,53,0,0.12)]',
 			themeColor: '#f53500'
 		},
 		{
@@ -131,7 +131,6 @@
 			role: 'UI/UX Designer',
 			services: ['Kanban SaaS Platform', 'B2B Flow Optimization', 'Scalable White-Label Framework'],
 			btnClass: 'hover:bg-[#e0533c] hover:border-[#e0533c] hover:shadow-[0_0_20px_rgba(224,83,60,0.45)]',
-			cardShadow: 'hover:border-white/20 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.95),0_0_50px_rgba(224,83,60,0.22)]',
 			themeColor: '#e0533c'
 		},
 		{
@@ -141,7 +140,6 @@
 			role: 'Product Designer',
 			services: ['Mobile App Redesign', 'Localized Design Library', 'AI Asset Integration'],
 			btnClass: 'hover:bg-[#14b8a6] hover:border-[#14b8a6] hover:shadow-[0_0_20px_rgba(20,184,166,0.45)]',
-			cardShadow: 'hover:border-white/20 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.95),0_0_50px_rgba(20,184,166,0.22)]',
 			themeColor: '#14b8a6'
 		},
 		{
@@ -151,7 +149,6 @@
 			role: 'WordPress Specialist',
 			services: ['Elementor & Gutenberg Systems', '50+ High-Performance Starter Sites', 'UX & Performance Tuning'],
 			btnClass: 'hover:bg-[#3b82f6] hover:border-[#3b82f6] hover:shadow-[0_0_20px_rgba(59,130,246,0.45)]',
-			cardShadow: 'hover:border-white/20 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.95),0_0_50px_rgba(59,130,246,0.22)]',
 			themeColor: '#3b82f6'
 		}
 	];
@@ -172,7 +169,7 @@
 		{#each projects as project, i}
 			<!-- Progressively higher z-index (z: {i + 10}) combined with opaque cardThemes[i].bg 
 			     ensures shadows from layers above do not bleed downwards into underlying cards. -->
-			<div class="project-stack-card w-full rounded-[2.5rem] p-8 md:p-12 text-white border border-white/10 shadow-2xl shadow-black/80 flex flex-col justify-between transition-[border-color,box-shadow] duration-500 sticky {cardThemes[i].bg} mb-[15vh] lg:mb-[35vh] h-auto lg:h-[70vh] min-h-[480px] lg:max-h-[580px] group {cardThemes[i].cardShadow}"
+			<div class="project-stack-card w-full relative rounded-[2.5rem] p-8 md:p-12 text-white border border-white/10 flex flex-col justify-between transition-colors duration-500 sticky {cardThemes[i].bg} mb-[15vh] lg:mb-[35vh] h-auto lg:h-[70vh] min-h-[480px] lg:max-h-[580px] group"
 			     style="--stack-offset: {i}; z-index: {i + 10};">
 				
 				<div class="card-overlay absolute inset-0 bg-[#0c0c0e] rounded-[2.5rem] opacity-0 pointer-events-none z-20"></div>
@@ -303,12 +300,26 @@
 
 <style>
 	.project-stack-card {
-		will-change: transform, opacity;
-		transform: translate3d(0, 0, 0);
+		will-change: transform;
+		transform: translateZ(0);
 		transform-style: preserve-3d;
 		outline: none !important;
 		-webkit-tap-highlight-color: transparent;
 		top: calc(60px + var(--stack-offset) * 16px);
+	}
+
+	.project-stack-card::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 5%;
+		width: 90%;
+		height: 20px;
+		z-index: -1;
+		border-radius: 100px;
+		box-shadow: 0px 40px 80px 10px rgba(0, 0, 0, 0.6);
+		will-change: opacity;
+		pointer-events: none;
 	}
 	
 	@media (min-width: 1024px) {
