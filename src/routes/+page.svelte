@@ -35,17 +35,20 @@
 		{
 			title: 'Project Based',
 			desc: 'Best for clearly defined projects with a fixed scope, set timelines, and definitive milestones.',
-			benefits: ['Defined deliverables', 'Fixed timeline', 'Full design execution', 'Two refinement rounds', 'Complete handoff']
+			benefits: ['Defined deliverables', 'Fixed timeline', 'Full design execution', 'Two refinement rounds', 'Complete handoff'],
+			ctaUrl: 'mailto:phantomcluster17@gmail.com?subject=Inquiry:%20Project%20Based%20Engagement&body=Hi%20Hitanshu,%0D%0A%0D%0AI%20am%20interested%20in%20a%20project-based%20engagement.%0D%0A%0D%0AMy%20current%20challenge%20is:%20[Briefly%20describe]%0D%0AEstimated%20Timeline:%20[Timeline]%0D%0A%0D%0AThank%20you.'
 		},
 		{
 			title: 'Retainer Support',
 			desc: 'Ideal for product teams needing ongoing, adaptive design leadership and constant feature upgrades.',
-			benefits: ['Monthly hour allocation', 'Ongoing designer support', 'Flexible prioritizations', 'Interactive review cycles', 'Dev alignment channels']
+			benefits: ['Monthly hour allocation', 'Ongoing designer support', 'Flexible prioritizations', 'Interactive review cycles', 'Dev alignment channels'],
+			ctaUrl: 'mailto:phantomcluster17@gmail.com?subject=Inquiry:%20Retainer%20Support&body=Hi%20Hitanshu,%0D%0A%0D%0AI%20am%20interested%20in%20securing%20retainer%20support%20for%20my%20product%20team.%0D%0A%0D%0AOur%20primary%20design%20needs%20are:%20[Briefly%20describe]%0D%0A%0D%0AThank%20you.'
 		},
 		{
 			title: 'Custom Partnership',
 			desc: 'Tailored consulting models for early-stage startups and complex enterprise system setups.',
-			benefits: ['Multi-phase work systems', 'Customized team scope', 'Cross-disciplinary design', 'Fractional system leadership', 'Weekly alignments']
+			benefits: ['Multi-phase work systems', 'Customized team scope', 'Cross-disciplinary design', 'Fractional system leadership', 'Weekly alignments'],
+			ctaUrl: 'mailto:phantomcluster17@gmail.com?subject=Inquiry:%20Custom%20Partnership&body=Hi%20Hitanshu,%0D%0A%0D%0AI%20would%20like%20to%20discuss%20a%20custom%20partnership/consulting%20model.%0D%0A%0D%0AOur%20company%20goals%20are:%20[Briefly%20describe]%0D%0A%0D%0AThank%20you.'
 		}
 	];
 
@@ -284,6 +287,20 @@
 								</li>
 							{/each}
 						</ul>
+						
+						<!-- Parameterized Routing CTA -->
+						<div class="mt-12 flex justify-end">
+							<a 
+								href={model.ctaUrl}
+								class="group flex items-center gap-2 text-white/50 hover:text-primary transition-colors duration-300 font-medium text-sm"
+							>
+								<span>Start Conversation</span>
+								<ArrowRight 
+									class="size-4 transition-transform duration-500 group-hover:translate-x-1" 
+									style="transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);" 
+								/>
+							</a>
+						</div>
 					</div>
 				</div>
 			{/each}
