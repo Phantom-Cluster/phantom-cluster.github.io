@@ -8,7 +8,7 @@
 	import { onMount } from 'svelte';
 	import { gsap } from 'gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-	import { ChevronDown, Send } from 'lucide-svelte';
+	import { ChevronDown, Send, ArrowRight } from 'lucide-svelte';
 	import VanillaTilt from 'vanilla-tilt';
 
 	let activeFaq = $state(-1);
