@@ -226,16 +226,12 @@
 						>
 							<a href="/work/{project.slug}" class="relative w-full aspect-[16/11] max-w-[420px] rounded-[1.5rem] overflow-hidden group border border-white/10 block bg-neutral-900 transition-all duration-500 ease-out">
 								
-								<div class="absolute top-0 left-0 right-0 h-6 bg-neutral-950/80 backdrop-blur-md border-b border-white/5 px-3 flex items-center justify-between z-20">
+								<div class="absolute top-0 left-0 right-0 h-6 bg-neutral-950/80 backdrop-blur-md border-b border-white/5 px-3 flex items-center z-20">
 									<div class="flex gap-1.5">
 										<span class="size-2 rounded-full bg-[#ff5f56]"></span>
 										<span class="size-2 rounded-full bg-[#ffbd2e]"></span>
 										<span class="size-2 rounded-full bg-[#27c93f]"></span>
 									</div>
-									<div class="w-1/2 h-3.5 bg-white/5 rounded text-[8px] flex items-center justify-center text-neutral-500 font-mono scale-90">
-										{project.slug}.design
-									</div>
-									<div class="w-4"></div>
 								</div>
 
 								<img 
