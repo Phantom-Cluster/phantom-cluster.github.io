@@ -91,10 +91,10 @@
 <div bind:this={pageWrapperEl} class="bg-[#f4f4f6] text-neutral-900 min-h-screen">
 	<!-- Phase 2: Hero Section -->
 	<section id="about-hero" class="relative min-h-screen flex flex-col items-center justify-center pt-20 lg:pt-0">
-		<h1 bind:this={h1El} class="relative z-10 text-center font-black uppercase text-neutral-900 whitespace-nowrap mb-8 lg:mb-12" style="font-size: clamp(6rem, 16.18vw, 20rem); letter-spacing: 0.088em; line-height: 0.9; transform-style: preserve-3d;">
-			<img src={starImg} alt="3D Star" class="floating-shape absolute object-contain pointer-events-none" style="z-index: -1; top: -15%; left: -25%; width: clamp(120px, 10vw, 180px);" />
+		<h1 bind:this={h1El} class="relative z-10 text-center font-black uppercase text-neutral-900 whitespace-nowrap mb-8 lg:mb-12" style="font-size: clamp(4rem, 10.5vw, 10rem); letter-spacing: -0.03em; line-height: 0.85; transform-style: preserve-3d;">
+			<img src={starImg} alt="3D Star" class="floating-shape absolute object-contain pointer-events-none" style="z-index: -1; top: -3vw; left: -6vw; width: clamp(80px, 7vw, 140px);" />
 			Product <br/> Designer
-			<img src={gemImg} alt="3D Gem" class="floating-shape absolute object-contain pointer-events-none" style="z-index: -1; bottom: -15%; right: -25%; width: clamp(120px, 10vw, 180px);" />
+			<img src={gemImg} alt="3D Gem" class="floating-shape absolute object-contain pointer-events-none" style="z-index: -1; bottom: -3vw; right: -6vw; width: clamp(80px, 7vw, 140px);" />
 		</h1>
 
 		<div bind:this={cardContainerEl} class="relative z-20 w-full max-w-[260px] lg:max-w-[320px] aspect-[4/5] mx-auto" style="perspective: 1500px;">
