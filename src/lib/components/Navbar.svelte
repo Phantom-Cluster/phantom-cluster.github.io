@@ -31,10 +31,10 @@
 	}
 
 	const navLinks = [
-		{ name: 'About', href: '/about' },
 		{ name: 'Projects', href: '/#projects' },
 		{ name: 'Studio', href: '/#studio' },
 		{ name: 'Blog', href: '/#blog' },
+		{ name: 'About', href: '/about' },
 		{ name: 'Contact', href: '/#contact' }
 	];
 </script>
@@ -51,7 +51,7 @@
 		onmousemove={handleMouseMove}
 		onmouseleave={handleMouseLeave}
 		role="presentation"
-		class="w-full max-w-[1320px] h-16 md:h-18 rounded-full flex items-center justify-between px-6 md:px-8 border pointer-events-auto transition-all duration-300 bg-white/40 backdrop-blur-2xl saturate-[1.8] border-white/40 shadow-lg shadow-black/5 relative overflow-hidden interactive-glow"
+		class="w-full max-w-[1320px] h-16 md:h-18 rounded-full flex items-center justify-between px-6 md:px-8 border pointer-events-auto transition-all duration-300 bg-white/40 backdrop-blur-2xl saturate-[1.8] border-white/40 shadow-lg shadow-black/5 relative interactive-glow"
 	>
 		
 		<!-- Logo (Left) -->
@@ -68,7 +68,7 @@
 				<div class="relative group flex items-center justify-center">
 					<a
 						href={link.href}
-						class="text-[14px] font-bold px-4 py-1.5 transition-colors duration-200 {link.name === 'About' ? 'border border-primary/20 bg-primary/5 text-primary rounded-full shadow-sm shadow-primary/5' : ($page.url.pathname === link.href ? 'bg-[#f53500]/10 text-[#f53500] rounded-[20px]' : 'text-neutral-600 dark:text-neutral-300 hover:text-primary dark:hover:text-primary')}"
+						class="text-[14px] font-bold px-4 py-1.5 transition-colors duration-200 {$page.url.pathname === link.href ? 'bg-[#f53500]/10 text-[#f53500] rounded-[20px]' : 'text-neutral-600 dark:text-neutral-300 hover:text-primary dark:hover:text-primary'}"
 					>
 						{link.name}
 					</a>
@@ -200,6 +200,7 @@
 		content: '';
 		position: absolute;
 		inset: 0;
+		border-radius: inherit;
 		background: radial-gradient(
 			250px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
 			rgba(255, 255, 255, 0.7),
@@ -208,6 +209,6 @@
 		opacity: var(--opacity, 0);
 		transition: opacity 0.4s ease;
 		pointer-events: none;
-		z-index: 0;
+		z-index: -1;
 	}
 </style>
