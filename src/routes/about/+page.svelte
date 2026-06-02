@@ -13,6 +13,7 @@
 	let h1El: HTMLElement;
 	let manifestoEl: HTMLElement;
 	let pageWrapperEl: HTMLElement;
+	let coreStrengthsEl: HTMLElement;
 
 	const experienceYears = new Date().getFullYear() - 2018;
 
@@ -90,6 +91,19 @@
 			{ y: -12, rotation: -8 },
 			{ y: 12, rotation: 8, duration: 2, yoyo: true, repeat: -1, ease: "sine.inOut", stagger: 0.5 }
 		);
+
+		// Revert to light theme for Core Strengths
+		gsap.to(pageWrapperEl, {
+			backgroundColor: '#f4f4f6',
+			color: '#171717',
+			ease: 'none',
+			scrollTrigger: {
+				trigger: coreStrengthsEl,
+				start: 'top 60%',
+				end: 'top 20%',
+				scrub: true
+			}
+		});
 		}); // End gsap context
 		}, 700);
 	});
@@ -215,8 +229,8 @@
 		</div>
 
 		<!-- Core Strengths -->
-		<div class="max-w-5xl mx-auto mt-32 mb-16 px-6 text-center">
-			<h2 class="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 dark:text-white mb-12">Core Strengths</h2>
+		<div bind:this={coreStrengthsEl} class="max-w-5xl mx-auto mt-32 mb-16 px-6 text-center">
+			<h2 class="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 mb-12">Core Strengths</h2>
 			<ul class="flex flex-wrap justify-center gap-3 md:gap-4" aria-label="List of core strengths">
 				{#each ['Design Systems (Atomic)', 'Starter Templates', 'WordPress (Gutenberg/Elementor)', 'UX Strategy & Psychology', 'Generative AI / LLMs', 'Prompt Engineering', 'User Flow Mapping', 'Wireframes & 3D Design', 'Accessibility (WCAG)', 'UI Optimization', 'Interaction Design', 'Animation', 'Motion UI', 'Agile Collaboration', 'SaaS Product Design', 'Developer Handoff'] as strength}
 					<li class="group relative inline-flex items-center justify-center p-[1px] rounded-full overflow-hidden transition-all duration-300">
@@ -235,9 +249,9 @@
 	</section>
 
 	<!-- Phase 6: Ecosystem Cross-Linking -->
-	<section id="project-routing" class="py-32 px-6 border-t border-white/5 text-center bg-transparent">
+	<section id="project-routing" class="py-32 px-6 border-t border-neutral-900/5 text-center bg-transparent">
 		<span class="font-mono text-xs uppercase text-neutral-500 tracking-widest block mb-4">Explore</span>
-		<h2 class="text-4xl md:text-5xl font-black mb-16 tracking-tight text-white">See systems in action →</h2>
+		<h2 class="text-4xl md:text-5xl font-black mb-16 tracking-tight text-neutral-900">See systems in action →</h2>
 		
 		<div class="flex flex-col md:flex-row items-center justify-center gap-6 max-w-4xl mx-auto">
 			<a href="/#wpmudev" class="group relative px-8 py-6 rounded-[2rem] bg-[#121318] border border-white/5 transition-transform hover:-translate-y-1 after:absolute after:inset-0 after:-z-10 after:shadow-[0_16px_48px_-12px_rgba(245,53,0,0.15)] after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-500 after:rounded-[2rem] flex items-center gap-4 w-full md:w-auto justify-center">
