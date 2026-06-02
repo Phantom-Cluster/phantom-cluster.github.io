@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
 	import { gsap } from 'gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { Star, ExternalLink, ArrowRight } from 'lucide-svelte';
@@ -14,8 +15,12 @@
 	let manifestoEl: HTMLElement;
 	let pageWrapperEl: HTMLElement;
 
+	let ctx: gsap.Context;
+
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
+
+		ctx = gsap.context(() => {
 
 		// Calculate exact distance for the FLIP landing
 		const getDistance = () => {
@@ -81,6 +86,17 @@
 			{ y: -12, rotation: -8 },
 			{ y: 12, rotation: 8, duration: 2, yoyo: true, repeat: -1, ease: "sine.inOut", stagger: 0.5 }
 		);
+		}); // End gsap context
+	});
+
+	onDestroy(() => {
+		if (ctx) ctx.revert();
+	});
+
+	afterNavigate(() => {
+		setTimeout(() => {
+			ScrollTrigger.refresh();
+		}, 50);
 	});
 </script>
 
