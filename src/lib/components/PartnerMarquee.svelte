@@ -44,10 +44,6 @@
 					<span class="text-primary">•</span>
 					<span>Searchmetrics</span>
 					<span class="text-primary">•</span>
-					<span>Elementor Hub</span>
-					<span class="text-primary">•</span>
-					<span>Gutenberg</span>
-					<span class="text-primary">•</span>
 					<span>Ideajam</span>
 					<span class="text-primary">•</span>
 				</div>
