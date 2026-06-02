@@ -82,14 +82,14 @@
 
 <div bind:this={pageWrapperEl} class="bg-[#f4f4f6] text-neutral-900 min-h-screen">
 	<!-- Phase 2: Hero Section -->
-	<section id="about-hero" class="relative min-h-screen flex items-center justify-center overflow-hidden" style="perspective: 1500px;">
-		<h1 bind:this={h1El} class="absolute z-0 text-center font-black uppercase text-neutral-900 whitespace-nowrap" style="font-size: clamp(4rem, 12vw, 14rem); letter-spacing: -0.05em; transform-style: preserve-3d;">
-			<Star class="absolute -top-10 -left-10 w-8 h-8 text-primary" />
+	<section id="about-hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20 lg:pt-0" style="perspective: 1500px;">
+		<h1 bind:this={h1El} class="relative z-10 text-center font-black uppercase text-neutral-900 whitespace-nowrap mb-8 lg:mb-12" style="font-size: clamp(3.5rem, 10vw, 11rem); letter-spacing: -0.05em; line-height: 0.85; transform-style: preserve-3d;">
+			<Star class="absolute -top-6 -left-6 md:-top-10 md:-left-10 w-6 h-6 md:w-8 md:h-8 text-primary" />
 			Product / <br/> Designer
-			<Star class="absolute -bottom-10 -right-10 w-8 h-8 text-primary" />
+			<Star class="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 w-6 h-6 md:w-8 md:h-8 text-primary" />
 		</h1>
 
-		<div bind:this={cardContainerEl} class="relative z-20 w-full max-w-[300px] md:max-w-md aspect-[4/5] mx-auto" style="perspective: 1500px;">
+		<div bind:this={cardContainerEl} class="relative z-20 w-full max-w-[260px] lg:max-w-[320px] aspect-[4/5] mx-auto" style="perspective: 1500px;">
 			<div bind:this={cardEl} class="w-full h-full relative" style="transform-style: preserve-3d;">
 				<!-- Front Face (Grayscale) -->
 				<div class="absolute inset-0 rounded-3xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.15)] border border-neutral-900/10" style="backface-visibility: hidden;">
@@ -105,8 +105,8 @@
 
 	<!-- Phase 3: The Copy Split Grid -->
 	<section id="about-bio" class="relative py-20 lg:py-32 px-6">
-		<div class="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.2fr_1fr] gap-12 lg:gap-8 items-center lg:items-start">
-			<div class="flex flex-col gap-8 lg:pr-8">
+		<div class="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_320px_1fr] gap-12 lg:gap-16 items-center lg:items-start">
+			<div class="flex flex-col gap-8 lg:pr-4">
 				<h2 class="text-5xl md:text-6xl font-bold tracking-tight">Hey!</h2>
 				<p class="text-xl text-neutral-400 leading-relaxed font-medium">
 					I'm Hitanshu Sahu, a tech-obsessed Product Designer based in Kanpur, India. I focus on bridging the exact gap between advanced visual interfaces and technical frontend architecture.
@@ -114,9 +114,9 @@
 			</div>
 			
 			<!-- Structural Gap for Card Positioning (Target Slot) -->
-			<div bind:this={cardSlotEl} class="w-full max-w-[300px] md:max-w-md mx-auto aspect-[4/5] rounded-3xl pointer-events-none opacity-0"></div>
+			<div bind:this={cardSlotEl} class="w-full max-w-[260px] lg:max-w-none mx-auto aspect-[4/5] rounded-3xl pointer-events-none opacity-0"></div>
 			
-			<div class="flex flex-col gap-12 lg:pl-8 lg:pt-4">
+			<div class="flex flex-col gap-12 lg:pl-4 lg:pt-4">
 				<p class="text-lg text-neutral-400 leading-relaxed">
 					With over 7 years of deep ecosystem experience, I build, launch, and scale intuitive UI systems for complex SaaS platforms, high-growth digital products, and optimized WordPress frameworks.
 				</p>
