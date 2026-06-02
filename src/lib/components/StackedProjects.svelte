@@ -122,7 +122,7 @@
 			services: ['SaaS Dashboard Design', 'Atomic Figma Variables', 'White-Label Monochrome Mode'],
 			btnClass: 'hover:bg-primary hover:border-primary hover:shadow-[0_0_20px_rgba(245,53,0,0.45)]',
 			cardShadow: 'hover:border-white/20 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.95),0_0_50px_rgba(245,53,0,0.12)]',
-			spotlight: 'bg-primary/20'
+			themeColor: '#f53500'
 		},
 		{
 			bg: 'bg-[#2c1b18]',
@@ -132,7 +132,7 @@
 			services: ['Kanban SaaS Platform', 'B2B Flow Optimization', 'Scalable White-Label Framework'],
 			btnClass: 'hover:bg-[#e0533c] hover:border-[#e0533c] hover:shadow-[0_0_20px_rgba(224,83,60,0.45)]',
 			cardShadow: 'hover:border-white/20 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.95),0_0_50px_rgba(224,83,60,0.22)]',
-			spotlight: 'bg-[#e0533c]/25'
+			themeColor: '#e0533c'
 		},
 		{
 			bg: 'bg-[#111e1c]',
@@ -142,7 +142,7 @@
 			services: ['Mobile App Redesign', 'Localized Design Library', 'AI Asset Integration'],
 			btnClass: 'hover:bg-[#14b8a6] hover:border-[#14b8a6] hover:shadow-[0_0_20px_rgba(20,184,166,0.45)]',
 			cardShadow: 'hover:border-white/20 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.95),0_0_50px_rgba(20,184,166,0.22)]',
-			spotlight: 'bg-[#14b8a6]/25'
+			themeColor: '#14b8a6'
 		},
 		{
 			bg: 'bg-[#121926]',
@@ -152,7 +152,7 @@
 			services: ['Elementor & Gutenberg Systems', '50+ High-Performance Starter Sites', 'UX & Performance Tuning'],
 			btnClass: 'hover:bg-[#3b82f6] hover:border-[#3b82f6] hover:shadow-[0_0_20px_rgba(59,130,246,0.45)]',
 			cardShadow: 'hover:border-white/20 hover:shadow-[0_40px_80px_-15px_rgba(0,0,0,0.95),0_0_50px_rgba(59,130,246,0.22)]',
-			spotlight: 'bg-[#3b82f6]/25'
+			themeColor: '#3b82f6'
 		}
 	];
 </script>
@@ -181,7 +181,11 @@
 					<div class="absolute -inset-[100%] bg-gradient-to-tr from-transparent via-white/8 to-transparent -translate-x-[50%] -translate-y-[50%] group-hover:translate-x-[50%] group-hover:translate-y-[50%] transition-transform duration-1000 ease-out"></div>
 				</div>
 
-				<div class="absolute right-[5%] bottom-[10%] w-[40%] h-[40%] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-[100px] pointer-events-none z-10 {cardThemes[i].spotlight}" aria-hidden="true"></div>
+				<div 
+					class="absolute right-[5%] bottom-[10%] w-[40%] h-[40%] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-[100px] pointer-events-none z-10" 
+					style="background: radial-gradient(circle, color-mix(in srgb, {cardThemes[i].themeColor} 15%, transparent) 0%, transparent 70%);"
+					aria-hidden="true"
+				></div>
 				
 				<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-stretch h-full w-full relative z-30">
 					
