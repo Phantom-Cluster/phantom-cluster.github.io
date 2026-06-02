@@ -109,9 +109,11 @@
 	<section id="about-hero" class="relative min-h-screen flex flex-col items-center justify-center pt-20 lg:pt-0">
 		
 		<!-- Experience Badge -->
-		<div class="relative z-20 flex items-center justify-center gap-2.5 bg-white border border-neutral-200 px-4 py-2 rounded-full mb-8 shadow-sm">
-			<div class="w-3.5 h-3.5 rounded-full border-[2px] border-orange-500/20 border-t-orange-500 animate-[spin_2s_linear_infinite]"></div>
-			<span class="text-xs font-semibold tracking-tight text-neutral-800">{experienceYears}+ years of experience</span>
+		<div class="relative z-20 inline-flex items-center justify-center p-[1.5px] rounded-full overflow-hidden mb-8 shadow-sm bg-neutral-200">
+			<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#f97316_360deg)]"></div>
+			<div class="relative bg-white px-5 py-2 rounded-full w-full h-full flex items-center justify-center">
+				<span class="text-xs font-semibold tracking-tight text-neutral-800">{experienceYears}+ years of experience</span>
+			</div>
 		</div>
 
 		<h1 bind:this={h1El} class="relative z-10 text-center font-black uppercase text-neutral-900 whitespace-nowrap mb-8 lg:mb-12" style="font-size: clamp(4rem, 10.5vw, 10rem); letter-spacing: -0.03em; line-height: 0.85; transform-style: preserve-3d;">
