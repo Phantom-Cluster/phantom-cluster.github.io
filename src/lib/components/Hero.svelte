@@ -2,10 +2,26 @@
 	import { Button } from '$lib/components/ui/button';
 	import { onMount } from 'svelte';
 	import { gsap } from 'gsap';
+	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { ArrowRight } from 'lucide-svelte';
+	import cubesImg from '$lib/assets/4 Cube Abstract Glass Spectrum.png';
 
 	onMount(() => {
+		gsap.registerPlugin(ScrollTrigger);
+
 		const tl = gsap.timeline({ delay: 0.2 });
+
+		// Subtle parallax drift for the background cubes
+		gsap.to('.hero-cubes-bg', {
+			yPercent: 40,
+			ease: 'none',
+			scrollTrigger: {
+				trigger: '.hero-headline-centered',
+				start: 'top bottom',
+				end: 'bottom top',
+				scrub: true
+			}
+		});
 
 		tl.from('.hero-badge-centered', {
 			opacity: 0,
@@ -163,7 +179,14 @@
 	</div>
 
 	<!-- MAIN HEADLINE: Centered, geometric Cal-Sans display typography with custom inline visual clips -->
-	<h1 class="hero-headline-centered text-center text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-[-0.04em] leading-[1.1] text-neutral-900 max-w-[20ch] mx-auto select-none">
+	<h1 class="hero-headline-centered relative text-center text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-[-0.04em] leading-[1.1] text-neutral-900 max-w-[20ch] mx-auto select-none">
+		<!-- Injected Abstract Glass Cubes Parallax Background -->
+		<img 
+			src={cubesImg} 
+			alt="" 
+			class="hero-cubes-bg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[400px] md:max-w-[700px] object-contain pointer-events-none" 
+			style="z-index: -1; opacity: 0.35; filter: blur(6px);" 
+		/>
 		Engineered 
 		<!-- Inline Rounded Image Clip 1 -->
 		<span class="hero-pill inline-block align-middle mx-1 md:mx-2 will-change-transform z-20 relative">
