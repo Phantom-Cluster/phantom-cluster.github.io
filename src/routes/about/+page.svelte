@@ -96,7 +96,7 @@
 	afterNavigate(() => {
 		setTimeout(() => {
 			ScrollTrigger.refresh();
-		}, 50);
+		}, 700);
 	});
 </script>
 
