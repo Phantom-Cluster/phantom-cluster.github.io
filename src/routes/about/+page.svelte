@@ -106,7 +106,7 @@
 
 <div bind:this={pageWrapperEl} class="bg-[#f4f4f6] text-neutral-900 min-h-screen">
 	<!-- Phase 2: Hero Section -->
-	<section id="about-hero" class="relative min-h-screen flex flex-col items-center justify-center pt-32 lg:pt-0">
+	<section id="about-hero" class="relative min-h-screen flex flex-col items-center pt-[160px] pb-24">
 		
 		<!-- Experience Badge -->
 		<div class="relative z-20 inline-flex items-center justify-center p-[1.5px] rounded-full overflow-hidden mb-8 shadow-sm bg-neutral-200">
