@@ -3,8 +3,11 @@
 	import { gsap } from 'gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { Star, ExternalLink, ArrowRight } from 'lucide-svelte';
+	import profilePic from '$lib/assets/527DDCBC-EBF7-4AD8-AEB8-1F3087FDB9E1.JPG';
 
 	let cardEl: HTMLElement;
+	let cardContainerEl: HTMLElement;
+	let cardSlotEl: HTMLElement;
 	let h1El: HTMLElement;
 	let manifestoEl: HTMLElement;
 	let pageWrapperEl: HTMLElement;
@@ -12,14 +15,22 @@
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
 
-		// Hero 3D Physics
+		// Calculate exact distance for the FLIP landing
+		const getDistance = () => {
+			if (!cardContainerEl || !cardSlotEl) return 0;
+			return cardSlotEl.getBoundingClientRect().top - cardContainerEl.getBoundingClientRect().top;
+		};
+
+		// Hero 3D Physics & FLIP Pinning
 		const tl = gsap.timeline({
 			scrollTrigger: {
-				trigger: '#about-hero',
-				start: 'top top',
-				end: '+=100%',
+				trigger: cardContainerEl,
+				start: 'center center',
+				end: () => `+=${getDistance()}`,
 				scrub: true,
-				pin: true
+				pin: true,
+				pinSpacing: false,
+				invalidateOnRefresh: true
 			}
 		});
 
@@ -27,17 +38,24 @@
 			rotateX: 180,
 			ease: 'none'
 		}, 0)
-		.to(h1El, {
-			opacity: 0.05,
-			z: -50,
-			color: '#ffffff',
-			ease: 'none'
-		}, 0)
 		.to(pageWrapperEl, {
 			backgroundColor: '#0a0a0c',
 			color: '#ffffff',
 			ease: 'none'
 		}, 0);
+
+		// Fade out H1 separately as we scroll down so it doesn't overlap text
+		gsap.to(h1El, {
+			opacity: 0,
+			y: -50,
+			ease: 'none',
+			scrollTrigger: {
+				trigger: '#about-hero',
+				start: 'top top',
+				end: 'bottom center',
+				scrub: true
+			}
+		});
 
 		// Manifesto Mask
 		const words = manifestoEl.querySelectorAll('span');
@@ -71,23 +89,23 @@
 			<Star class="absolute -bottom-10 -right-10 w-8 h-8 text-primary" />
 		</h1>
 
-		<div class="relative z-10 w-full max-w-[300px] md:max-w-md aspect-[4/5]" style="perspective: 1500px;">
+		<div bind:this={cardContainerEl} class="relative z-20 w-full max-w-[300px] md:max-w-md aspect-[4/5] mx-auto" style="perspective: 1500px;">
 			<div bind:this={cardEl} class="w-full h-full relative" style="transform-style: preserve-3d;">
-				<!-- Front Face -->
+				<!-- Front Face (Grayscale) -->
 				<div class="absolute inset-0 rounded-3xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.15)] border border-neutral-900/10" style="backface-visibility: hidden;">
-					<img src="/527DDCBC-EBF7-4AD8-AEB8-1F3087FDB9E1.JPG" alt="Hitanshu Sahu Profile" class="w-full h-full object-cover grayscale" />
+					<img src={profilePic} alt="Hitanshu Sahu Profile" class="w-full h-full object-cover grayscale" />
 				</div>
-				<!-- Back Face -->
+				<!-- Back Face (Color) -->
 				<div class="absolute inset-0 rounded-3xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,0.6)] border border-white/10" style="backface-visibility: hidden; transform: rotateX(180deg);">
-					<img src="/527DDCBC-EBF7-4AD8-AEB8-1F3087FDB9E1.JPG" alt="Hitanshu Sahu Profile Color" class="w-full h-full object-cover" />
+					<img src={profilePic} alt="Hitanshu Sahu Profile Color" class="w-full h-full object-cover" />
 				</div>
 			</div>
 		</div>
 	</section>
 
 	<!-- Phase 3: The Copy Split Grid -->
-	<section id="about-bio" class="relative py-32 px-6">
-		<div class="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.2fr_1fr] gap-12 lg:gap-8 items-start">
+	<section id="about-bio" class="relative py-20 lg:py-32 px-6">
+		<div class="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.2fr_1fr] gap-12 lg:gap-8 items-center lg:items-start">
 			<div class="flex flex-col gap-8 lg:pr-8">
 				<h2 class="text-5xl md:text-6xl font-bold tracking-tight">Hey!</h2>
 				<p class="text-xl text-neutral-400 leading-relaxed font-medium">
@@ -95,10 +113,10 @@
 				</p>
 			</div>
 			
-			<!-- Structural Gap for Card Positioning -->
-			<div class="hidden lg:block h-[600px] border border-white/5 rounded-3xl opacity-0"></div>
+			<!-- Structural Gap for Card Positioning (Target Slot) -->
+			<div bind:this={cardSlotEl} class="w-full max-w-[300px] md:max-w-md mx-auto aspect-[4/5] rounded-3xl pointer-events-none opacity-0"></div>
 			
-			<div class="flex flex-col gap-12 lg:pl-8 pt-4">
+			<div class="flex flex-col gap-12 lg:pl-8 lg:pt-4">
 				<p class="text-lg text-neutral-400 leading-relaxed">
 					With over 7 years of deep ecosystem experience, I build, launch, and scale intuitive UI systems for complex SaaS platforms, high-growth digital products, and optimized WordPress frameworks.
 				</p>
@@ -121,7 +139,7 @@
 	</section>
 
 	<!-- Phase 5: Credentials Bento Box -->
-	<section id="credentials-bento" class="py-32 px-6 border-t border-white/5 bg-[#0a0a0c]">
+	<section id="credentials-bento" class="py-32 px-6 border-t border-white/5 bg-transparent">
 		<div class="max-w-[1440px] mx-auto mb-24">
 			<h3 class="text-sm font-mono text-primary tracking-widest uppercase mb-12 text-center md:text-left">Verifiable Credentials</h3>
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -178,7 +196,7 @@
 	</section>
 
 	<!-- Phase 6: Ecosystem Cross-Linking -->
-	<section id="project-routing" class="py-32 px-6 border-t border-white/5 text-center bg-[#0a0a0c]">
+	<section id="project-routing" class="py-32 px-6 border-t border-white/5 text-center bg-transparent">
 		<span class="font-mono text-xs uppercase text-neutral-500 tracking-widest block mb-4">Explore</span>
 		<h2 class="text-4xl md:text-5xl font-black mb-16 tracking-tight text-white">See systems in action →</h2>
 		
