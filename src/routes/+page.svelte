@@ -140,19 +140,19 @@
 
 				<!-- Metrics Card widget stays black for massive visual contrast -->
 				<div class="metrics-card-wrapper" style="perspective: 1200px;">
-					<div class="metrics-tilt-card bg-neutral-950 border border-white/5 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between hover:border-primary/20 transition-colors duration-300 shadow-2xl h-full" style="transform-style: preserve-3d;">
+					<div class="metrics-tilt-card bg-neutral-950 border border-white/5 rounded-[2.5rem] p-10 lg:p-14 flex flex-col justify-between hover:border-primary/20 transition-colors duration-300 shadow-2xl h-full" style="transform-style: preserve-3d;">
 						<span class="text-primary font-mono text-xs uppercase tracking-widest block mb-12" style="transform: translateZ(30px);">Metrics & Impact</span>
 						<div class="space-y-8" style="transform: translateZ(50px);">
 							<div>
-								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(2.5rem, 10vw, 4.25rem);">98%</span>
+								<span class="text-5xl md:text-[3.5rem] font-bold text-white tracking-tighter block leading-none">98%</span>
 								<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Client Satisfaction</span>
 							</div>
 							<div>
-								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(2.5rem, 10vw, 4.25rem);">2M+</span>
+								<span class="text-5xl md:text-[3.5rem] font-bold text-white tracking-tighter block leading-none">2M+</span>
 								<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Active Plugin Users</span>
 							</div>
 							<div>
-								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(2.5rem, 10vw, 4.25rem);">50+</span>
+								<span class="text-5xl md:text-[3.5rem] font-bold text-white tracking-tighter block leading-none">50+</span>
 								<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Starter Templates Completed</span>
 							</div>
 						</div>
