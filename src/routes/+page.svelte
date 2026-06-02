@@ -9,6 +9,7 @@
 	import { gsap } from 'gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { ChevronDown, Send } from 'lucide-svelte';
+	import VanillaTilt from 'vanilla-tilt';
 
 	let activeFaq = $state(-1);
 	let activeProcess = $state(0);
@@ -72,6 +73,33 @@
 				start: 'top 80%'
 			}
 		});
+
+		// Spotlight horizontal marquee scroll
+		gsap.to('.marquee-inner', {
+			xPercent: -50,
+			ease: 'none',
+			scrollTrigger: {
+				trigger: '.marquee-container',
+				start: 'top bottom',
+				end: 'bottom top',
+				scrub: 1
+			}
+		});
+
+		// --- Metrics Card 3D Tilt ---
+		const metricsCard = document.querySelector('.metrics-tilt-card');
+		if (metricsCard) {
+			const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+			if (!isTouchDevice) {
+				VanillaTilt.init(metricsCard as HTMLElement, {
+					max: 3.5,
+					speed: 400,
+					glare: true,
+					"max-glare": 0.06,
+					easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)" // Spring-like cubic bezier
+				});
+			}
+		}
 	});
 </script>
 
@@ -111,20 +139,22 @@
 				</div>
 
 				<!-- Metrics Card widget stays black for massive visual contrast -->
-				<div class="bg-neutral-950 border border-white/5 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between hover:border-primary/20 transition-all duration-300 shadow-2xl">
-					<span class="text-primary font-mono text-xs uppercase tracking-widest block mb-12">Metrics & Impact</span>
-					<div class="space-y-8">
-						<div>
-							<span class="text-5xl md:text-6xl font-bold text-white tracking-tighter block leading-none">98%</span>
-							<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Client Satisfaction</span>
-						</div>
-						<div>
-							<span class="text-5xl md:text-6xl font-bold text-white tracking-tighter block leading-none">2M+</span>
-							<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Active Plugin Users</span>
-						</div>
-						<div>
-							<span class="text-5xl md:text-6xl font-bold text-white tracking-tighter block leading-none">50+</span>
-							<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Starter Templates Completed</span>
+				<div class="metrics-card-wrapper" style="perspective: 1200px;">
+					<div class="metrics-tilt-card bg-neutral-950 border border-white/5 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between hover:border-primary/20 transition-colors duration-300 shadow-2xl h-full" style="transform-style: preserve-3d;">
+						<span class="text-primary font-mono text-xs uppercase tracking-widest block mb-12" style="transform: translateZ(30px);">Metrics & Impact</span>
+						<div class="space-y-8" style="transform: translateZ(50px);">
+							<div>
+								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(3.5rem, 10vw, 5rem);">98%</span>
+								<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Client Satisfaction</span>
+							</div>
+							<div>
+								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(3.5rem, 10vw, 5rem);">2M+</span>
+								<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Active Plugin Users</span>
+							</div>
+							<div>
+								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(3.5rem, 10vw, 5rem);">50+</span>
+								<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Starter Templates Completed</span>
+							</div>
 						</div>
 					</div>
 				</div>
