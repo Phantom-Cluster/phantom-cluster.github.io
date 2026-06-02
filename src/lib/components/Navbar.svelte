@@ -64,7 +64,7 @@
 
 		<!-- Minimal Center Menu Links (Desktop Only) -->
 		<div class="hidden md:flex items-center gap-8 relative z-10">
-			{#each navLinks.filter(l => l.name !== 'Contact') as link}
+			{#each navLinks.filter(l => l.name !== 'Contact' && l.name !== 'About') as link}
 				<div class="relative group flex items-center justify-center">
 					<a
 						href={link.href}
@@ -72,20 +72,31 @@
 					>
 						{link.name}
 					</a>
-
-					{#if link.name === 'About'}
-						<!-- Motion Tooltip (Desktop Only) -->
-						<div class="absolute top-[130%] left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-neutral-900 text-white text-[11px] font-medium rounded-md opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl">
-							Learn more about me
-							<div class="absolute bottom-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-b-neutral-900"></div>
-						</div>
-					{/if}
 				</div>
 			{/each}
 		</div>
 
 		<!-- Desktop Action Button vs Mobile Hamburger (Right) -->
-		<div class="flex items-center gap-4 relative z-10">
+		<div class="flex items-center gap-3 relative z-10">
+			<!-- About Pill with Tooltip (Desktop Only) -->
+			<div class="hidden md:block relative group">
+				<a
+					href="/about"
+					class="relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-neutral-700 bg-neutral-100/50 hover:bg-neutral-200/50 dark:text-neutral-300 dark:bg-white/5 dark:hover:bg-white/10 transition-colors duration-300"
+				>
+					About
+					<svg class="attention-nudge w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+					</svg>
+				</a>
+
+				<!-- Motion Tooltip (Desktop Only) -->
+				<div class="absolute top-[130%] left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-neutral-900 text-white text-[11px] font-medium rounded-md opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl">
+					Learn more about me
+					<div class="absolute bottom-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-b-neutral-900"></div>
+				</div>
+			</div>
+
 			<!-- Desktop Only: "Contact Us" Button -->
 			<a
 				href="/#contact"
@@ -193,6 +204,18 @@
 	}
 	:global(.animate-spin-once) {
 		animation: spin-once 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	}
+
+	/* 6-second cycle: Rests for ~5 seconds, nudges quickly, then rests again */
+	@keyframes subtle-nudge {
+		0%, 85%, 100% { transform: translateX(0); opacity: 0.4; }
+		88% { transform: translateX(3px); opacity: 1; color: #f53500; }
+		91% { transform: translateX(0); opacity: 0.4; }
+		94% { transform: translateX(3px); opacity: 1; color: #f53500; }
+	}
+	.attention-nudge {
+		animation: subtle-nudge 6s infinite ease-in-out;
+		will-change: transform, opacity;
 	}
 
 	/* Interactive mouse glow */
