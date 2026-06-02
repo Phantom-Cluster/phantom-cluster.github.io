@@ -12,7 +12,6 @@
 	import VanillaTilt from 'vanilla-tilt';
 
 	let activeFaq = $state(-1);
-	let activeProcess = $state(0);
 
 	const capabilities = [
 		{ id: '001', title: 'Creative Strategy', desc: 'Translating business goals and technical features into clear product blueprints.' },
@@ -100,6 +99,22 @@
 				});
 			}
 		}
+
+		// --- Process Scroll-Driven Reveal ---
+		const processStepsList = document.querySelectorAll('.process-step');
+		gsap.set(processStepsList, { opacity: 0.3, x: -15, willChange: "opacity, transform" });
+
+		processStepsList.forEach((step) => {
+			ScrollTrigger.create({
+				trigger: step,
+				start: "top 65%", // Item becomes active when its top hits 65% down the viewport
+				end: "bottom 35%", // Item becomes inactive when its bottom leaves 35% down the viewport
+				onEnter: () => gsap.to(step, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out", overwrite: "auto", filter: "grayscale(0%)" }),
+				onLeave: () => gsap.to(step, { opacity: 0.3, x: -15, duration: 0.4, ease: "power2.out", overwrite: "auto", filter: "grayscale(100%)" }),
+				onEnterBack: () => gsap.to(step, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out", overwrite: "auto", filter: "grayscale(0%)" }),
+				onLeaveBack: () => gsap.to(step, { opacity: 0.3, x: -15, duration: 0.4, ease: "power2.out", overwrite: "auto", filter: "grayscale(100%)" }),
+			});
+		});
 	});
 </script>
 
@@ -220,26 +235,19 @@
 
 		<div class="lg:col-span-3 space-y-6">
 			{#each processSteps as step, index}
-				<button 
-					onclick={() => (activeProcess = index)}
-					class="w-full text-left p-8 md:p-10 border rounded-[2rem] flex flex-col justify-between transition-all duration-300 group
-					       {activeProcess === index ? 'bg-white border-neutral-350 shadow-xl text-neutral-900' : 'bg-transparent border-neutral-200 hover:border-neutral-300 text-neutral-800'}"
+				<div 
+					class="process-step w-full text-left p-8 md:p-10 border rounded-[2rem] flex flex-col justify-between bg-white border-neutral-200 shadow-sm"
 				>
 					<div class="flex justify-between items-center w-full">
 						<div class="flex items-center gap-6">
-							<span class="font-mono text-sm text-neutral-400 group-hover:text-primary transition-colors">{step.num}</span>
-							<h4 class="text-xl md:text-2xl font-bold tracking-tight">{step.title}</h4>
-						</div>
-						<div class="size-8 rounded-full border border-neutral-200 flex items-center justify-center group-hover:border-primary/30 transition-colors">
-							<span class="text-xs text-neutral-400 group-hover:text-primary transition-colors">↳</span>
+							<span class="font-mono text-sm text-neutral-400">{step.num}</span>
+							<h4 class="text-xl md:text-2xl font-bold tracking-tight text-neutral-900">{step.title}</h4>
 						</div>
 					</div>
-					{#if activeProcess === index}
-						<p class="mt-6 text-neutral-600 text-sm md:text-base leading-relaxed max-w-[65ch] font-medium">
-							{step.desc}
-						</p>
-					{/if}
-				</button>
+					<p class="mt-6 text-neutral-600 text-sm md:text-base leading-relaxed max-w-[65ch] font-medium">
+						{step.desc}
+					</p>
+				</div>
 			{/each}
 		</div>
 	</div>
