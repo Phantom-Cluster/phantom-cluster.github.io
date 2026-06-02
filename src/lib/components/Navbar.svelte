@@ -31,8 +31,8 @@
 	}
 
 	const navLinks = [
-		{ name: 'Projects', href: '/#projects' },
 		{ name: 'About', href: '/about' },
+		{ name: 'Projects', href: '/#projects' },
 		{ name: 'Studio', href: '/#studio' },
 		{ name: 'Blog', href: '/#blog' },
 		{ name: 'Contact', href: '/#contact' }
@@ -65,12 +65,22 @@
 		<!-- Minimal Center Menu Links (Desktop Only) -->
 		<div class="hidden md:flex items-center gap-8 relative z-10">
 			{#each navLinks.filter(l => l.name !== 'Contact') as link}
-				<a
-					href={link.href}
-					class="text-[14px] font-bold px-3 py-1.5 transition-colors duration-200 {$page.url.pathname === link.href ? 'bg-[#f53500]/10 text-[#f53500] rounded-[20px]' : 'text-neutral-600 dark:text-neutral-300 hover:text-primary dark:hover:text-primary'}"
-				>
-					{link.name}
-				</a>
+				<div class="relative group flex items-center justify-center">
+					<a
+						href={link.href}
+						class="text-[14px] font-bold px-4 py-1.5 transition-colors duration-200 {link.name === 'About' ? 'border border-primary/20 bg-primary/5 text-primary rounded-full shadow-sm shadow-primary/5' : ($page.url.pathname === link.href ? 'bg-[#f53500]/10 text-[#f53500] rounded-[20px]' : 'text-neutral-600 dark:text-neutral-300 hover:text-primary dark:hover:text-primary')}"
+					>
+						{link.name}
+					</a>
+
+					{#if link.name === 'About'}
+						<!-- Motion Tooltip (Desktop Only) -->
+						<div class="absolute top-[130%] left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-neutral-900 text-white text-[11px] font-medium rounded-md opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl">
+							Learn more about me
+							<div class="absolute bottom-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-b-neutral-900"></div>
+						</div>
+					{/if}
+				</div>
 			{/each}
 		</div>
 
