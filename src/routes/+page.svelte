@@ -272,7 +272,7 @@
 
 		<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 			{#each engagementModels as model}
-				<div class="bg-neutral-900 border border-white/5 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between hover:border-primary/20 transition-all duration-300">
+				<div class="relative z-10 bg-neutral-900 border border-white/5 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between hover:border-primary/20 transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 after:absolute after:inset-0 after:-z-10 after:rounded-[2.5rem] after:shadow-[0px_16px_48px_-12px_rgba(245,53,0,0.15)] after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-[400ms] after:ease-[cubic-bezier(0.16,1,0.3,1)] after:pointer-events-none">
 					<div>
 						<span class="text-primary font-mono text-xs uppercase tracking-widest block mb-6">{model.title}</span>
 						<p class="text-neutral-400 text-sm leading-relaxed mb-8">{model.desc}</p>
