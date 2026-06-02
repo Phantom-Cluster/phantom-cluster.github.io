@@ -144,15 +144,15 @@
 						<span class="text-primary font-mono text-xs uppercase tracking-widest block mb-12" style="transform: translateZ(30px);">Metrics & Impact</span>
 						<div class="space-y-8" style="transform: translateZ(50px);">
 							<div>
-								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(3.5rem, 10vw, 5rem);">98%</span>
+								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(2.5rem, 10vw, 4.5rem);">98%</span>
 								<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Client Satisfaction</span>
 							</div>
 							<div>
-								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(3.5rem, 10vw, 5rem);">2M+</span>
+								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(2.5rem, 10vw, 4.5rem);">2M+</span>
 								<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Active Plugin Users</span>
 							</div>
 							<div>
-								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(3.5rem, 10vw, 5rem);">50+</span>
+								<span class="font-bold text-white tracking-tighter block leading-none" style="font-size: clamp(2.5rem, 10vw, 4.5rem);">50+</span>
 								<span class="text-xs text-neutral-500 uppercase tracking-widest mt-2 block">Starter Templates Completed</span>
 							</div>
 						</div>
