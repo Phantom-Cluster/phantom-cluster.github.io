@@ -216,21 +216,21 @@
 
 		<!-- Core Strengths -->
 		<div class="max-w-5xl mx-auto mt-32 mb-16 px-6 text-center">
-			<h2 class="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 mb-12">Core Strengths</h2>
-			<div class="flex flex-wrap justify-center gap-3 md:gap-4">
+			<h2 class="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 dark:text-white mb-12">Core Strengths</h2>
+			<ul class="flex flex-wrap justify-center gap-3 md:gap-4" aria-label="List of core strengths">
 				{#each ['Design Systems (Atomic)', 'Starter Templates', 'WordPress (Gutenberg/Elementor)', 'UX Strategy & Psychology', 'Generative AI / LLMs', 'Prompt Engineering', 'User Flow Mapping', 'Wireframes & 3D Design', 'Accessibility (WCAG)', 'UI Optimization', 'Interaction Design', 'Animation', 'Motion UI', 'Agile Collaboration', 'SaaS Product Design', 'Developer Handoff'] as strength}
-					<div class="group relative inline-flex items-center justify-center p-[1px] rounded-full overflow-hidden transition-all duration-300">
+					<li class="group relative inline-flex items-center justify-center p-[1px] rounded-full overflow-hidden transition-all duration-300">
 						<!-- Default subtle border -->
-						<div class="absolute inset-0 bg-neutral-200 group-hover:bg-transparent transition-colors duration-300"></div>
-						<!-- Animated border on hover -->
-						<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#f97316_360deg)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+						<div class="absolute inset-0 bg-neutral-200 dark:bg-white/10 group-hover:bg-transparent transition-colors duration-300"></div>
+						<!-- Animated border on hover (respects reduced motion) -->
+						<div class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#f97316_360deg)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 						<!-- Inner background -->
-						<div class="relative bg-white px-5 md:px-6 py-2 md:py-2.5 rounded-full w-full h-full flex items-center justify-center transition-colors">
-							<span class="text-sm font-medium tracking-tight text-neutral-600 group-hover:text-primary transition-colors duration-300">{strength}</span>
+						<div class="relative bg-white dark:bg-[#121318] px-5 md:px-6 py-2 md:py-2.5 rounded-full w-full h-full flex items-center justify-center transition-colors">
+							<span class="text-sm font-medium tracking-tight text-neutral-600 dark:text-neutral-300 group-hover:text-primary transition-colors duration-300">{strength}</span>
 						</div>
-					</div>
+					</li>
 				{/each}
-			</div>
+			</ul>
 		</div>
 	</section>
 
