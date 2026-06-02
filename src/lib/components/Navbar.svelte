@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Menu, X } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 
 	let isScrolled = $state(false);
 	let isOpen = $state(false);
@@ -31,6 +32,7 @@
 
 	const navLinks = [
 		{ name: 'Projects', href: '/#projects' },
+		{ name: 'About', href: '/about' },
 		{ name: 'Studio', href: '/#studio' },
 		{ name: 'Blog', href: '/#blog' },
 		{ name: 'Contact', href: '/#contact' }
@@ -65,7 +67,7 @@
 			{#each navLinks.filter(l => l.name !== 'Contact') as link}
 				<a
 					href={link.href}
-					class="text-[14px] font-bold text-neutral-600 dark:text-neutral-300 hover:text-primary dark:hover:text-primary transition-colors duration-200"
+					class="text-[14px] font-bold px-3 py-1.5 transition-colors duration-200 {$page.url.pathname === link.href ? 'bg-[#f53500]/10 text-[#f53500] rounded-[20px]' : 'text-neutral-600 dark:text-neutral-300 hover:text-primary dark:hover:text-primary'}"
 				>
 					{link.name}
 				</a>
