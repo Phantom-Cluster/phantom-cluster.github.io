@@ -85,7 +85,7 @@
 	<section id="about-hero" class="relative min-h-screen flex flex-col items-center justify-center pt-20 lg:pt-0">
 		<h1 bind:this={h1El} class="relative z-10 text-center font-black uppercase text-neutral-900 whitespace-nowrap mb-8 lg:mb-12" style="font-size: clamp(3.5rem, 10vw, 11rem); letter-spacing: -0.05em; line-height: 0.85; transform-style: preserve-3d;">
 			<Star class="absolute -top-6 -left-6 md:-top-10 md:-left-10 w-6 h-6 md:w-8 md:h-8 text-primary" />
-			Product / <br/> Designer
+			Product <br/> Designer
 			<Star class="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 w-6 h-6 md:w-8 md:h-8 text-primary" />
 		</h1>
 
