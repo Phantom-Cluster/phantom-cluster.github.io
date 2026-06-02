@@ -92,7 +92,7 @@
 
 				<!-- Motion Tooltip (Desktop Only) -->
 				<div class="absolute top-[130%] left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-neutral-900 text-white text-[11px] font-medium rounded-md opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl">
-					Learn more about me
+					View Capabilities &amp; Credentials
 					<div class="absolute bottom-full left-1/2 -translate-x-1/2 border-[4px] border-transparent border-b-neutral-900"></div>
 				</div>
 			</div>
