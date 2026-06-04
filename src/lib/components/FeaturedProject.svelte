@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import TubesBackground from '$lib/components/TubesBackground.svelte';
-	import { Mail } from 'lucide-svelte';
 </script>
 
 <!-- Repurposed visual card sits on a light gray section, creating massive visual contrast -->
@@ -84,16 +83,20 @@
 					<p class="text-sm text-neutral-300 max-w-[32ch] leading-snug md:text-right font-medium drop-shadow-md">
 						Spearheaded a scalable atomic design system in Figma and launched white-label monochrome dashboards.
 					</p>
-					<div class="flex items-center gap-3 bg-black/45 backdrop-blur-md p-2 rounded-full border border-white/10 w-fit">
-						<div class="flex h-10 w-10 rounded-full bg-neutral-900 items-center justify-center border border-white/5">
-							<Mail class="size-4 text-primary" />
+					<div class="flex items-center gap-2 border border-gray-800 rounded-full p-1.5 group cursor-pointer hover:border-gray-600 transition-colors duration-300">
+						<!-- Circular Arrow Icon -->
+						<div class="flex items-center justify-center w-10 h-10 rounded-full bg-black/50 transition-all duration-300">
+							<svg class="w-4 h-4 text-white transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+							</svg>
 						</div>
-						<Button
-							href="mailto:phantomcluster17@gmail.com"
-							class="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-6 py-2.5 text-xs uppercase tracking-wider flex items-center gap-2"
+						<!-- Main Action Button -->
+						<a
+							href="/work/wpmu-dev"
+							class="bg-[#FF4400] text-white px-6 py-2.5 rounded-full font-semibold tracking-wide text-xs whitespace-nowrap shadow-[0_0_15px_rgba(255,68,0,0.4)] transition-all duration-300 group-hover:shadow-[0_0_25px_rgba(255,68,0,0.6)] group-hover:bg-[#ff5511]"
 						>
-							<span>Email Me</span>
-						</Button>
+							EXPLORE PROJECT
+						</a>
 					</div>
 				</div>
 

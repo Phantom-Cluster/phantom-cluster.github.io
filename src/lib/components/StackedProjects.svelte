@@ -154,12 +154,12 @@
 	];
 </script>
 
-<section id="projects" class="py-32 bg-[#f4f4f6] relative flex flex-col items-center">
+<section id="projects" data-theme="light" class="py-32 bg-[#f4f4f6] relative flex flex-col items-center">
 	
 	<div class="relative z-0 w-full text-center select-none pointer-events-none mb-16 sm:mb-24 px-6">
-		<span class="font-mono text-xs uppercase text-neutral-500 tracking-[0.25em] block mb-3">
-			(Why clients love Hitanshu)
-		</span>
+		<p class="text-[10px] font-mono tracking-widest text-gray-500 uppercase text-center relative z-10 mb-3">
+			(02) Proof of Execution
+		</p>
 		<h3 class="text-[10vw] sm:text-[12vw] font-black tracking-[-0.05em] uppercase leading-none text-neutral-200/40">
 			Recent Works
 		</h3>

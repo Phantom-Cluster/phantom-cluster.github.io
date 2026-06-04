@@ -1,53 +1,51 @@
-<script lang="ts">
-	import { onMount } from 'svelte';
-	import { gsap } from 'gsap';
-	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-
-	let containerEl: HTMLElement | null = $state(null);
-	let innerEl: HTMLElement | null = $state(null);
-
-	onMount(() => {
-		gsap.registerPlugin(ScrollTrigger);
-		
-		if (!containerEl || !innerEl) return;
-
-		const animation = gsap.to(innerEl, {
-			xPercent: -50,
-			ease: 'none',
-			scrollTrigger: {
-				trigger: containerEl,
-				start: 'top bottom',
-				end: 'bottom top',
-				scrub: 1
-			}
-		});
-
-		return () => {
-			animation.kill();
-		};
-	});
-</script>
-
-<section bind:this={containerEl} class="py-16 overflow-hidden border-y border-neutral-200/50 bg-white">
-	<div class="container mx-auto px-6 max-w-[1440px] grid grid-cols-1 lg:grid-cols-4 gap-8 items-center mb-8">
-		<span class="font-mono text-xs uppercase text-neutral-500 tracking-widest">
+<section
+	data-theme="light"
+	class="py-20 overflow-hidden border-y border-neutral-200/50 bg-[#f4f4f6] flex flex-col items-center"
+>
+	<!-- Animated Stroke Pill -->
+	<div class="mb-12 relative inline-flex overflow-hidden rounded-full p-[1px]">
+		<span class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#f4f4f6_0%,#FF4400_50%,#f4f4f6_100%)]"></span>
+		<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-[#f4f4f6] px-6 py-2 text-[10px] font-mono tracking-widest text-gray-500 uppercase z-10">
 			Proud to work with
-		</span>
+		</div>
 	</div>
-	<div class="relative w-full overflow-hidden select-none">
-		<div bind:this={innerEl} class="flex gap-16 whitespace-nowrap min-w-[200%]">
-			{#each Array(4) as _}
-				<div class="flex gap-16 items-center text-lg md:text-xl font-bold text-neutral-600 font-sans tracking-tight">
-					<span>WPMU DEV</span>
-					<span class="text-primary">•</span>
-					<span>Themeisle</span>
-					<span class="text-primary">•</span>
-					<span>Searchmetrics</span>
-					<span class="text-primary">•</span>
-					<span>Ideajam</span>
-					<span class="text-primary">•</span>
-				</div>
-			{/each}
+
+	<!-- GPU-Accelerated Marquee Track -->
+	<div class="w-full flex overflow-hidden select-none pointer-events-none">
+		<div class="flex w-max animate-gpu-marquee">
+			<!-- Group 1 -->
+			<div class="flex shrink-0 items-center justify-around gap-16 px-8 min-w-[100vw]">
+				<span class="text-xl md:text-2xl font-semibold text-neutral-700">WPMU DEV</span>
+				<span class="text-[#FF4400] text-sm">●</span>
+				<span class="text-xl md:text-2xl font-semibold text-neutral-700">Themeisle</span>
+				<span class="text-[#FF4400] text-sm">●</span>
+				<span class="text-xl md:text-2xl font-semibold text-neutral-700">Searchmetrics</span>
+				<span class="text-[#FF4400] text-sm">●</span>
+				<span class="text-xl md:text-2xl font-semibold text-neutral-700">Ideajam</span>
+				<span class="text-[#FF4400] text-sm">●</span>
+			</div>
+			<!-- Group 2 (aria-hidden duplicate for seamless loop) -->
+			<div class="flex shrink-0 items-center justify-around gap-16 px-8 min-w-[100vw]" aria-hidden="true">
+				<span class="text-xl md:text-2xl font-semibold text-neutral-700">WPMU DEV</span>
+				<span class="text-[#FF4400] text-sm">●</span>
+				<span class="text-xl md:text-2xl font-semibold text-neutral-700">Themeisle</span>
+				<span class="text-[#FF4400] text-sm">●</span>
+				<span class="text-xl md:text-2xl font-semibold text-neutral-700">Searchmetrics</span>
+				<span class="text-[#FF4400] text-sm">●</span>
+				<span class="text-xl md:text-2xl font-semibold text-neutral-700">Ideajam</span>
+				<span class="text-[#FF4400] text-sm">●</span>
+			</div>
 		</div>
 	</div>
 </section>
+
+<style>
+	@keyframes gpu-marquee {
+		0%   { transform: translate3d(0, 0, 0); }
+		100% { transform: translate3d(-50%, 0, 0); }
+	}
+	.animate-gpu-marquee {
+		animation: gpu-marquee 30s linear infinite;
+		will-change: transform;
+	}
+</style>
