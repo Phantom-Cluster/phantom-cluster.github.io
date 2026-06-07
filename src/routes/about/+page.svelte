@@ -3,7 +3,7 @@
 	import { gsap } from "gsap";
 	import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 	import { Star, ExternalLink, ArrowRight } from "lucide-svelte";
-	import profilePic from "$lib/assets/527DDCBC-EBF7-4AD8-AEB8-1F3087FDB9E1.JPG";
+	import profilePic from "$lib/assets/portrait.webp";
 	import starImg from "$lib/assets/Cylindrical Half Star.png";
 	import gemImg from "$lib/assets/Gem Shape.png";
 
@@ -132,7 +132,91 @@
 		clearTimeout(initTimeout);
 		if (ctx) ctx.revert();
 	});
+
+	let activeIndex = $state(0);
+	let timelineCards: HTMLElement[] = $state([]);
+
+	onMount(() => {
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					activeIndex = parseInt(entry.target.dataset.index || "0");
+				}
+			});
+		}, {
+			rootMargin: '-50% 0px -50% 0px',
+			threshold: 0
+		});
+
+		setTimeout(() => {
+			timelineCards.forEach(card => {
+				if (card) observer.observe(card);
+			});
+		}, 100);
+
+		return () => observer.disconnect();
+	});
+
+	const experiences = [
+		{
+			company: "SomeTechWork",
+			role: "Product Designer & Frontend Designer",
+			date: "Dec 2025 — Present",
+			description: "Developing product blueprints and translating client requirements into clear, user-centered UI/UX designs. Implementing front-end pages in WordPress using Elementor and Gutenberg, ensuring WCAG-aligned accessibility and cross-device responsiveness."
+		},
+		{
+			company: "Eclectic",
+			role: "Product Designer & Social Media Designer",
+			date: "Mar 2025 — Present",
+			description: "Leading app redesigns using scalable Figma design systems for multi-region localization. Leveraging AI tools and After Effects to accelerate graphic design workflows and motion graphics production."
+		},
+		{
+			company: "WPMU DEV",
+			role: "Product Designer",
+			date: "May 2022 — Sep 2024",
+			description: "Spearheaded a scalable atomic design system and WordPress-standard monochrome mode. Redesigned core plugin flows (Smush, Hummingbird, Snapshot) to boost Pro conversions, reduce bounce rates, and streamline complex database restore UX."
+		},
+		{
+			company: "Ideajam",
+			role: "UI/UX Designer",
+			date: "Aug 2021 — Jan 2022",
+			description: "Led a Kanban SaaS redesign, leveraging user feedback to remove bottlenecks. Engineered a fresh, white-labeled design system from scratch to ensure cross-brand consistency and future scalability."
+		},
+		{
+			company: "Searchmetrics",
+			role: "SaaS Video & Brand Designer",
+			date: "May 2021 — Jan 2022",
+			description: "Produced engaging data-driven animations demonstrating API capabilities. Designed marketing materials, brochures, and client awards to highlight core sales points and strengthen brand loyalty."
+		},
+		{
+			company: "Themeisle",
+			role: "Starter Template Designer",
+			date: "Jul 2018 — May 2021",
+			description: "Designed 50+ diverse, high-performance layouts for the Neve Theme. Conducted niche research to optimize typography, color systems, and cohesive WordPress starter template designs."
+		}
+	];
+
+	let timelineContainer = $state<HTMLElement | null>(null);
+	let innerHeight = $state(0);
+	let scrollY = $state(0);
+	
+	const fillPercentage = $derived.by(() => {
+		const _ = scrollY; // Force dependency
+		if (timelineContainer && innerHeight) {
+			const rect = timelineContainer.getBoundingClientRect();
+			// Trigger point is the vertical center of the viewport
+			const triggerPoint = innerHeight / 2;
+			const scrolledPast = triggerPoint - rect.top;
+			const rawPercentage = scrolledPast / rect.height;
+			
+			// Clamp the value strictly between 0 and 100
+			return Math.max(0, Math.min(1, rawPercentage)) * 100;
+		}
+		return 0;
+	});
 </script>
+
+<svelte:window bind:scrollY bind:innerHeight />
 
 <svelte:head>
 	<title>About | Hitanshu Sahu</title>
@@ -203,6 +287,8 @@
 					<img
 						src={profilePic}
 						alt="Hitanshu Sahu Profile"
+						fetchpriority="high"
+						decoding="async"
 						class="w-full h-full object-cover grayscale"
 					/>
 				</div>
@@ -214,6 +300,8 @@
 					<img
 						src={profilePic}
 						alt="Hitanshu Sahu Profile Color"
+						fetchpriority="high"
+						decoding="async"
 						class="w-full h-full object-cover"
 					/>
 				</div>
@@ -285,6 +373,66 @@
 					<span class="inline-block transition-colors">{word}</span>
 				{/each}
 			</p>
+		</div>
+	</section>
+
+	<!-- The Dark Theme Timeline Track -->
+	<section class="w-full max-w-5xl mx-auto py-24 px-6 relative border-t border-gray-900" data-theme="dark">
+		<div class="mb-20">
+			<div class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1px]">
+				<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"></div>
+				<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-neutral-950 px-6 py-2 relative z-10">
+					<span class="text-[11px] font-mono tracking-widest text-gray-400 uppercase">PROOF OF EXECUTION</span>
+				</div>
+			</div>
+			<h2 class="text-4xl md:text-5xl font-bold tracking-tight text-white">
+				Work Experience
+			</h2>
+		</div>
+
+		<div class="relative pl-8 md:pl-12" bind:this={timelineContainer}>
+			<!-- The Absolute Vertical Line (Dark Mode) -->
+			<div class="absolute left-0 top-2 bottom-0 w-[2px] bg-gray-800"></div>
+
+			<!-- The Animated Draw Line -->
+			<div 
+				class="absolute left-0 top-2 w-[2px] bg-[#FF4400] transition-all duration-75 ease-out"
+				style="height: {fillPercentage}%;"
+			></div>
+
+			<!-- The Data Loop -->
+			<div class="space-y-16">
+				{#each experiences as exp, i}
+					<div 
+						bind:this={timelineCards[i]} 
+						data-index={i}
+						class="relative group transition-opacity duration-500 {activeIndex >= i ? 'opacity-100' : 'opacity-40'}"
+					>
+						<!-- The Tracking Node -->
+						<div class="absolute -left-[39px] md:-left-[55px] top-1.5 flex h-4 w-4 items-center justify-center">
+							<!-- Node Outer Pulse -->
+							<span class="absolute inline-flex h-full w-full rounded-full transition-all duration-500 {activeIndex >= i ? 'bg-[#FF4400] opacity-30 scale-150' : 'bg-gray-800 scale-100'}"></span>
+							<!-- Node Inner Core -->
+							<span class="relative inline-flex rounded-full h-2 w-2 transition-colors duration-500 {activeIndex >= i ? 'bg-[#FF4400]' : 'bg-gray-600'}"></span>
+						</div>
+
+						<!-- Card Content -->
+						<div class="flex flex-col md:flex-row md:justify-between md:items-baseline gap-2 mb-4">
+							<div>
+								<h3 class="text-2xl font-semibold text-white transition-colors duration-500 {activeIndex >= i ? 'text-white' : 'text-gray-400'}">{exp.role}</h3>
+								<p class="text-lg text-gray-500 font-medium mt-1">{exp.company}</p>
+							</div>
+							<span class="text-sm font-mono tracking-widest uppercase shrink-0 transition-colors duration-500 {activeIndex >= i ? 'text-[#FF4400]' : 'text-gray-600'}">
+								{exp.date}
+							</span>
+						</div>
+						
+						<p class="text-gray-400 text-base md:text-lg leading-relaxed max-w-3xl transition-colors duration-500 {activeIndex >= i ? 'text-gray-300' : 'text-gray-600'}">
+							{exp.description}
+						</p>
+					</div>
+				{/each}
+			</div>
 		</div>
 	</section>
 
@@ -482,10 +630,12 @@
 		id="project-routing"
 		class="py-32 px-6 border-t border-neutral-900/5 text-center bg-transparent"
 	>
-		<span
-			class="font-mono text-xs uppercase text-neutral-500 tracking-widest block mb-4"
-			>Explore</span
-		>
+		<div class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
+			<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"></div>
+			<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
+				<span class="text-[11px] font-mono tracking-widest text-gray-400 uppercase">EXPLORE</span>
+			</div>
+		</div>
 		<h2
 			class="text-4xl md:text-5xl font-black mb-16 tracking-tight text-neutral-900"
 		>

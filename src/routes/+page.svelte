@@ -9,8 +9,7 @@
 	import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 	import { ChevronDown, Send, ArrowRight } from "lucide-svelte";
 	import VanillaTilt from "vanilla-tilt";
-	import portrait from "$lib/assets/527DDCBC-EBF7-4AD8-AEB8-1F3087FDB9E1.JPG";
-	import heroVideo from "$lib/assets/Header_grid node.mp4";
+	import portrait from "$lib/assets/portrait.webp";
 	import cubeImg from "$lib/assets/4 Cube Abstract Glass Spectrum.png";
 	import gemImg from "$lib/assets/Gem Shape.png";
 
@@ -29,7 +28,9 @@
 	let targetY = 400;
 
 	const handleMouseMove = (event: MouseEvent) => {
-		const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+		const rect = (
+			event.currentTarget as HTMLElement
+		).getBoundingClientRect();
 		targetX = event.clientX - rect.left;
 		targetY = event.clientY - rect.top;
 	};
@@ -41,11 +42,11 @@
 		const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
 		const x = e.clientX - rect.left;
 		const y = e.clientY - rect.top;
-		
-		bridgeRotateY = ((x / rect.width) - 0.5) * 30; 
-		bridgeRotateX = ((y / rect.height) - 0.5) * -30;
+
+		bridgeRotateY = (x / rect.width - 0.5) * 30;
+		bridgeRotateX = (y / rect.height - 0.5) * -30;
 	};
-	
+
 	const handleBridgeMouseLeave = () => {
 		bridgeRotateX = 0;
 		bridgeRotateY = 0;
@@ -184,8 +185,56 @@
 		},
 	];
 
+	let workSectionRef: HTMLElement;
+	let leftGlassWrapper: HTMLElement;
+	let rightGlassWrapper: HTMLElement;
+
+	const brands = [
+		"WPMU DEV",
+		"Themeisle",
+		"Searchmetrics",
+		"Ideajam",
+		"Eclectic",
+	];
+
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
+
+		// 1. Ambient Bobbing
+		gsap.to(".glass-asset", {
+			y: 12,
+			rotation: 4,
+			duration: 4.5,
+			yoyo: true,
+			repeat: -1,
+			ease: "sine.inOut",
+			stagger: 0.5,
+		});
+
+		// 2. Mouse Parallax Tracking
+		const handleMouseMove = (e: MouseEvent) => {
+			if (!workSectionRef) return;
+			const rect = workSectionRef.getBoundingClientRect();
+			const xPos = (e.clientX - rect.left - rect.width / 2) / rect.width;
+			const yPos = (e.clientY - rect.top - rect.height / 2) / rect.height;
+
+			gsap.to(leftGlassWrapper, {
+				x: -xPos * 40,
+				y: -yPos * 40,
+				duration: 1,
+				ease: "power2.out",
+			});
+			gsap.to(rightGlassWrapper, {
+				x: xPos * 50,
+				y: yPos * 50,
+				duration: 1,
+				ease: "power2.out",
+			});
+		};
+
+		if (workSectionRef) {
+			workSectionRef.addEventListener("mousemove", handleMouseMove);
+		}
 
 		// Page reveals
 		gsap.from(".reveal-section", {
@@ -280,17 +329,14 @@
 			});
 		});
 		// ---- Hero entrance stagger ----
-		gsap.from(
-			[heroHeadline, heroBio, heroImage, heroBar],
-			{
-				y: 30,
-				opacity: 0,
-				duration: 1,
-				stagger: 0.1,
-				ease: "power3.out",
-				delay: 0.15,
-			}
-		);
+		gsap.from([heroHeadline, heroBio, heroImage, heroBar], {
+			y: 30,
+			opacity: 0,
+			duration: 1,
+			stagger: 0.1,
+			ease: "power3.out",
+			delay: 0.15,
+		});
 
 		// ---- Spotlight lerp loop (10% per frame → smooth trailing inertia) ----
 		let rafId: number;
@@ -308,16 +354,18 @@
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						activeProcessIndex = parseInt(
-							(entry.target as HTMLElement).dataset.index ?? '0'
+							(entry.target as HTMLElement).dataset.index ?? "0",
 						);
 					}
 				});
 			},
-			{ rootMargin: '-40% 0px -40% 0px', threshold: 0 }
+			{ rootMargin: "-40% 0px -40% 0px", threshold: 0 },
 		);
 		// Wait a tick for bind:this to populate processCards
 		setTimeout(() => {
-			processCards.forEach((card) => { if (card) processObserver.observe(card); });
+			processCards.forEach((card) => {
+				if (card) processObserver.observe(card);
+			});
 		}, 100);
 
 		return () => {
@@ -339,16 +387,19 @@
 	class="relative h-[100svh] w-full overflow-hidden bg-black flex flex-col"
 >
 	<!-- ─── Video Background (full-width, edge-to-edge) ──────────────────── -->
-	<div class="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-black">
+	<div
+		class="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-black"
+	>
 		<!-- High-Contrast Blended Video: screen burns black away, orange nodes punch through -->
 		<video
 			autoplay
 			loop
 			muted
 			playsinline
+			preload="metadata"
 			class="absolute min-w-full min-h-full object-cover opacity-70 mix-blend-screen contrast-125 brightness-110"
 		>
-			<source src={heroVideo} type="video/mp4" />
+			<source src="/videos/hero-background.mp4" type="video/mp4" />
 		</video>
 	</div>
 
@@ -359,10 +410,13 @@
 	></div>
 
 	<!-- ─── Content wrapper (constrained) ───────────────────────────────── -->
-	<div class="relative z-10 flex-1 flex flex-col justify-center max-w-[1600px] mx-auto w-full px-6 lg:px-12 mt-16 md:mt-0">
+	<div
+		class="relative z-10 flex-1 flex flex-col justify-center max-w-[1320px] mx-auto w-full px-6 md:px-8 mt-16 md:mt-0 md:pt-24"
+	>
 		<!-- 12-col primary grid -->
-		<div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 items-center w-full">
-
+		<div
+			class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 items-center w-full"
+		>
 			<!-- Left col · span 8 · three-tier nameplate -->
 			<div class="col-span-1 md:col-span-8 flex flex-col justify-center">
 				<div class="relative z-20 flex flex-col justify-center">
@@ -373,7 +427,9 @@
 						Hitanshu <br /> Sahu.
 					</h1>
 
-					<h2 class="text-2xl md:text-4xl text-gray-300 font-normal tracking-tight mt-6">
+					<h2
+						class="text-2xl md:text-4xl text-gray-300 font-normal tracking-tight mt-6"
+					>
 						Product Designer.
 					</h2>
 
@@ -381,14 +437,16 @@
 						bind:this={heroBio}
 						class="max-w-md text-gray-500 mt-6 text-lg font-normal leading-relaxed"
 					>
-						Building clean digital products, high-growth SaaS interfaces, and
-						optimized frontend systems.
+						Building clean digital products, high-growth SaaS
+						interfaces, and optimized frontend systems.
 					</p>
 				</div>
 			</div>
 
 			<!-- Right col · span 4 · greyscale portrait -->
-			<div class="col-span-1 md:col-span-4 flex justify-start md:justify-end">
+			<div
+				class="col-span-1 md:col-span-4 flex justify-start md:justify-end"
+			>
 				<div
 					bind:this={heroImage}
 					class="w-full max-w-[320px] aspect-[3/4] relative"
@@ -396,6 +454,8 @@
 					<img
 						src={portrait}
 						alt="Hitanshu Sahu — Product Designer"
+						fetchpriority="high"
+						decoding="async"
 						class="w-full h-full object-cover rounded-2xl grayscale brightness-75 hover:grayscale-0 hover:brightness-100 transition-all duration-500 relative z-20"
 					/>
 				</div>
@@ -404,22 +464,32 @@
 	</div>
 
 	<!-- ─── Pinned Utility Bar ──────────────────────────────────────────── -->
-	<div class="relative z-20 w-full max-w-[1600px] mx-auto px-6 lg:px-12 pb-8 mt-auto">
+	<div
+		class="relative z-20 w-full max-w-[1320px] mx-auto px-6 md:px-8 pb-8 mt-auto"
+	>
 		<div class="border-t border-white/10 pt-6">
 			<!-- Utility chips · content-hugging flex row -->
 			<div
 				bind:this={heroBar}
 				class="w-full flex flex-col md:flex-row flex-wrap justify-between items-center gap-4 text-[10px] md:text-xs font-mono uppercase tracking-widest"
 			>
-				<div class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/[0.03] border border-white/10 text-gray-400 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:text-white hover:border-white/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] cursor-default">
+				<div
+					class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/[0.03] border border-white/10 text-gray-400 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:text-white hover:border-white/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] cursor-default"
+				>
 					<span>Core: Figma, Svelte, WordPress</span>
 				</div>
 
-				<div class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/[0.03] border border-white/10 text-gray-400 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:text-white hover:border-[#FF4400]/50 hover:shadow-[0_0_20px_rgba(255,68,0,0.15)] cursor-default">
-					<span>Specialization: SaaS, Dashboards &amp; Atomic Systems</span>
+				<div
+					class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/[0.03] border border-white/10 text-gray-400 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:text-white hover:border-[#FF4400]/50 hover:shadow-[0_0_20px_rgba(255,68,0,0.15)] cursor-default"
+				>
+					<span
+						>Specialization: SaaS, Dashboards &amp; Atomic Systems</span
+					>
 				</div>
 
-				<div class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/[0.03] border border-white/10 text-gray-400 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:text-white hover:border-white/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] cursor-default">
+				<div
+					class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/[0.03] border border-white/10 text-gray-400 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:text-white hover:border-white/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] cursor-default"
+				>
 					<span>7+ Years Deep Ecosystem Experience</span>
 				</div>
 			</div>
@@ -434,133 +504,287 @@
 	data-theme="light"
 	class="bg-[#f4f4f6] border-t border-neutral-200/50"
 >
-	<div class="w-full max-w-[1600px] mx-auto px-6 lg:px-12 py-32 lg:py-40">
-		<div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 items-start">
-
-			<!-- Left Column: Meta Label (2 Columns) -->
-			<div class="col-span-1 md:col-span-2 pt-2">
-				<p class="text-[10px] font-mono tracking-widest text-gray-500 uppercase">
-					(01) System Architecture
-				</p>
-			</div>
-
-			<!-- Center Column: Value Proposition (6 Columns) -->
-			<div class="col-span-1 md:col-span-6 pr-0 md:pr-8">
-				<h2 class="text-3xl md:text-[2.5rem] leading-[1.15] font-semibold tracking-tight text-black mb-6">
-					Architecting scalable UI systems and production-ready frontends for high-growth SaaS.
-				</h2>
-
-				<p class="text-gray-600 text-lg leading-relaxed mb-10">
-					I operate at the intersection of high-fidelity design and technical execution. Over the past 7 years, I've integrated with companies like WPMU DEV to translate complex constraints into robust, compliant design systems.
-				</p>
-
-				<ul class="space-y-6">
-					<li class="flex items-start gap-4">
-						<div class="relative flex h-3 w-3 mt-1.5 flex-shrink-0">
-							<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF4400] opacity-60" style="animation-delay: 0ms;"></span>
-							<span class="relative inline-flex rounded-full h-3 w-3 bg-[#FF4400]"></span>
-						</div>
-						<span class="text-gray-600 text-lg leading-snug">
-							<strong class="font-semibold text-black tracking-tight">Atomic Design:</strong>
-							Engineering modular, reusable component libraries.
-						</span>
-					</li>
-
-					<li class="flex items-start gap-4">
-						<div class="relative flex h-3 w-3 mt-1.5 flex-shrink-0">
-							<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF4400] opacity-60" style="animation-delay: 300ms;"></span>
-							<span class="relative inline-flex rounded-full h-3 w-3 bg-[#FF4400]"></span>
-						</div>
-						<span class="text-gray-600 text-lg leading-snug">
-							<strong class="font-semibold text-black tracking-tight">WordPress &amp; Gutenberg:</strong>
-							Optimizing custom editor workflows.
-						</span>
-					</li>
-
-					<li class="flex items-start gap-4">
-						<div class="relative flex h-3 w-3 mt-1.5 flex-shrink-0">
-							<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF4400] opacity-60" style="animation-delay: 600ms;"></span>
-							<span class="relative inline-flex rounded-full h-3 w-3 bg-[#FF4400]"></span>
-						</div>
-						<span class="text-gray-600 text-lg leading-snug">
-							<strong class="font-semibold text-black tracking-tight">Frontend Architecture:</strong>
-							Building scalable systems for long-term growth.
-						</span>
-					</li>
-				</ul>
-			</div>
-
-			<!-- Right Column: Metrics & Impact Card (4 Columns) -->
-			<div class="col-span-1 md:col-span-4 mt-12 md:mt-0">
-				<div class="w-full bg-[#0b0c10] border border-gray-800 rounded-[2rem] p-8 md:p-10 text-white min-h-[400px] flex flex-col justify-between">
-
-					<p class="text-[#FF4400] text-[10px] font-mono tracking-widest uppercase mb-12">
-						Metrics &amp; Impact
-					</p>
-
-					<div class="space-y-10">
-						<div>
-							<h3 class="text-6xl font-medium tracking-tighter mb-2">98%</h3>
-							<p class="text-gray-500 text-xs tracking-widest uppercase font-mono">Client Satisfaction</p>
-						</div>
-						<div>
-							<h3 class="text-6xl font-medium tracking-tighter mb-2">2M+</h3>
-							<p class="text-gray-500 text-xs tracking-widest uppercase font-mono">Active Plugin Users</p>
-						</div>
-						<div>
-							<h3 class="text-6xl font-medium tracking-tighter mb-2">50+</h3>
-							<p class="text-gray-500 text-xs tracking-widest uppercase font-mono">Starter Templates Completed</p>
-						</div>
+	<div
+		class="w-full max-w-[1320px] mx-auto px-6 py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center"
+	>
+		<div class="lg:col-span-7 flex flex-col space-y-8">
+			<div class="max-w-2xl">
+				<div
+					class="mb-8 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
+				>
+					<div
+						class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+					></div>
+					<div
+						class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
+					>
+						<span
+							class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
+							>SYSTEM ARCHITECTURE</span
+						>
 					</div>
+				</div>
+				<h2
+					class="text-4xl md:text-5xl font-bold tracking-tight text-black mb-6 leading-tight"
+				>
+					Architecting scalable UI systems and production-ready
+					frontends for high-growth SaaS.
+				</h2>
+				<p class="text-lg text-gray-600 leading-relaxed">
+					I operate at the intersection of high-fidelity design and
+					technical execution. Over the past 7 years, I've integrated
+					with companies like WPMU DEV to translate complex
+					constraints into robust, compliant design systems.
+				</p>
+			</div>
 
+			<ul class="space-y-6 max-w-2xl">
+				<li class="flex items-start gap-4">
+					<div class="relative flex h-3 w-3 mt-1.5 flex-shrink-0">
+						<span
+							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF4400] opacity-60"
+							style="animation-delay: 0ms;"
+						></span>
+						<span
+							class="relative inline-flex rounded-full h-3 w-3 bg-[#FF4400]"
+						></span>
+					</div>
+					<span class="text-gray-600 text-lg leading-snug">
+						<strong class="font-semibold text-black tracking-tight"
+							>Atomic Design:</strong
+						>
+						Engineering modular, reusable component libraries.
+					</span>
+				</li>
+
+				<li class="flex items-start gap-4">
+					<div class="relative flex h-3 w-3 mt-1.5 flex-shrink-0">
+						<span
+							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF4400] opacity-60"
+							style="animation-delay: 300ms;"
+						></span>
+						<span
+							class="relative inline-flex rounded-full h-3 w-3 bg-[#FF4400]"
+						></span>
+					</div>
+					<span class="text-gray-600 text-lg leading-snug">
+						<strong class="font-semibold text-black tracking-tight"
+							>WordPress &amp; Gutenberg:</strong
+						>
+						Optimizing custom editor workflows.
+					</span>
+				</li>
+
+				<li class="flex items-start gap-4">
+					<div class="relative flex h-3 w-3 mt-1.5 flex-shrink-0">
+						<span
+							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF4400] opacity-60"
+							style="animation-delay: 600ms;"
+						></span>
+						<span
+							class="relative inline-flex rounded-full h-3 w-3 bg-[#FF4400]"
+						></span>
+					</div>
+					<span class="text-gray-600 text-lg leading-snug">
+						<strong class="font-semibold text-black tracking-tight"
+							>Frontend Architecture:</strong
+						>
+						Building scalable systems for long-term growth.
+					</span>
+				</li>
+			</ul>
+		</div>
+
+		<div class="lg:col-span-5 flex items-center">
+			<div
+				class="bg-[#0a0a0a] rounded-[2rem] p-8 lg:p-10 w-full flex flex-col justify-center space-y-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
+			>
+				<p
+					class="text-xs font-mono tracking-widest text-[#FF4400] uppercase"
+				>
+					Metrics &amp; Impact
+				</p>
+
+				<div>
+					<h3
+						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1"
+					>
+						98%
+					</h3>
+					<p
+						class="text-sm lg:text-base font-medium tracking-widest text-gray-400 uppercase"
+					>
+						Client Satisfaction
+					</p>
+				</div>
+
+				<div>
+					<h3
+						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1"
+					>
+						2M+
+					</h3>
+					<p
+						class="text-sm lg:text-base font-medium tracking-widest text-gray-400 uppercase"
+					>
+						Active Plugin Users
+					</p>
+				</div>
+
+				<div>
+					<h3
+						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1"
+					>
+						50+
+					</h3>
+					<p
+						class="text-sm lg:text-base font-medium tracking-widest text-gray-400 uppercase"
+					>
+						Starter Templates Completed
+					</p>
 				</div>
 			</div>
-
 		</div>
 	</div>
 </section>
 
-<!-- BRIDGING THE GAP PARALLAX (Light Section) -->
-<section 
-	data-theme="light"
-	onmousemove={handleBridgeMouseMove} 
-	onmouseleave={handleBridgeMouseLeave}
-	class="relative w-full py-32 md:py-40 flex flex-col items-center justify-center bg-[#f8f9fa] overflow-hidden border-t border-gray-200"
-	style="perspective: 1000px;"
+<!-- UNIFIED WORK SECTION (Bridging The Gap, Marquee, Case Study) -->
+<section
+	bind:this={workSectionRef}
+	class="relative w-full overflow-hidden py-32 flex flex-col items-center gap-y-20 bg-[#f8f9fa] border-t border-gray-200"
 >
-	<div class="relative z-10 flex flex-col justify-center items-center text-center w-full max-w-[1600px] px-6 lg:px-12">
-		<img 
-			src={cubeImg} 
-			alt="Glass Cubes" 
-			class="absolute top-0 -left-8 md:-top-12 md:left-12 w-28 md:w-48 h-auto object-contain opacity-90 pointer-events-none drop-shadow-[0_20px_30px_rgba(0,0,0,0.1)] z-20 transition-transform duration-300 ease-out"
-			style="transform: rotateX({bridgeRotateX * 0.8}deg) rotateY({bridgeRotateY * 0.8}deg) translateZ(40px);"
-		/>
-
-		<div class="relative z-30 max-w-4xl mx-auto">
-			<h2 class="text-[10vw] md:text-[7vw] leading-[0.9] font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-black via-[#1a1a1a] to-[#666666] uppercase">
-				BRIDGING <br/> THE GAP.
-			</h2>
-			
-			<p class="mt-8 text-lg md:text-xl text-gray-500 font-medium tracking-tight">
-				Translating high-fidelity interface design into production-ready code. <br class="hidden md:block"/> 
-				Here is the proof.
-			</p>
+	<div
+		class="relative w-full max-w-[1320px] mx-auto px-6 text-center z-10 mt-12"
+	>
+		<div
+			bind:this={leftGlassWrapper}
+			class="absolute left-0 md:left-12 top-1/2 -translate-y-1/2 w-20 md:w-28 opacity-70 pointer-events-none"
+		>
+			<img
+				src={cubeImg}
+				alt="Glass Cube"
+				class="glass-asset w-full h-auto drop-shadow-2xl"
+			/>
 		</div>
 
-		<img 
-			src={gemImg} 
-			alt="Glass Gem" 
-			class="absolute bottom-0 -right-4 md:-bottom-8 md:right-24 w-20 md:w-36 h-auto object-contain opacity-90 pointer-events-none drop-shadow-[0_20px_30px_rgba(0,0,0,0.1)] z-20 transition-transform duration-300 ease-out"
-			style="transform: rotateX({bridgeRotateX * -1.2}deg) rotateY({bridgeRotateY * -1.2}deg) translateZ(60px);"
-		/>
+		<div
+			bind:this={rightGlassWrapper}
+			class="absolute right-0 md:right-12 top-1/4 w-16 md:w-24 opacity-70 pointer-events-none"
+		>
+			<img
+				src={gemImg}
+				alt="Glass Gem"
+				class="glass-asset w-full h-auto drop-shadow-2xl"
+			/>
+		</div>
+
+		<h2
+			class="text-6xl md:text-[8rem] font-black tracking-tighter leading-[0.9] text-[#111] mb-6 relative z-10"
+		>
+			BRIDGING <br />
+			THE
+			<span
+				class="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4400] to-[#ff7733]"
+				>GAP.</span
+			>
+		</h2>
+		<p
+			class="text-xl md:text-2xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed relative z-10 mt-6"
+		>
+			Architecting high-fidelity designs into scalable, production-ready
+			frontends.
+		</p>
+	</div>
+
+	<div
+		class="w-full relative z-20 flex flex-col items-center overflow-hidden mt-16 mb-24"
+	>
+		<div
+			class="relative w-full max-w-[1320px] mx-auto overflow-hidden"
+			style="mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);"
+		>
+			<div class="marquee-track flex items-center">
+				<div class="flex items-center gap-16 md:gap-32 px-8 md:px-16">
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>WPMU DEV</span
+					>
+					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>Themeisle</span
+					>
+					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>Searchmetrics</span
+					>
+					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>Ideajam</span
+					>
+					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>Eclectic</span
+					>
+					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+				</div>
+
+				<div class="flex items-center gap-16 md:gap-32 px-8 md:px-16">
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>WPMU DEV</span
+					>
+					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>Themeisle</span
+					>
+					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>Searchmetrics</span
+					>
+					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>Ideajam</span
+					>
+					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>Eclectic</span
+					>
+					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="w-full max-w-[1320px] mx-auto px-6 relative z-30 mt-24">
+		<div class="text-center mb-8 flex justify-center">
+			<div
+				class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
+			>
+				<div
+					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+				></div>
+				<div
+					class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
+				>
+					<span
+						class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
+						>CASE STUDY HIGHLIGHT</span
+					>
+				</div>
+			</div>
+		</div>
+
+		<FeaturedProject />
 	</div>
 </section>
-
-<!-- PARTNER LOGO MARQUEE (Light Section) -->
-<PartnerMarquee />
-
-<!-- Repurposed Visual Card WPMU DEV Highlight Case study with Watermark background -->
-<FeaturedProject />
 
 <!-- (02) FEATURED PROJECTS SECTION (Light Section) -->
 <StackedProjects />
@@ -571,23 +795,38 @@
 	data-theme="dark"
 	class="py-32 bg-neutral-950 text-white border-t border-white/5 z-10 relative"
 >
-	<div class="container mx-auto px-6 max-w-[1440px]">
-		<div class="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-20">
-			<div class="lg:col-span-1">
-				<span
-					class="font-mono text-xs uppercase text-neutral-500 tracking-widest block mb-4"
-					>(04) Capabilities</span
-				>
-			</div>
+	<div class="container mx-auto px-6 max-w-[1320px]">
+		<!-- ======================================= -->
+		<!-- HEADER ROW -->
+		<!-- ======================================= -->
+		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 mb-24">
+			<!-- Left Column: The Restored Chip -->
 			<div class="lg:col-span-3">
+				<div
+					class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1px]"
+				>
+					<div
+						class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+					></div>
+					<div
+						class="inline-flex h-full w-full items-center justify-center rounded-full bg-neutral-950 px-6 py-2 relative z-10"
+					>
+						<span
+							class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
+							>CAPABILITIES</span
+						>
+					</div>
+				</div>
+			</div>
+
+			<!-- Right Column: Header Content -->
+			<div class="lg:col-span-9 max-w-2xl">
 				<h2
-					class="text-4xl md:text-7xl font-bold tracking-tighter text-white leading-none"
+					class="text-6xl md:text-7xl font-bold tracking-tighter text-white mb-6 leading-[1.1]"
 				>
 					What I Do
 				</h2>
-				<p
-					class="text-neutral-400 mt-6 max-w-[55ch] text-sm md:text-base leading-relaxed"
-				>
+				<p class="text-lg text-gray-400 leading-relaxed">
 					Combining UX strategy, pixel-perfect visual engineering, and
 					systematic responsive layouts to launch high-performance
 					digital solutions.
@@ -595,33 +834,34 @@
 			</div>
 		</div>
 
-		<!-- Seven numbered capabilities rows -->
-		<div class="border-t border-white/5 divide-y divide-white/5">
+		<!-- ======================================= -->
+		<!-- LIST ITEMS -->
+		<!-- ======================================= -->
+		<div class="border-t border-gray-800">
 			{#each capabilities as cap}
-				<!-- The interactive row wrapper now uses CSS Grid -->
-				<div class="group grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 py-8 border-b border-gray-800 transition-colors duration-300 hover:bg-white/[0.02] px-4 -mx-4 cursor-default">
-				  
-				  <!-- Column 1: Number -->
-				  <div class="col-span-1 flex items-start pt-1">
-				    <span class="font-mono text-xs text-gray-500 transition-colors duration-300 group-hover:text-[#FF4400]">
-				      {cap.id}
-				    </span>
-				  </div>
-
-				  <!-- Column 2: Title (Brightens, shifts, and glows on hover) -->
-				  <div class="col-span-1 md:col-span-4">
-				    <h3 class="text-xl md:text-2xl font-medium text-gray-300 transition-all duration-300 transform group-hover:text-white group-hover:translate-x-2 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.6)]">
-				      {cap.title}
-				    </h3>
-				  </div>
-
-				  <!-- Column 3: Description (Strictly left-aligned) -->
-				  <div class="col-span-1 md:col-span-7">
-				    <p class="text-gray-400 text-sm md:text-base text-left leading-relaxed transition-colors duration-300 group-hover:text-gray-200">
-				      {cap.desc}
-				    </p>
-				  </div>
-
+				<div
+					class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-16 py-12 border-b border-gray-800 group hover:bg-white/[0.02] transition-colors duration-300"
+				>
+					<div class="lg:col-span-3 flex items-start lg:items-center">
+						<span
+							class="text-sm font-mono text-gray-600 group-hover:text-[#FF4400] transition-colors duration-300"
+							>{cap.id}</span
+						>
+					</div>
+					<div class="lg:col-span-4 flex items-start lg:items-center">
+						<h3
+							class="text-3xl font-medium tracking-tight text-gray-300 group-hover:text-white transition-colors duration-300"
+						>
+							{cap.title}
+						</h3>
+					</div>
+					<div class="lg:col-span-5 flex items-start lg:items-center">
+						<p
+							class="text-gray-500 leading-relaxed group-hover:text-gray-400 transition-colors duration-300"
+						>
+							{cap.desc}
+						</p>
+					</div>
 				</div>
 			{/each}
 		</div>
@@ -629,11 +869,32 @@
 </section>
 
 <!-- (03) MY PROCESS SECTION (Light Section) -->
-<section data-theme="light" class="py-32 bg-[#f4f4f6] border-t border-neutral-200/50">
-	<div class="container mx-auto px-6 max-w-[1440px] grid grid-cols-1 lg:grid-cols-4 gap-12">
+<section
+	data-theme="light"
+	class="py-32 bg-[#f4f4f6] border-t border-neutral-200/50"
+>
+	<div
+		class="container mx-auto px-6 max-w-[1320px] grid grid-cols-1 lg:grid-cols-4 gap-12"
+	>
 		<div class="lg:col-span-1">
-			<p class="text-[10px] font-mono tracking-widest text-neutral-500 uppercase block mb-4">(03) My Process</p>
-			<h3 class="text-3xl md:text-5xl font-extrabold tracking-tight text-neutral-900 leading-none sticky top-32">
+			<div
+				class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
+			>
+				<div
+					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+				></div>
+				<div
+					class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
+				>
+					<span
+						class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
+						>MY PROCESS</span
+					>
+				</div>
+			</div>
+			<h3
+				class="text-3xl md:text-5xl font-extrabold tracking-tight text-neutral-900 leading-none sticky top-32"
+			>
 				A Thoughtful Process Behind My Work
 			</h3>
 		</div>
@@ -644,11 +905,15 @@
 				<div
 					bind:this={processCards[i]}
 					data-index={i}
-					class="process-step w-full text-left p-8 md:p-12 border rounded-[2rem] flex flex-col justify-between bg-white transition-all duration-500 ease-out {isActive ? 'shadow-lg scale-[1.02]' : 'border-neutral-200 opacity-60 scale-100'}"
-					style={isActive ? 'border-color: rgba(255,68,0,0.35);' : ''}
+					class="process-step w-full text-left p-8 md:p-12 border rounded-[2rem] flex flex-col justify-between bg-white transition-all duration-500 ease-out {isActive
+						? 'shadow-lg scale-[1.02]'
+						: 'border-neutral-200 opacity-60 scale-100'}"
+					style={isActive ? "border-color: rgba(255,68,0,0.35);" : ""}
 				>
 					<div class="flex items-center gap-6 mb-4">
-						<span class="font-mono text-sm text-neutral-400">{step.num}</span>
+						<span class="font-mono text-sm text-neutral-400"
+							>{step.num}</span
+						>
 						<h4
 							class="text-2xl md:text-3xl font-semibold tracking-tight transition-colors duration-500 ease-out"
 							style="color: {isActive ? '#FF4400' : '#171717'};"
@@ -656,7 +921,9 @@
 							{step.title}
 						</h4>
 					</div>
-					<p class="mt-2 text-neutral-600 text-lg leading-relaxed font-medium">
+					<p
+						class="mt-2 text-neutral-600 text-lg leading-relaxed font-medium"
+					>
 						{step.desc}
 					</p>
 				</div>
@@ -670,87 +937,131 @@
 	data-theme="dark"
 	class="py-32 bg-neutral-950 text-white border-t border-white/5 z-10 relative"
 >
-	<div class="container mx-auto px-6 max-w-[1440px]">
-		<div class="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-24">
-			<div class="lg:col-span-1">
-				<span
-					class="font-mono text-xs uppercase text-neutral-500 tracking-widest block mb-4"
-					>(05) Engagement Models</span
+	<div class="container mx-auto px-6 max-w-[1320px]">
+		<div
+			class="flex flex-col items-center text-center max-w-3xl mx-auto mb-20"
+		>
+			<div
+				class="mb-8 relative inline-flex overflow-hidden rounded-full p-[1px]"
+			>
+				<div
+					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+				></div>
+				<div
+					class="inline-flex h-full w-full items-center justify-center rounded-full bg-neutral-950 px-6 py-2 relative z-10"
 				>
+					<span
+						class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
+						>ENGAGEMENT MODELS</span
+					>
+				</div>
 			</div>
-			<div class="lg:col-span-3">
-				<h2
-					class="text-4xl md:text-7xl font-bold tracking-tighter text-white leading-none"
-				>
-					Ways to Collaborate
-				</h2>
-			</div>
+			<h2
+				class="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-tight"
+			>
+				Ways to Collaborate
+			</h2>
 		</div>
 
-		<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+		<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
 			{#each engagementModels as model}
-				<div
-					class="relative z-10 bg-neutral-900 border border-white/5 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between hover:border-primary/20 transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 after:absolute after:inset-0 after:-z-10 after:rounded-[2.5rem] after:shadow-[0px_16px_48px_-12px_rgba(245,53,0,0.15)] after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-[400ms] after:ease-[cubic-bezier(0.16,1,0.3,1)] after:pointer-events-none"
+				<a
+					href={model.ctaUrl}
+					class="group/card relative rounded-[2rem] p-[1px] overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl h-full block bg-gray-800"
 				>
-					<div>
-						<span
-							class="text-primary font-mono text-xs uppercase tracking-widest block mb-6"
-							>{model.title}</span
+					<!-- Animated spinning border -->
+					<div
+						class="absolute inset-[-1000%] motion-safe:animate-[spin_8s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
+					></div>
+
+					<!-- Inner Card Surface -->
+					<div
+						class="relative z-10 h-full w-full bg-[#111] rounded-[calc(2rem-1px)] p-8 md:p-10 flex flex-col"
+					>
+						<!-- Ambient Glow -->
+						<div
+							class="absolute -top-12 -right-12 w-48 h-48 bg-[#FF4400]/[0.15] rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+						></div>
+
+						<h3
+							class="relative z-10 text-sm font-mono tracking-widest text-[#FF4400] uppercase mb-4"
 						>
+							{model.title}
+						</h3>
 						<p
-							class="text-neutral-400 text-sm leading-relaxed mb-8"
+							class="relative z-10 text-gray-400 leading-relaxed mb-10"
 						>
 							{model.desc}
 						</p>
-					</div>
-					<div>
-						<span
-							class="font-mono text-xs text-neutral-600 block mb-4 uppercase tracking-widest"
-							>What's included</span
-						>
-						<ul class="space-y-3">
-							{#each model.benefits as benefit}
-								<li
-									class="flex items-center gap-3 text-xs md:text-sm text-neutral-300"
-								>
-									<span
-										class="size-1.5 rounded-full bg-primary flex-shrink-0"
-									></span>
-									<span>{benefit}</span>
-								</li>
-							{/each}
-						</ul>
 
-						<!-- Parameterized Routing CTA -->
-						<div class="mt-12 flex justify-end">
-							<a
-								href={model.ctaUrl}
-								class="group flex items-center gap-2 text-white/50 hover:text-primary transition-colors duration-300 font-medium text-sm"
+						<div class="relative z-10 grow flex flex-col">
+							<p
+								class="text-[11px] font-bold tracking-widest text-gray-500 uppercase mb-6"
 							>
-								<span>Start Conversation</span>
-								<ArrowRight
-									class="size-4 transition-transform duration-500 group-hover:translate-x-1"
-									style="transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);"
-								/>
-							</a>
+								What's Included
+							</p>
+							<ul class="space-y-4 mb-10">
+								{#each model.benefits as benefit}
+									<li class="flex items-start">
+										<span
+											class="w-1.5 h-1.5 rounded-full bg-[#FF4400] mt-2 mr-4 shrink-0"
+										></span>
+										<span class="text-gray-300"
+											>{benefit}</span
+										>
+									</li>
+								{/each}
+							</ul>
+						</div>
+
+						<div
+							class="relative z-10 mt-auto flex items-center justify-between text-gray-400 text-sm font-bold tracking-widest uppercase transition-colors group-hover/card:text-white pt-6 border-t border-gray-800"
+						>
+							Start Conversation
+							<svg
+								class="w-5 h-5 group-hover/card:translate-x-2 transition-transform duration-300 text-[#FF4400]"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+								><path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M17 8l4 4m0 0l-4 4m4-4H3"
+								></path></svg
+							>
 						</div>
 					</div>
-				</div>
+				</a>
 			{/each}
 		</div>
 	</div>
 </section>
 
 <!-- (06) PARTNER MARQUEE SECTION (Light Section) -->
-<section data-theme="light" class="py-32 bg-[#f4f4f6] border-t border-neutral-200/50">
+<section
+	data-theme="light"
+	class="py-32 bg-[#f4f4f6] border-t border-neutral-200/50"
+>
 	<div
-		class="container mx-auto px-6 max-w-[1440px] grid grid-cols-1 lg:grid-cols-4 gap-12"
+		class="container mx-auto px-6 max-w-[1320px] grid grid-cols-1 lg:grid-cols-4 gap-12"
 	>
 		<div class="lg:col-span-1">
-			<span
-				class="font-mono text-xs uppercase text-neutral-500 tracking-widest block mb-4"
-				>(06) Client Stories</span
+			<div
+				class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
 			>
+				<div
+					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+				></div>
+				<div
+					class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
+				>
+					<span
+						class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
+						>CLIENT STORIES</span
+					>
+				</div>
+			</div>
 		</div>
 		<div class="lg:col-span-3">
 			<!-- Testimonial card stays solid black for gorgeous contrast pop -->
@@ -803,13 +1114,24 @@
 	data-theme="dark"
 	class="py-32 bg-neutral-950 text-white border-t border-white/5 z-10 relative"
 >
-	<div class="container mx-auto px-6 max-w-[1440px]">
+	<div class="container mx-auto px-6 max-w-[1320px]">
 		<div class="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-20">
 			<div class="lg:col-span-1">
-				<span
-					class="font-mono text-xs uppercase text-neutral-500 tracking-widest block mb-4"
-					>(07) Insights with Purpose</span
+				<div
+					class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1px]"
 				>
+					<div
+						class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+					></div>
+					<div
+						class="inline-flex h-full w-full items-center justify-center rounded-full bg-neutral-950 px-6 py-2 relative z-10"
+					>
+						<span
+							class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
+							>INSIGHTS WITH PURPOSE</span
+						>
+					</div>
+				</div>
 			</div>
 			<div class="lg:col-span-3">
 				<h2
@@ -908,14 +1230,29 @@
 </section>
 
 <!-- FAQ ACCORDION SECTION (Light Section) -->
-<section data-theme="light" class="py-32 bg-[#f4f4f6] border-t border-neutral-200/50">
+<section
+	data-theme="light"
+	class="py-32 bg-[#f4f4f6] border-t border-neutral-200/50"
+>
 	<div
-		class="container mx-auto px-6 max-w-[1440px] grid grid-cols-1 lg:grid-cols-4 gap-12"
+		class="container mx-auto px-6 max-w-[1320px] grid grid-cols-1 lg:grid-cols-4 gap-12"
 	>
 		<div class="lg:col-span-1">
-			<p
-				class="text-[10px] font-mono tracking-widest text-neutral-500 uppercase block mb-4"
-			>(03) Shared Expectations</p>
+			<div
+				class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
+			>
+				<div
+					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+				></div>
+				<div
+					class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
+				>
+					<span
+						class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
+						>SHARED EXPECTATIONS</span
+					>
+				</div>
+			</div>
 			<h3
 				class="text-3xl md:text-5xl font-extrabold tracking-tight text-neutral-900 leading-none"
 			>
@@ -960,159 +1297,253 @@
 <section
 	id="contact"
 	data-theme="dark"
-	class="py-32 bg-black text-white border-t border-white/5 z-10 relative"
+	class="w-full py-32 bg-[#050505] text-white border-t border-white/5 z-10 relative"
 >
-	<div
-		class="container mx-auto px-6 max-w-[1440px] grid grid-cols-1 lg:grid-cols-4 gap-12"
-	>
-		<div class="lg:col-span-1 space-y-8">
-			<div>
-				<p
-					class="text-[10px] font-mono tracking-widest text-neutral-500 uppercase block mb-4"
-				>(04) Start A Conversation</p>
-				<h3
-					class="text-4xl md:text-6xl font-bold tracking-tight text-white leading-none"
+	<div class="container mx-auto px-6 max-w-[1320px] flex flex-col gap-16 lg:gap-24">
+		<!-- ======================================= -->
+		<!-- TOP: Typography & Direct Links          -->
+		<!-- ======================================= -->
+		<div class="flex flex-col max-w-5xl">
+			<div
+				class="-ml-[25px] mb-8 self-start relative inline-flex overflow-hidden rounded-full p-[1px]"
+			>
+				<div
+					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+				></div>
+				<div
+					class="inline-flex h-full w-full items-center justify-center rounded-full bg-[#050505] px-6 py-2.5 relative z-10"
 				>
-					Let’s Start Something Meaningful
-				</h3>
-				<p
-					class="text-neutral-400 mt-6 text-sm leading-relaxed max-w-[25ch]"
-				>
-					Have a project in mind or just an idea taking shape? Tell me
-					where you are. I'll take it from there.
-				</p>
+					<span
+						class="text-xs md:text-sm font-mono tracking-widest text-gray-300 uppercase"
+						>START A CONVERSATION</span
+					>
+				</div>
 			</div>
+			<h2
+				class="text-6xl md:text-7xl font-bold tracking-tighter text-white mb-8 leading-[1.1]"
+			>
+				Let’s Start Something Meaningful
+			</h2>
+			<p
+				class="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-4xl"
+			>
+				Have a project in mind or just an idea taking shape? Tell me
+				where you are. I'll take it from there.
+			</p>
 
-			<!-- Direct contact shortcuts with monochrome SVG icons -->
-			<div class="space-y-4 pt-6 border-t border-white/10 max-w-[25ch]">
+			<!-- Mathematical Horizontal Divider -->
+			<div class="w-full h-px bg-gray-800/50 my-10"></div>
+
+			<!-- Direct Links (Horizontal Row) -->
+			<div
+				class="flex flex-col sm:flex-row gap-8"
+			>
 				<a
 					href="mailto:phantomcluster17@gmail.com"
-					class="flex items-center gap-3 text-sm text-neutral-400 hover:text-primary transition-colors group"
+					class="group flex items-center text-gray-300 hover:text-white transition-colors text-base font-medium"
 				>
 					<svg
-						aria-hidden="true"
-						class="size-4 fill-neutral-500 group-hover:fill-primary transition-colors"
+						class="w-6 h-6 mr-4 text-gray-600 group-hover:text-[#FF4400] transition-colors"
+						fill="none"
+						stroke="currentColor"
 						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
+						><path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+						></path></svg
 					>
-						<path
-							d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
-						/>
-					</svg>
-					<span class="font-medium tracking-tight"
-						>phantomcluster17@gmail.com</span
-					>
+					phantomcluster17@gmail.com
 				</a>
 				<a
-					href="https://www.linkedin.com/in/phantom-cluster/"
+					href="https://linkedin.com/in/phantomcluster"
 					target="_blank"
 					rel="noopener noreferrer"
-					class="flex items-center gap-3 text-sm text-neutral-400 hover:text-primary transition-colors group"
+					class="group flex items-center text-gray-300 hover:text-white transition-colors text-base font-medium"
 				>
 					<svg
-						aria-hidden="true"
-						class="size-4 fill-neutral-500 group-hover:fill-primary transition-colors"
+						class="w-6 h-6 mr-4 text-gray-600 group-hover:text-[#FF4400] transition-colors"
+						fill="currentColor"
 						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
+						><path
+							d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+						/></svg
 					>
-						<path
-							d="M22.23 0H1.77C.8 0 0 .77 0 1.72v20.56C0 23.23.8 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.2 0 22.23 0zM7.12 20.45H3.56V9h3.56v11.45zM5.34 7.43c-1.14 0-2.06-.92-2.06-2.06 0-1.14.92-2.06 2.06-2.06 1.14 0 2.06.92 2.06 2.06 0 1.14-.92 2.06-2.06 2.06zm15.11 13.02h-3.56v-5.6c0-1.34-.03-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95v5.7H9.33V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29z"
-						/>
-					</svg>
-					<span class="font-medium tracking-tight"
-						>LinkedIn Profile</span
-					>
+					LinkedIn Profile
 				</a>
 			</div>
 		</div>
 
-		<div class="lg:col-span-3">
-			<form class="space-y-8" onsubmit={(e) => e.preventDefault()}>
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-					<div class="flex flex-col gap-2">
-						<label
-							for="firstName"
-							class="text-xs font-mono text-neutral-500 uppercase tracking-widest"
-							>First Name</label
-						>
-						<input
-							type="text"
-							id="firstName"
-							placeholder="Alex"
-							class="bg-neutral-900 border border-white/5 rounded-xl px-5 py-4 text-white placeholder-neutral-600 focus:outline-none focus:border-primary/50 transition-colors"
-						/>
-					</div>
-					<div class="flex flex-col gap-2">
-						<label
-							for="lastName"
-							class="text-xs font-mono text-neutral-500 uppercase tracking-widest"
-							>Last Name</label
-						>
-						<input
-							type="text"
-							id="lastName"
-							placeholder="Morgan"
-							class="bg-neutral-900 border border-white/5 rounded-xl px-5 py-4 text-white placeholder-neutral-600 focus:outline-none focus:border-primary/50 transition-colors"
-						/>
-					</div>
-				</div>
+		<!-- ======================================= -->
+		<!-- BOTTOM: Dual-Path Intake Cards          -->
+		<!-- ======================================= -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+			<!-- Card 1: Typeform (Hover Physics) -->
+			<a
+				href="https://form.typeform.com/to/qKlWDcaw"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="group/card relative block overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)]"
+			>
+				<!-- Default subtle border -->
+				<div
+					class="absolute inset-0 bg-white/5 transition-opacity duration-500 group-hover/card:opacity-0"
+				></div>
 
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-					<div class="flex flex-col gap-2">
-						<label
-							for="email"
-							class="text-xs font-mono text-neutral-500 uppercase tracking-widest"
-							>Email Address</label
-						>
-						<input
-							type="email"
-							id="email"
-							placeholder="alex@example.com"
-							class="bg-neutral-900 border border-white/5 rounded-xl px-5 py-4 text-white placeholder-neutral-600 focus:outline-none focus:border-primary/50 transition-colors"
-						/>
-					</div>
-					<div class="flex flex-col gap-2">
-						<label
-							for="phone"
-							class="text-xs font-mono text-neutral-500 uppercase tracking-widest"
-							>Phone Number (Optional)</label
-						>
-						<input
-							type="tel"
-							id="phone"
-							placeholder="e.g. +1 (555) 000-0000"
-							class="bg-neutral-900 border border-white/5 rounded-xl px-5 py-4 text-white placeholder-neutral-600 focus:outline-none focus:border-primary/50 transition-colors"
-						/>
-					</div>
-				</div>
+				<!-- Animated spinning border -->
+				<div
+					class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
+				></div>
 
-				<div class="flex flex-col gap-2">
-					<label
-						for="details"
-						class="text-xs font-mono text-neutral-500 uppercase tracking-widest"
-						>Project Details</label
+				<!-- Inner Card Surface -->
+				<div
+					class="relative z-10 h-full w-full bg-[#0a0a0a] rounded-[calc(1.5rem-1px)] p-8 md:p-10 flex flex-col"
+				>
+					<!-- Ambient Glow -->
+					<div
+						class="absolute -top-12 -right-12 w-48 h-48 bg-[#FF4400]/[0.15] rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+					></div>
+
+					<div
+						class="relative z-10 w-12 h-12 rounded-full bg-[#FF4400]/10 flex items-center justify-center mb-6 text-[#FF4400] shrink-0"
 					>
-					<textarea
-						id="details"
-						rows="6"
-						placeholder="Tell me about your product, timeline, and design challenges..."
-						class="bg-neutral-900 border border-white/5 rounded-2xl px-5 py-4 text-white placeholder-neutral-600 focus:outline-none focus:border-primary/50 transition-colors resize-none"
-					></textarea>
-				</div>
-
-				<div class="flex justify-end pt-4">
-					<Button
-						type="submit"
-						class="bg-primary hover:bg-primary/95 text-white font-semibold rounded-full px-8 py-4 h-14 text-sm uppercase tracking-wider flex items-center gap-3 transition-transform active:scale-98"
+						<svg
+							class="w-5 h-5"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+							></path></svg
+						>
+					</div>
+					<h3
+						class="relative z-10 text-2xl font-bold text-white mb-3"
 					>
-						<span>Send Enquiry</span>
-						<Send class="size-4" />
-					</Button>
+						Submit Project Brief
+					</h3>
+					<p
+						class="relative z-10 text-gray-400 text-sm leading-relaxed mb-8 grow"
+					>
+						Complete a structured intake form detailing your
+						requirements for a precise technical quote.
+					</p>
+					<div
+						class="relative z-10 flex items-center text-[#FF4400] text-sm font-bold tracking-widest uppercase mt-auto"
+					>
+						Start Brief
+						<svg
+							class="w-4 h-4 ml-2 group-hover/card:translate-x-2 transition-transform duration-300"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M17 8l4 4m0 0l-4 4m4-4H3"
+							></path></svg
+						>
+					</div>
 				</div>
-			</form>
+			</a>
+
+			<!-- Card 2: Calendly (Hover Physics) -->
+			<a
+				href="https://calendly.com/phantomcluster/30min"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="group/card relative block overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)]"
+			>
+				<!-- Default subtle border -->
+				<div
+					class="absolute inset-0 bg-white/5 transition-opacity duration-500 group-hover/card:opacity-0"
+				></div>
+
+				<!-- Animated spinning border -->
+				<div
+					class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
+				></div>
+
+				<!-- Inner Card Surface -->
+				<div
+					class="relative z-10 h-full w-full bg-[#0a0a0a] rounded-[calc(1.5rem-1px)] p-8 md:p-10 flex flex-col"
+				>
+					<!-- Ambient Glow -->
+					<div
+						class="absolute -top-12 -right-12 w-48 h-48 bg-[#FF4400]/[0.15] rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+					></div>
+
+					<div
+						class="relative z-10 w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-6 text-white shrink-0"
+					>
+						<svg
+							class="w-5 h-5"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M8 7V3m8 4V3m-9 8h10M5 21h14a.2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+							></path></svg
+						>
+					</div>
+					<h3
+						class="relative z-10 text-2xl font-bold text-white mb-3"
+					>
+						Schedule Discovery
+					</h3>
+					<p
+						class="relative z-10 text-gray-400 text-sm leading-relaxed mb-8 grow"
+					>
+						Bypass the brief and book a direct 30-minute strategic
+						alignment call to discuss your ecosystem architecture.
+					</p>
+					<div
+						class="relative z-10 flex items-center text-white text-sm font-bold tracking-widest uppercase mt-auto"
+					>
+						Book Call
+						<svg
+							class="w-4 h-4 ml-2 group-hover/card:translate-x-2 transition-transform duration-300"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M17 8l4 4m0 0l-4 4m4-4H3"
+							></path></svg
+						>
+					</div>
+				</div>
+			</a>
 		</div>
 	</div>
 </section>
 
 <!-- BOTTOM MARQUEE -->
 <PartnerMarquee />
+
+<style>
+	/* This guarantees the width doesn't collapse and the animation runs natively */
+	.marquee-track {
+		width: max-content;
+		animation: infinite-scroll 40s linear infinite;
+	}
+
+	@keyframes infinite-scroll {
+		0% {
+			transform: translateX(0);
+		}
+		100% {
+			transform: translateX(-50%);
+		}
+	}
+</style>

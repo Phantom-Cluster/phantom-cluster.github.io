@@ -61,9 +61,7 @@
 
 		(async () => {
 			try {
-				const importUrl = 'https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js';
-				// @ts-ignore
-				const mod = await import(/* @vite-ignore */ importUrl);
+				const mod = await import('$lib/vendor/tubes1.min.js');
 				if (!mounted) return;
 				const TubesCursor = mod.default;
 
