@@ -1,0 +1,104 @@
+<script lang="ts">
+	interface Stat {
+		label: string;
+		value: string;
+		accent?: boolean;
+		html?: boolean;
+	}
+
+	interface Props {
+		prevNum: string;
+		prevName: string;
+		prevIconSvg: string;
+		nextNum: string;
+		nextName: string;
+		nextIconSvg: string;
+		nextDescriptor: string;
+		nextShadow?: string;
+		stats: [Stat, Stat, Stat];
+	}
+
+	let {
+		prevNum, prevName, prevIconSvg,
+		nextNum, nextName, nextIconSvg,
+		nextDescriptor,
+		nextShadow = 'drop-shadow(0 12px 28px rgba(0,0,0,0.15))',
+		stats
+	}: Props = $props();
+</script>
+
+<style>
+	.full-bleed {
+		width: 100vw;
+		position: relative;
+		left: 50%;
+		right: 50%;
+		margin-left: -50vw;
+		margin-right: -50vw;
+	}
+</style>
+
+<div class="full-bleed bg-neutral-950" data-theme="dark">
+	<section
+		class="max-w-6xl mx-auto px-4 md:px-6 pt-12 pb-16 md:pb-20 relative overflow-hidden"
+		aria-label="Chapter transition: {prevName} complete, entering {nextName}">
+
+		<!-- Ghost chapter numeral — left-anchored texture -->
+		<span
+			class="absolute -left-8 top-1/2 -translate-y-1/2 text-[clamp(14rem,40vw,36rem)] font-black text-white/4 leading-none select-none pointer-events-none tracking-tighter"
+			aria-hidden="true">{nextNum}</span>
+
+		<!-- Progress strip -->
+		<div class="flex items-center gap-3 mb-14 relative">
+			<div class="flex items-center gap-2.5 opacity-35 shrink-0">
+				<div class="w-4 h-4 shrink-0 [&>svg]:w-full [&>svg]:h-full">{@html prevIconSvg}</div>
+				<span class="text-[9px] font-mono tracking-[0.28em] text-neutral-400 uppercase hidden sm:block">{prevNum} — {prevName}</span>
+				<svg class="w-2.5 h-2.5 text-neutral-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+				</svg>
+			</div>
+			<div class="flex-1 h-px bg-white/10" aria-hidden="true"></div>
+			<div class="flex items-center gap-2 shrink-0">
+				<span class="w-1 h-1 rounded-full bg-[#FF4400] animate-pulse" aria-hidden="true"></span>
+				<span class="text-[9px] font-mono tracking-[0.28em] text-[#FF4400] uppercase">{nextNum} — {nextName}</span>
+			</div>
+		</div>
+
+		<!-- Two-column: identity left, stats right -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 relative">
+
+			<!-- Left: icon + name + descriptor -->
+			<div class="flex flex-col justify-center gap-6">
+				<div class="flex items-center gap-5">
+					<div
+						class="w-14 h-14 shrink-0 [&>svg]:w-full [&>svg]:h-full"
+						style="filter: {nextShadow};"
+						aria-hidden="true">{@html nextIconSvg}</div>
+					<div>
+						<p class="text-[10px] font-mono tracking-[0.4em] text-neutral-500 uppercase mb-1">Next Chapter</p>
+						<h2 class="text-[clamp(2rem,5vw,3.5rem)] font-black text-white tracking-tight leading-none">{nextName}</h2>
+					</div>
+				</div>
+				<p class="text-base text-neutral-400 leading-relaxed max-w-sm">
+					{nextDescriptor}
+				</p>
+			</div>
+
+			<!-- Right: 3-row stat ledger -->
+			<div class="flex flex-col self-center">
+				{#each stats as stat}
+					<div class="flex items-baseline justify-between py-5 border-b border-white/6 last:border-b-0">
+						<span class="text-[10px] font-mono tracking-[0.22em] text-neutral-500 uppercase">{stat.label}</span>
+						{#if stat.html}
+							<span class="text-xl font-black text-white tracking-tight">{@html stat.value}</span>
+						{:else}
+							<span class="text-xl font-black tracking-tight {stat.accent ? 'text-[#FF4400]' : 'text-white'}">{stat.value}</span>
+						{/if}
+					</div>
+				{/each}
+			</div>
+
+		</div>
+
+	</section>
+</div>

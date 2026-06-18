@@ -39,7 +39,7 @@
 <div class="min-h-screen flex flex-col bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
 	<Navbar />
 	
-	<main class="flex-grow {$page.url.pathname === '/' ? '' : 'pt-20'}">
+	<main class="flex-grow {$page.url.pathname === '/' || $page.url.pathname === '/work/wpmu-dev-dashboard' ? '' : 'pt-20'}">
 		{#key $page.url.pathname}
 			<div in:fade={{ duration: 300, delay: 300 }} out:fade={{ duration: 300 }}>
 				{@render children()}

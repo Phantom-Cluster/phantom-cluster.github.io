@@ -26,3 +26,4 @@ vite.config.ts.timestamp-*
 .agents/
 skills-lock.json
 *.code-workspace
+.claude/

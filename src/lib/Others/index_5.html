@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Smush — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#000;
+    --panel:rgba(255,255,255,0.04);
+    --line:rgba(255,255,255,0.07);
+    --line-strong:rgba(255,255,255,0.14);
+    --text:#F5F5F7;
+    --text-dim:#86868B;
+    --orange:#FF5A2A;
+    --orange-2:#FF8A50;
+    --radius:16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  body{
+    background:
+      radial-gradient(900px 500px at 18% 0%, rgba(255,90,42,0.10), transparent 60%),
+      radial-gradient(700px 500px at 100% 100%, rgba(255,90,42,0.06), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .hero{
+    width:100%; max-width:1180px; height:90vh;
+    display:flex; flex-direction:column;
+    position:relative;
+  }
+  .hero::before{
+    content:'';
+    position:absolute; top:10%; left:50%; width:60%; height:50%;
+    background:radial-gradient(circle, rgba(255,90,42,0.10), transparent 70%);
+    filter:blur(40px);
+    transform:translateX(-50%);
+    animation:ambient 14s ease-in-out infinite alternate;
+    pointer-events:none; z-index:0;
+    will-change:transform, opacity;
+  }
+  @keyframes ambient{
+    0%{ transform:translate(-60%,-4%) scale(1); opacity:.6; }
+    100%{ transform:translate(-40%,4%) scale(1.25); opacity:1; }
+  }
+
+  .eyebrow{
+    position:relative; z-index:1;
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--orange);
+    margin-bottom:8px;
+  }
+  .eyebrow::before{
+    content:''; width:5px; height:5px; border-radius:50%;
+    background:var(--orange);
+    box-shadow:0 0 0 3px rgba(255,90,42,0.18);
+  }
+
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:clamp(26px, 3.4vw, 42px);
+    line-height:1.1;
+    letter-spacing:-0.02em;
+  }
+  h1 .accent{
+    background:linear-gradient(100deg, var(--orange), var(--orange-2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+
+  /* ===== GRID ===== */
+  .grid{
+    position:relative; z-index:1;
+    flex:1;
+    display:grid;
+    grid-template-columns:repeat(12, 1fr);
+    grid-template-rows:repeat(6, 1fr);
+    gap:10px;
+    margin-top:18px;
+    min-height:0;
+  }
+
+  .card{
+    position:relative;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015) 45%, rgba(255,255,255,0.02) 100%),
+      var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    overflow:hidden;
+    backdrop-filter:blur(16px) saturate(140%);
+    -webkit-backdrop-filter:blur(16px) saturate(140%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.10),
+      0 1px 2px rgba(0,0,0,0.4),
+      0 18px 36px -20px rgba(0,0,0,0.6);
+    opacity:0;
+    transform:translateY(28px) scale(0.97);
+    transition:opacity .6s cubic-bezier(.2,.7,.2,1), transform .6s cubic-bezier(.2,.7,.2,1);
+    will-change:transform, opacity;
+  }
+  .card.in{ opacity:1; transform:translateY(0) scale(1); }
+
+  .card:hover{
+    border-color:var(--line-strong);
+    transform:translateY(-4px) scale(1.01);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.12),
+      0 1px 2px rgba(0,0,0,0.4),
+      0 24px 40px -16px rgba(0,0,0,0.65),
+      0 0 0 1px rgba(255,90,42,0.18);
+    transition:transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s ease, box-shadow .35s ease, opacity .6s;
+  }
+
+  /* grid placements */
+  .g-1{ grid-column:1 / 6; grid-row:1 / 4; }
+  .g-2{ grid-column:6 / 9; grid-row:1 / 4; }
+  .g-3{ grid-column:9 / 13; grid-row:1 / 3; }
+  .g-4{ grid-column:1 / 4; grid-row:4 / 7; }
+  .g-5{ grid-column:4 / 7; grid-row:4 / 7; }
+  .g-6{ grid-column:7 / 10; grid-row:4 / 7; }
+  .g-7{ grid-column:10 / 13; grid-row:3 / 7; display:flex; flex-direction:column; }
+
+  @media (max-width:860px){
+    .hero{ height:auto; }
+    .grid{ grid-template-columns:repeat(6,1fr); grid-template-rows:none; grid-auto-rows:130px; }
+    .g-1,.g-2,.g-3,.g-4,.g-5,.g-6,.g-7{ grid-column:1 / 7; grid-row:auto; }
+  }
+
+  /* ===== video placeholder ===== */
+  .video-slot{
+    position:relative; width:100%; height:100%;
+    display:flex; align-items:flex-end; justify-content:flex-start;
+    background:var(--vg);
+  }
+  .video-slot::before{
+    content:''; position:absolute; inset:0;
+    background:
+      radial-gradient(120% 90% at 30% 110%, rgba(0,0,0,0.55), transparent 60%),
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 26px);
+  }
+  .video-slot .ph{
+    position:relative; z-index:2;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:.12em; text-transform:uppercase;
+    color:rgba(255,255,255,0.55);
+    padding:12px 14px;
+  }
+  .video-slot .ph b{ color:#fff; font-weight:600; }
+
+  /* ===== headline ===== */
+  .head{ padding:24px; display:flex; flex-direction:column; justify-content:space-between; height:100%; }
+  .head .heading{
+    font-family:'Space Grotesk', sans-serif; font-weight:600;
+    font-size:clamp(17px,1.7vw,21px); line-height:1.35; max-width:420px;
+  }
+  .head .heading b{
+    background:linear-gradient(100deg, var(--orange), var(--orange-2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .head .meta{ display:flex; gap:24px; flex-wrap:wrap; }
+  .head .meta div{
+    font-family:'JetBrains Mono', monospace; font-size:10px; color:var(--text-dim);
+    letter-spacing:.08em; text-transform:uppercase;
+  }
+  .head .meta div b{
+    display:block; font-family:'Space Grotesk', sans-serif; font-size:14px; color:var(--text);
+    letter-spacing:0; text-transform:none; margin-top:4px; font-weight:600;
+  }
+
+  /* ===== big stat ===== */
+  .big-stat{ padding:20px; height:100%; display:flex; flex-direction:column; justify-content:space-between; }
+  .big-stat .top-label{
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-dim);
+  }
+  .big-stat .value{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:clamp(34px, 4.6vw, 54px); line-height:1; letter-spacing:-0.02em;
+    background:linear-gradient(160deg, #fff, #fff 75%, var(--orange-2) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .big-stat .value .arrow{ color:var(--text-dim); font-weight:500; -webkit-text-fill-color:var(--text-dim); }
+  .big-stat .caption{ font-size:12px; color:var(--text-dim); line-height:1.5; margin-top:6px; max-width:220px; }
+
+  /* ===== banner word ===== */
+  .banner{ height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:6px; padding:16px; }
+  .banner .word{
+    font-family:'Space Grotesk', sans-serif; font-weight:700;
+    font-size:clamp(20px,2.6vw,30px); letter-spacing:-0.02em;
+    background:linear-gradient(110deg, #fff, #fff 70%, var(--orange-2) 100%);
+    background-size:200% 100%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:sheen 8s ease-in-out infinite;
+  }
+  @keyframes sheen{
+    0%, 100%{ background-position:0% 0%; }
+    50%{ background-position:100% 0%; }
+  }
+  .banner .word-sub{ font-size:11px; color:var(--text-dim); }
+
+  /* ===== logo ===== */
+  .logo-card{ height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:12px; }
+  .logo-card .ring{
+    width:60px; height:60px; border-radius:16px;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,90,42,0.3);
+    box-shadow:0 0 30px -8px rgba(255,90,42,0.45);
+    position:relative;
+    animation:breathe 5s ease-in-out infinite;
+  }
+  @keyframes breathe{
+    0%, 100%{ transform:scale(1); }
+    50%{ transform:scale(1.06); }
+  }
+  .logo-card .ring svg{ width:30px; height:30px; }
+  .logo-card .wordmark{ font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:16px; letter-spacing:0.02em; }
+  .logo-card .wordmark span{ color:var(--orange-2); }
+  .logo-card .role{
+    font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-dim);
+  }
+  .pulse{ position:absolute; inset:-10px; border-radius:22px; border:1px solid rgba(255,90,42,0.35); animation:pulse 3.2s ease-out infinite; }
+  .pulse.delay{ animation-delay:1.6s; }
+  @keyframes pulse{ 0%{ transform:scale(0.9); opacity:.8; } 100%{ transform:scale(1.6); opacity:0; } }
+
+  /* ===== glow pill ===== */
+  .glow-pill{ height:100%; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:10px; padding:20px; }
+  .glow-pill .label{ font-size:12px; color:var(--text-dim); }
+  .glow-pill .hl{
+    font-family:'Space Grotesk', sans-serif; font-weight:700; font-size:15px;
+    background:rgba(255,90,42,0.10);
+    border:1px solid rgba(255,90,42,0.35);
+    padding:7px 14px; border-radius:99px; color:var(--orange-2);
+    box-shadow:0 0 24px -10px rgba(255,90,42,0.5);
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Case Study — Performance Engineering</div>
+  <h1>Rebuilding Smush for <span class="accent">scale &amp; speed.</span></h1>
+
+  <div class="grid">
+
+    <!-- g-1: large video -->
+    <div class="card g-1" data-i="0">
+      <div class="video-slot" style="--vg:linear-gradient(135deg, #1a1a1a, #000 70%);">
+        <div class="ph">WPMU_<b>1</b></div>
+      </div>
+    </div>
+
+    <!-- g-2: headline -->
+    <div class="card g-2 head" data-i="1">
+      <p class="heading">A <b>full redesign</b> of the optimization flow — built for clarity, speed, and confidence at scale.</p>
+      <div class="meta">
+        <div>Role<b>Product</b></div>
+        <div>Time<b>14 wks</b></div>
+      </div>
+    </div>
+
+    <!-- g-3: big stat installs -->
+    <div class="card g-3 big-stat" data-i="2">
+      <div class="top-label">Adoption</div>
+      <div>
+        <div class="value">1M<span class="arrow">→</span>2M+</div>
+        <div class="caption">Smush installs since the redesigned onboarding shipped.</div>
+      </div>
+    </div>
+
+    <!-- g-4: small video -->
+    <div class="card g-4" data-i="3">
+      <div class="video-slot" style="--vg:linear-gradient(135deg, #1a1a1a, #000 70%);">
+        <div class="ph">WPMU_<b>2</b></div>
+      </div>
+    </div>
+
+    <!-- g-5: logo -->
+    <div class="card g-5 logo-card" data-i="4">
+      <div class="ring">
+        <span class="pulse"></span>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 12L8 7L12 11L16 6L21 12L16 18L12 14L8 19L3 12Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="wordmark">WPMU<span>DEV</span></div>
+        <div class="role">Smush · Image Optimization</div>
+      </div>
+    </div>
+
+    <!-- g-6: banner bounce rate -->
+    <div class="card g-6 banner" data-i="5">
+      <div class="word">Reduced Bounce Rate</div>
+      <div class="word-sub">−31% after launch</div>
+    </div>
+
+    <!-- g-7: glow pill + video stack -->
+    <div class="card g-7" data-i="6">
+      <div class="video-slot" style="--vg:linear-gradient(135deg, #1a1a1a, #000 70%); height:55%;">
+        <div class="ph">WPMU_<b>3</b></div>
+      </div>
+      <div class="glow-pill" style="height:45%;">
+        <span class="label">Pro conversions</span>
+        <span class="hl">+47%</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const cards = document.querySelectorAll('.card');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const i = parseInt(entry.target.dataset.i || 0, 10);
+        entry.target.style.transitionDelay = (i * 70) + 'ms';
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  cards.forEach(c => io.observe(c));
+</script>
+
+</body>
+</html>

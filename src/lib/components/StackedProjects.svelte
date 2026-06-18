@@ -5,6 +5,8 @@
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { ArrowRight } from 'lucide-svelte';
 
+	const stackedProjects = projects.filter(p => p.slug !== 'wpmu-dev-dashboard');
+
 	let colorThief: any;
 
 	onMount(async () => {
@@ -116,15 +118,6 @@
 
 	const cardThemes = [
 		{
-			bg: 'bg-[#18181b]',
-			accent: 'text-primary',
-			year: '2025',
-			role: 'Product Designer',
-			services: ['SaaS Dashboard Design', 'Atomic Figma Variables', 'White-Label Monochrome Mode'],
-			btnClass: 'hover:bg-primary hover:border-primary hover:shadow-[0_0_20px_rgba(245,53,0,0.45)]',
-			themeColor: '#f53500'
-		},
-		{
 			bg: 'bg-[#2c1b18]',
 			accent: 'text-primary',
 			year: '2024',
@@ -166,7 +159,7 @@
 	</div>
 
 	<div class="relative z-10 w-full max-w-[1320px] mx-auto px-6" style="perspective: 1800px;">
-		{#each projects as project, i}
+		{#each stackedProjects as project, i}
 			<!-- Progressively higher z-index (z: {i + 10}) combined with opaque cardThemes[i].bg 
 			     ensures shadows from layers above do not bleed downwards into underlying cards. -->
 			<div class="project-stack-card w-full relative rounded-[2.5rem] p-8 md:p-12 text-white border border-white/10 flex flex-col justify-between transition-colors duration-500 sticky {cardThemes[i].bg} mb-[15vh] lg:mb-[35vh] h-auto lg:h-[70vh] min-h-[480px] lg:max-h-[580px] group"
@@ -196,7 +189,7 @@
 						
 						<div class="mt-8 lg:mt-0">
 							<span class="font-mono text-xs text-neutral-400 block tracking-wider">
-								0{i + 1} / 0{projects.length}
+								0{i + 1} / 0{stackedProjects.length}
 							</span>
 							<h4 class="text-3xl sm:text-4xl lg:text-[2.5rem] font-extrabold tracking-[-0.04em] leading-tight text-white mt-3 max-w-[15ch]">
 								{project.title.split(' & ')[0]}

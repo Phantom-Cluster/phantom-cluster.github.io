@@ -3,9 +3,12 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { afterNavigate } from '$app/navigation';
+	import { navTheme } from '$lib/stores/navTheme';
 
-	// Auto-detected from data-theme on page sections via IntersectionObserver
-	let currentTheme = $state<'dark' | 'light'>('dark');
+	// observedTheme: driven by IntersectionObserver (fallback for all pages)
+	// $navTheme: driven by GSAP onUpdate when a page sets it explicitly (frame-accurate)
+	let observedTheme = $state<'dark' | 'light'>('dark');
+	const currentTheme = $derived($navTheme ?? observedTheme);
 
 	let isScrolled = $state(false);
 	let isOpen = $state(false);
@@ -23,7 +26,7 @@
 					entries.forEach((entry) => {
 						if (entry.isIntersecting) {
 							const t = entry.target.getAttribute('data-theme') as 'dark' | 'light';
-							if (t) currentTheme = t;
+							if (t) observedTheme = t;
 						}
 					});
 				},

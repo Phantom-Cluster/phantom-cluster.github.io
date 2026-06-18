@@ -126,7 +126,7 @@
 						</div>
 						<!-- Main Action Button -->
 						<a
-							href="/work/wpmu-dev"
+							href="/work/wpmu-dev-dashboard"
 							class="bg-[#FF4400] text-white px-6 py-2.5 rounded-full font-semibold tracking-wide text-xs whitespace-nowrap shadow-[0_0_15px_rgba(255,68,0,0.4)] transition-all duration-300 group-hover:shadow-[0_0_25px_rgba(255,68,0,0.6)] group-hover:bg-[#ff5511]"
 						>
 							EXPLORE PROJECT
