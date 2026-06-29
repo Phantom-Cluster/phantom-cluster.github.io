@@ -39,7 +39,7 @@
 <div class="min-h-screen flex flex-col bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
 	<Navbar />
 	
-	<main class="flex-grow {$page.url.pathname === '/' || $page.url.pathname === '/work/wpmu-dev-dashboard' ? '' : 'pt-20'}">
+	<main class="flex-grow {['/', '/work/wpmu-dev-dashboard', '/work/ideajam-kanban-saas', '/work/eclectic-app-design', '/work/themeisle-starter-templates', '/work/wordpress-redesign', '/work/effido-productivity-app', '/work/resort-island-design', '/work/alt-news-concept', '/work/discord-redesign'].includes($page.url.pathname) ? '' : 'pt-20'}">
 		{#key $page.url.pathname}
 			<div in:fade={{ duration: 300, delay: 300 }} out:fade={{ duration: 300 }}>
 				{@render children()}

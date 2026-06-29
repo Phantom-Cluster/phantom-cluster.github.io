@@ -29,6 +29,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Selected Work | Hitanshu Sahu</title>
+</svelte:head>
+
 <div class="container mx-auto px-6 py-12 md:py-24 min-h-screen">
 	<div class="max-w-3xl mb-16 work-header">
 		<h1 class="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-foreground">Selected Work</h1>

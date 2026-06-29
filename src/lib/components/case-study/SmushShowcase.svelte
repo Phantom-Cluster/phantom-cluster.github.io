@@ -48,7 +48,7 @@
 </script>
 
 <style>
-	input[type='range'] { accent-color: #FF4400; }
+	input[type='range'] { accent-color: #2244CC; }
 	input[type='range']:hover { accent-color: #ffffff; }
 	@keyframes ripple {
 		0%   { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
@@ -65,11 +65,11 @@
 		margin-right: -50vw;
 	}
 	@keyframes text-glow {
-		0%   { text-shadow: 0 0 0px  rgba(255,68,0,0),    0 0 0px  rgba(255,68,0,0); }
-		35%  { text-shadow: 0 0 8px  rgba(255,68,0,0.28), 0 0 18px rgba(255,68,0,0.10); }
-		50%  { text-shadow: 0 0 16px rgba(255,68,0,0.48), 0 0 36px rgba(255,68,0,0.16), 0 0 60px rgba(255,68,0,0.06); }
-		65%  { text-shadow: 0 0 8px  rgba(255,68,0,0.28), 0 0 18px rgba(255,68,0,0.10); }
-		100% { text-shadow: 0 0 0px  rgba(255,68,0,0),    0 0 0px  rgba(255,68,0,0); }
+		0%   { text-shadow: 0 0 0px  rgba(61,204,17,0),    0 0 0px  rgba(61,204,17,0); }
+		35%  { text-shadow: 0 0 8px  rgba(61,204,17,0.28), 0 0 18px rgba(61,204,17,0.10); }
+		50%  { text-shadow: 0 0 16px rgba(61,204,17,0.48), 0 0 36px rgba(61,204,17,0.16), 0 0 60px rgba(61,204,17,0.06); }
+		65%  { text-shadow: 0 0 8px  rgba(61,204,17,0.28), 0 0 18px rgba(61,204,17,0.10); }
+		100% { text-shadow: 0 0 0px  rgba(61,204,17,0),    0 0 0px  rgba(61,204,17,0); }
 	}
 	@keyframes icon-spin {
 		from { transform: rotate(0deg); }
@@ -80,7 +80,7 @@
 </style>
 
 <section class="w-full bg-white pt-24 pb-20 overflow-x-hidden">
-	<div class="max-w-6xl mx-auto px-4 md:px-6">
+	<div class="max-w-7xl mx-auto px-4 md:px-6">
 
 		<!-- ── Row 1: Title LEFT / Feature Chips RIGHT ─────────────── -->
 		<p class="text-[10px] font-mono tracking-[0.35em] text-neutral-400 uppercase mb-4">Image Optimization</p>
@@ -92,7 +92,7 @@
 			<div class="flex flex-row sm:flex-col items-center sm:items-end gap-2 shrink-0 flex-wrap">
 				<div class="relative">
 					<span class="px-3 py-1.5 bg-gray-100 text-gray-500 text-[10px] font-mono uppercase tracking-widest rounded-full block">Ultra · 5×</span>
-					<span class="absolute -top-2 -right-1 bg-[#FF4400] text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none">NEW</span>
+					<span class="absolute -top-2 -right-1 bg-neutral-900 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none">NEW</span>
 				</div>
 				<span class="px-3 py-1.5 bg-gray-100 text-gray-500 text-[10px] font-mono uppercase tracking-widest rounded-full">Lossy</span>
 				<span class="px-3 py-1.5 bg-gray-100 text-gray-500 text-[10px] font-mono uppercase tracking-widest rounded-full">Lossless</span>
@@ -104,13 +104,13 @@
 
 			<!-- Col 1 — Ultra vs Lossy with text-glow -->
 			<div class="py-10 pr-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
-				<span class="text-[10px] font-mono tracking-[0.18em] text-gray-400 uppercase block mb-4">Ultra vs Lossy</span>
+				<span class="text-[10px] font-mono tracking-[0.18em] text-gray-500 uppercase block mb-4">Ultra vs Lossy</span>
 				<div>
 					<div class="flex items-baseline gap-1 leading-none mb-2">
-						<span class="text-glow text-[clamp(2.8rem,7vw,5rem)] font-black text-[#FF4400] tracking-tighter leading-none">5×</span>
+						<span class="text-[clamp(2.8rem,7vw,5rem)] font-black text-neutral-900 tracking-tighter leading-none">5×</span>
 						<span class="text-base font-semibold text-gray-500 leading-none pb-1 ml-1">better</span>
 					</div>
-					<p class="text-sm text-gray-400 leading-relaxed max-w-[20ch]">
+					<p class="text-sm text-gray-600 leading-relaxed max-w-[20ch]">
 						Pro-exclusive Ultra tier. Lossy and Lossless stay free — always.
 					</p>
 				</div>
@@ -118,10 +118,10 @@
 
 			<!-- Col 2 — Auto-rescan with counter-clockwise spin icon -->
 			<div class="py-10 md:px-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
-				<span class="text-[10px] font-mono tracking-[0.18em] text-gray-400 uppercase block mb-4">Re-Scan Logic</span>
+				<span class="text-[10px] font-mono tracking-[0.18em] text-gray-500 uppercase block mb-4">Re-Scan Logic</span>
 				<div class="flex flex-col gap-4">
 					<svg
-						class="icon-spin w-7 h-7 text-[#FF4400]"
+						class="icon-spin w-7 h-7 text-[#6B7280]"
 						fill="none" stroke="currentColor" stroke-width="1.75"
 						viewBox="0 0 24 24" aria-hidden="true">
 						<path stroke-linecap="round" stroke-linejoin="round"
@@ -131,7 +131,7 @@
 						<p class="text-base font-semibold text-gray-700 leading-snug mb-2 max-w-[22ch]">
 							Already-optimized images get a second look on every update.
 						</p>
-						<p class="text-sm text-gray-400 leading-relaxed max-w-[22ch]">
+						<p class="text-sm text-gray-600 leading-relaxed max-w-[22ch]">
 							If a better algorithm exists, Smush finds it automatically.
 						</p>
 					</div>
@@ -143,7 +143,7 @@
 				<p class="text-lg md:text-xl text-gray-600 leading-relaxed mb-5">
 					Ultra delivers 5× the file reduction of Lossy — for sites where every kilobyte matters. Lossy and Lossless remain free because not every site needs the maximum.
 				</p>
-				<p class="text-base text-gray-400 leading-relaxed">
+				<p class="text-base text-gray-600 leading-relaxed">
 					The library rescans on every plugin update. Better algorithms get applied retroactively — without any user action required.
 				</p>
 			</div>
@@ -153,7 +153,7 @@
 	</div>
 
 	<!-- ── VIDEOS: Before / After side-by-side ──────────────────── -->
-	<div class="max-w-6xl mx-auto px-4 md:px-6 mt-12">
+	<div class="max-w-7xl mx-auto px-4 md:px-6 mt-12">
 
 		<!-- Section label -->
 		<div class="flex items-center gap-4 mb-10">
@@ -199,29 +199,29 @@
 						            transition-all duration-500 ease-out">
 							<div class="flex items-center gap-3 w-full">
 								<span class="text-white/70 text-[10px] font-mono w-8 text-right">{formatTime(currentTime)}</span>
-								<input type="range" min="0" max={duration || 100} step="0.01" bind:value={currentTime}
+								<input type="range" aria-label="Seek" min="0" max={duration || 100} step="0.01" bind:value={currentTime}
 									class="flex-1 h-1.5 bg-white/20 rounded-full appearance-none cursor-pointer" />
 								<span class="text-white/70 text-[10px] font-mono w-8">{formatTime(duration)}</span>
 							</div>
 							<div class="flex items-center justify-between w-full">
 								<div class="flex items-center gap-5">
-									<button onclick={back} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
+									<button aria-label="Skip back 5 seconds" onclick={back} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
 										<svg class="w-4 h-4 group-active/btn:-rotate-45 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.333 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"/></svg>
 										<span class="text-[10px] font-mono tracking-widest mt-1">-5s</span>
 									</button>
-									<button onclick={toggle} class="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+									<button aria-label={isPaused ? "Play" : "Pause"} onclick={toggle} class="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
 										{#if isPaused}
 											<svg class="w-3.5 h-3.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
 										{:else}
 											<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
 										{/if}
 									</button>
-									<button onclick={fwd} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
+									<button aria-label="Skip forward 10 seconds" onclick={fwd} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
 										<span class="text-[10px] font-mono tracking-widest mt-1">+10s</span>
 										<svg class="w-4 h-4 group-active/btn:rotate-45 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.334-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.334-4z"/></svg>
 									</button>
 								</div>
-								<button onclick={toggleFullScreen} class="text-white/80 hover:text-white transition-colors">
+								<button aria-label="Toggle fullscreen" onclick={toggleFullScreen} class="text-white/80 hover:text-white transition-colors">
 									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
 								</button>
 							</div>
@@ -242,7 +242,7 @@
 
 						<div class="absolute top-4 left-5 z-40 flex items-center gap-3
 						            bg-black/50 backdrop-blur-md border border-white/10 rounded-full px-3 py-1.5">
-							<span class="w-1.5 h-1.5 rounded-full bg-[#FF4400] animate-pulse shrink-0"></span>
+							<span class="w-1.5 h-1.5 rounded-full bg-portfolio-accent-vivid animate-pulse shrink-0"></span>
 							<span class="text-[10px] font-mono tracking-widest text-white/70 uppercase">After · Smush SUI 3</span>
 						</div>
 
@@ -267,29 +267,29 @@
 						            transition-all duration-500 ease-out">
 							<div class="flex items-center gap-3 w-full">
 								<span class="text-white/70 text-[10px] font-mono w-8 text-right">{formatTime(currentTime2)}</span>
-								<input type="range" min="0" max={duration2 || 100} step="0.01" bind:value={currentTime2}
+								<input type="range" aria-label="Seek" min="0" max={duration2 || 100} step="0.01" bind:value={currentTime2}
 									class="flex-1 h-1.5 bg-white/20 rounded-full appearance-none cursor-pointer" />
 								<span class="text-white/70 text-[10px] font-mono w-8">{formatTime(duration2)}</span>
 							</div>
 							<div class="flex items-center justify-between w-full">
 								<div class="flex items-center gap-5">
-									<button onclick={back2} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
+									<button aria-label="Skip back 5 seconds" onclick={back2} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
 										<svg class="w-4 h-4 group-active/btn:-rotate-45 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.333 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"/></svg>
 										<span class="text-[10px] font-mono tracking-widest mt-1">-5s</span>
 									</button>
-									<button onclick={toggle2} class="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+									<button aria-label={isPaused2 ? "Play" : "Pause"} onclick={toggle2} class="w-9 h-9 rounded-full bg-white text-black flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
 										{#if isPaused2}
 											<svg class="w-3.5 h-3.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
 										{:else}
 											<svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
 										{/if}
 									</button>
-									<button onclick={fwd2} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
+									<button aria-label="Skip forward 10 seconds" onclick={fwd2} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
 										<span class="text-[10px] font-mono tracking-widest mt-1">+10s</span>
 										<svg class="w-4 h-4 group-active/btn:rotate-45 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.334-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.334-4z"/></svg>
 									</button>
 								</div>
-								<button onclick={toggleFullScreen2} class="text-white/80 hover:text-white transition-colors">
+								<button aria-label="Toggle fullscreen" onclick={toggleFullScreen2} class="text-white/80 hover:text-white transition-colors">
 									<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
 								</button>
 							</div>
@@ -303,7 +303,7 @@
 	</div>
 
 	<!-- ── VIDEO 3: Figma Prototype ─────────────────────────────────── -->
-	<div class="max-w-6xl mx-auto px-4 md:px-6 mt-12">
+	<div class="max-w-7xl mx-auto px-4 md:px-6 mt-12">
 
 		<div class="flex items-center gap-4 mb-10">
 			<span class="text-[10px] font-mono tracking-[0.18em] text-gray-400 uppercase">Figma Prototype · Smush v3</span>
@@ -318,7 +318,7 @@
 
 				<div class="absolute top-5 left-6 z-40 flex items-center gap-3
 				            bg-black/50 backdrop-blur-md border border-white/10 rounded-full px-4 py-2">
-					<span class="w-1.5 h-1.5 rounded-full bg-[#FF4400] animate-pulse shrink-0"></span>
+					<span class="w-1.5 h-1.5 rounded-full bg-portfolio-accent-vivid animate-pulse shrink-0"></span>
 					<span class="text-[10px] font-mono tracking-widest text-white/70 uppercase">Smush · Prototype Validation</span>
 				</div>
 
@@ -343,13 +343,13 @@
 				            transition-all duration-500 ease-out">
 					<div class="flex items-center gap-4 w-full">
 						<span class="text-white/70 text-[10px] font-mono w-8 text-right">{formatTime(currentTime3)}</span>
-						<input type="range" min="0" max={duration3 || 100} step="0.01" bind:value={currentTime3}
+						<input type="range" aria-label="Seek" min="0" max={duration3 || 100} step="0.01" bind:value={currentTime3}
 							class="flex-1 h-1.5 bg-white/20 rounded-full appearance-none cursor-pointer transition-all" />
 						<span class="text-white/70 text-[10px] font-mono w-8">{formatTime(duration3)}</span>
 					</div>
 					<div class="flex items-center justify-between w-full">
 						<div class="flex items-center gap-6">
-							<button onclick={back3} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
+							<button aria-label="Skip back 5 seconds" onclick={back3} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
 								<svg class="w-5 h-5 group-active/btn:-rotate-45 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.333 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"/></svg>
 								<span class="text-[10px] font-mono tracking-widest mt-1">-5s</span>
 							</button>
@@ -360,12 +360,12 @@
 									<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
 								{/if}
 							</button>
-							<button onclick={fwd3} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
+							<button aria-label="Skip forward 10 seconds" onclick={fwd3} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
 								<span class="text-[10px] font-mono tracking-widest mt-1">+10s</span>
 								<svg class="w-5 h-5 group-active/btn:rotate-45 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.334-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.334-4z"/></svg>
 							</button>
 						</div>
-						<button onclick={toggleFullScreen3} class="text-white/80 hover:text-white transition-colors">
+						<button aria-label="Toggle fullscreen" onclick={toggleFullScreen3} class="text-white/80 hover:text-white transition-colors">
 							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
 						</button>
 					</div>
@@ -376,7 +376,7 @@
 	</div>
 
 	<!-- ── RESEARCH CONTEXT ─────────────────────────────────────────── -->
-	<div class="max-w-6xl mx-auto px-4 md:px-6 py-16 md:py-20">
+	<div class="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-20">
 		<div class="rounded-3xl overflow-hidden shadow-[0_16px_64px_rgba(0,0,0,0.12)]">
 
 			<!-- Core finding + quote -->
@@ -386,7 +386,7 @@
 						<span class="text-[9px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Core research finding · Smush</span>
 						<p class="text-[clamp(1.3rem,3.2vw,2rem)] font-black text-white leading-snug">
 							Images were compressed.<br/>
-							Just not compressed <span class="text-[#FF4400]">enough.</span>
+							Just not compressed <span class="shimmer-red">enough.</span>
 						</p>
 						<div class="flex flex-wrap gap-2">
 							<span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-mono text-neutral-400 uppercase tracking-widest">500+ reviews audited</span>
@@ -395,7 +395,7 @@
 						</div>
 					</div>
 					<blockquote class="bg-white/3 rounded-2xl px-6 py-6 flex flex-col justify-between gap-5">
-						<span class="text-[#FF4400] text-3xl font-black leading-none">"</span>
+						<span class="text-portfolio-accent-vivid text-3xl font-black leading-none">"</span>
 						<p class="text-sm text-neutral-300 italic leading-relaxed -mt-2">
 							It said everything was optimized. I tried rescan on a whim and it found 200+ images with another 38% to save. I had no idea.
 						</p>
@@ -433,8 +433,8 @@
 			<div class="bg-neutral-900 px-8 md:px-12 py-7 border-b border-white/5">
 				<div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
 					<div class="shrink-0 flex items-center gap-2 md:pt-0.5">
-						<div class="w-1.5 h-1.5 rounded-full bg-[#FF4400] animate-pulse shrink-0"></div>
-						<span class="text-[9px] font-bold font-mono tracking-[0.3em] text-[#FF4400] uppercase">Hypothesis</span>
+						<div class="w-1.5 h-1.5 rounded-full bg-portfolio-accent-vivid animate-pulse shrink-0"></div>
+						<span class="text-[9px] font-bold font-mono tracking-[0.3em] text-portfolio-accent-vivid uppercase">Hypothesis</span>
 					</div>
 					<div class="hidden md:block w-px h-10 bg-white/10 shrink-0"></div>
 					<p class="text-base font-semibold text-white leading-relaxed">
@@ -444,7 +444,7 @@
 			</div>
 
 			<!-- Orange divider -->
-			<div class="h-[3px] bg-[#FF4400] w-full"></div>
+			<div class="h-[3px] bg-portfolio-accent w-full"></div>
 
 			<!-- White bottom: What we changed + Proof -->
 			<div class="bg-white px-8 md:px-12 pt-10 pb-6 grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-10">
@@ -459,7 +459,7 @@
 							{ n: '04', action: 'Email reports + background toggle',   detail: 'Compression digest sent to admin after each run. Toggle to control when background jobs run — set it and forget it.' },
 						] as step}
 							<div class="flex gap-4">
-								<span class="text-[#FF4400] text-[11px] font-black font-mono shrink-0 mt-0.5">{step.n}</span>
+								<span class="text-[#6B7280] text-[11px] font-black font-mono shrink-0 mt-0.5">{step.n}</span>
 								<div>
 									<p class="text-sm font-bold text-neutral-900 leading-snug mb-1">{step.action}</p>
 									<p class="text-xs text-neutral-500 leading-relaxed">{step.detail}</p>
@@ -479,7 +479,7 @@
 							{ stat: '−37%', label: 'Bounce rate',      sub: 'post-launch' },
 						] as m}
 							<div class="bg-neutral-950 rounded-xl px-4 py-4 border border-neutral-800">
-								<span class="text-[clamp(1.4rem,3vw,2rem)] font-black text-[#FF4400] tracking-tight leading-none block">{m.stat}</span>
+								<span class="text-[clamp(1.4rem,3vw,2rem)] font-black text-portfolio-success tracking-tight leading-none block">{m.stat}</span>
 								<span class="text-xs font-semibold text-white block mt-1">{m.label}</span>
 								<span class="text-[10px] text-neutral-500">{m.sub}</span>
 							</div>

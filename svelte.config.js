@@ -10,7 +10,8 @@ const config = {
 		adapter: adapter(),
 		prerender: {
 			handleHttpError: 'warn',
-			handleMissingId: 'ignore'
+			handleMissingId: 'ignore',
+			handleUnseenRoutes: 'ignore'
 		}
 	}
 };

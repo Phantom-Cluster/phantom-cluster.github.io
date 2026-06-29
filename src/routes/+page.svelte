@@ -1,13 +1,11 @@
 <script lang="ts">
 	import FeaturedProject from "$lib/components/FeaturedProject.svelte";
-	import StackedProjects from "$lib/components/StackedProjects.svelte";
+	import StackedProjectsV2 from "$lib/components/StackedProjectsV2.svelte";
 	import PartnerMarquee from "$lib/components/PartnerMarquee.svelte";
-	import { projects } from "$lib/data/projects";
-	import { Button } from "$lib/components/ui/button";
 	import { onMount } from "svelte";
 	import { gsap } from "gsap";
 	import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-	import { ChevronDown, Send, ArrowRight } from "lucide-svelte";
+	import { ArrowRight } from "lucide-svelte";
 	import VanillaTilt from "vanilla-tilt";
 	import portrait from "$lib/assets/portrait.webp";
 	import cubeImg from "$lib/assets/4 Cube Abstract Glass Spectrum.png";
@@ -34,25 +32,6 @@
 		targetX = event.clientX - rect.left;
 		targetY = event.clientY - rect.top;
 	};
-
-	let bridgeRotateX = $state(0);
-	let bridgeRotateY = $state(0);
-
-	const handleBridgeMouseMove = (e: MouseEvent) => {
-		const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-		const x = e.clientX - rect.left;
-		const y = e.clientY - rect.top;
-
-		bridgeRotateY = (x / rect.width - 0.5) * 30;
-		bridgeRotateX = (y / rect.height - 0.5) * -30;
-	};
-
-	const handleBridgeMouseLeave = () => {
-		bridgeRotateX = 0;
-		bridgeRotateY = 0;
-	};
-
-	let activeFaq = $state(-1);
 
 	const capabilities = [
 		{
@@ -92,116 +71,17 @@
 		},
 	];
 
-	let activeProcessIndex = $state(0);
-	let processCards: HTMLElement[] = $state([]);
-
-	const processSteps = [
-		{
-			num: "01",
-			title: "Think",
-			desc: "Every project starts with understanding. I listen, analyze constraints, and study user behaviors to make context-driven decisions.",
-		},
-		{
-			num: "02",
-			title: "Define",
-			desc: "Ideas take clear shape. I outline structural blueprints, UX layouts, and functional details connecting design with product goals.",
-		},
-		{
-			num: "03",
-			title: "Design",
-			desc: "Pixel-perfect execution. I build unified atomic components, establish flexible typography systems, and customize visual variables.",
-		},
-		{
-			num: "04",
-			title: "Refine",
-			desc: "Details make excellence. I test across devices, conduct performance reviews, and continuously polish micro-interactions.",
-		},
-		{
-			num: "05",
-			title: "Deliver",
-			desc: "Confident execution. I deliver clean Figma libraries or optimized front-end systems ready for scalable deployment.",
-		},
-	];
-
-	const engagementModels = [
-		{
-			title: "Project Based",
-			desc: "Best for clearly defined projects with a fixed scope, set timelines, and definitive milestones.",
-			benefits: [
-				"Defined deliverables",
-				"Fixed timeline",
-				"Full design execution",
-				"Two refinement rounds",
-				"Complete handoff",
-			],
-			ctaUrl: "mailto:phantomcluster17@gmail.com?subject=Inquiry:%20Project%20Based%20Engagement&body=Hi%20Hitanshu,%0D%0A%0D%0AI%20am%20interested%20in%20a%20project-based%20engagement.%0D%0A%0D%0AMy%20current%20challenge%20is:%20[Briefly%20describe]%0D%0AEstimated%20Timeline:%20[Timeline]%0D%0A%0D%0AThank%20you.",
-		},
-		{
-			title: "Retainer Support",
-			desc: "Ideal for product teams needing ongoing, adaptive design leadership and constant feature upgrades.",
-			benefits: [
-				"Monthly hour allocation",
-				"Ongoing designer support",
-				"Flexible prioritizations",
-				"Interactive review cycles",
-				"Dev alignment channels",
-			],
-			ctaUrl: "mailto:phantomcluster17@gmail.com?subject=Inquiry:%20Retainer%20Support&body=Hi%20Hitanshu,%0D%0A%0D%0AI%20am%20interested%20in%20securing%20retainer%20support%20for%20my%20product%20team.%0D%0A%0D%0AOur%20primary%20design%20needs%20are:%20[Briefly%20describe]%0D%0A%0D%0AThank%20you.",
-		},
-		{
-			title: "Custom Partnership",
-			desc: "Tailored consulting models for early-stage startups and complex enterprise system setups.",
-			benefits: [
-				"Multi-phase work systems",
-				"Customized team scope",
-				"Cross-disciplinary design",
-				"Fractional system leadership",
-				"Weekly alignments",
-			],
-			ctaUrl: "mailto:phantomcluster17@gmail.com?subject=Inquiry:%20Custom%20Partnership&body=Hi%20Hitanshu,%0D%0A%0D%0AI%20would%20like%20to%20discuss%20a%20custom%20partnership/consulting%20model.%0D%0A%0D%0AOur%20company%20goals%20are:%20[Briefly%20describe]%0D%0A%0D%0AThank%20you.",
-		},
-	];
-
-	const faqs = [
-		{
-			q: "Who do you typically work with?",
-			a: "I partner with tech founders, SaaS startups, and WordPress plugin businesses who value design as a primary business accelerator. Industry matters less than a shared drive for visual clarity and robust engineering.",
-		},
-		{
-			q: "Do you design and code?",
-			a: "Yes! I bridge the gap between design systems in Figma and frontend performance. I specialize in building atomic design systems, Gutenberg/Elementor blocks, and clean SvelteKit/Tailwind templates.",
-		},
-		{
-			q: "How do projects usually start?",
-			a: "I start with a quick alignment session to outline structural constraints and goals. From there, I build a custom interactive flow map and visual design system that aligns with your technical timelines.",
-		},
-		{
-			q: "What engagement models do you offer?",
-			a: "I offer fixed-scope project arrangements, monthly design support contracts (retainers), and custom fractional Product Design consulting.",
-		},
-		{
-			q: "Do you offer support after a project ends?",
-			a: "Absolutely. I provide documentation support for developer handoffs and offer retainer options for ongoing updates, testing, and audits.",
-		},
-	];
-
 	let workSectionRef: HTMLElement;
 	let leftGlassWrapper: HTMLElement;
 	let rightGlassWrapper: HTMLElement;
 
-	const brands = [
-		"WPMU DEV",
-		"Themeisle",
-		"Searchmetrics",
-		"Ideajam",
-		"Eclectic",
-	];
-
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
 
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 		// 1. Ambient Bobbing
-		gsap.to(".glass-asset", {
+		if (!reducedMotion) gsap.to(".glass-asset", {
 			y: 12,
 			rotation: 4,
 			duration: 4.5,
@@ -237,7 +117,7 @@
 		}
 
 		// Page reveals
-		gsap.from(".reveal-section", {
+		if (!reducedMotion) gsap.from(".reveal-section", {
 			opacity: 0,
 			y: 50,
 			duration: 1,
@@ -262,74 +142,26 @@
 		});
 
 		// --- Metrics Card 3D Tilt ---
-		const metricsCard = document.querySelector(".metrics-tilt-card");
-		if (metricsCard) {
-			const isTouchDevice = window.matchMedia(
-				"(hover: none) and (pointer: coarse)",
-			).matches;
-			if (!isTouchDevice) {
-				VanillaTilt.init(metricsCard as HTMLElement, {
-					max: 3.5,
-					speed: 400,
-					glare: true,
-					"max-glare": 0.06,
-					easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)", // Spring-like cubic bezier
-				});
+		if (!reducedMotion) {
+			const metricsCard = document.querySelector(".metrics-tilt-card");
+			if (metricsCard) {
+				const isTouchDevice = window.matchMedia(
+					"(hover: none) and (pointer: coarse)",
+				).matches;
+				if (!isTouchDevice) {
+					VanillaTilt.init(metricsCard as HTMLElement, {
+						max: 3.5,
+						speed: 400,
+						glare: true,
+						"max-glare": 0.06,
+						easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+					});
+				}
 			}
 		}
 
-		// --- Process Scroll-Driven Reveal ---
-		const processStepsList = document.querySelectorAll(".process-step");
-		gsap.set(processStepsList, {
-			opacity: 0.3,
-			x: -15,
-			willChange: "opacity, transform",
-		});
-
-		processStepsList.forEach((step) => {
-			ScrollTrigger.create({
-				trigger: step,
-				start: "top 65%",
-				end: "bottom 35%",
-				onEnter: () =>
-					gsap.to(step, {
-						opacity: 1,
-						x: 0,
-						duration: 0.4,
-						ease: "power2.out",
-						overwrite: "auto",
-					}),
-				onLeave: () =>
-					gsap.to(step, {
-						opacity: 0.3,
-						x: -15,
-						duration: 0.4,
-						ease: "power2.out",
-						overwrite: "auto",
-						filter: "grayscale(100%)",
-					}),
-				onEnterBack: () =>
-					gsap.to(step, {
-						opacity: 1,
-						x: 0,
-						duration: 0.4,
-						ease: "power2.out",
-						overwrite: "auto",
-						filter: "grayscale(0%)",
-					}),
-				onLeaveBack: () =>
-					gsap.to(step, {
-						opacity: 0.3,
-						x: -15,
-						duration: 0.4,
-						ease: "power2.out",
-						overwrite: "auto",
-						filter: "grayscale(100%)",
-					}),
-			});
-		});
 		// ---- Hero entrance stagger ----
-		gsap.from([heroHeadline, heroBio, heroImage, heroBar], {
+		if (!reducedMotion) gsap.from([heroHeadline, heroBio, heroImage, heroBar], {
 			y: 30,
 			opacity: 0,
 			duration: 1,
@@ -348,29 +180,8 @@
 		};
 		rafId = requestAnimationFrame(tick);
 
-		// ---- Process card center-viewport active state ----
-		const processObserver = new IntersectionObserver(
-			(entries) => {
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						activeProcessIndex = parseInt(
-							(entry.target as HTMLElement).dataset.index ?? "0",
-						);
-					}
-				});
-			},
-			{ rootMargin: "-40% 0px -40% 0px", threshold: 0 },
-		);
-		// Wait a tick for bind:this to populate processCards
-		setTimeout(() => {
-			processCards.forEach((card) => {
-				if (card) processObserver.observe(card);
-			});
-		}, 100);
-
 		return () => {
 			cancelAnimationFrame(rafId);
-			processObserver.disconnect();
 		};
 	});
 </script>
@@ -382,7 +193,6 @@
 <section
 	onmousemove={handleMouseMove}
 	data-theme="dark"
-	role="region"
 	aria-label="Hero"
 	class="relative h-[100svh] w-full overflow-hidden bg-black flex flex-col"
 >
@@ -397,7 +207,8 @@
 			muted
 			playsinline
 			preload="metadata"
-			class="absolute min-w-full min-h-full object-cover opacity-70 mix-blend-screen contrast-125 brightness-110"
+			aria-hidden="true"
+			class="absolute min-w-full min-h-full object-cover opacity-70 mix-blend-screen contrast-125 brightness-110 grayscale"
 		>
 			<source src="/videos/hero-background.mp4" type="video/mp4" />
 		</video>
@@ -433,13 +244,44 @@
 						Product Designer.
 					</h2>
 
+					<div class="flex items-center gap-2 mt-5">
+						<span class="relative flex h-2 w-2" aria-hidden="true">
+							<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+							<span class="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
+						</span>
+						<span class="text-[11px] font-mono tracking-widest text-green-400/80 uppercase">Available — open to full-time roles</span>
+					</div>
+
 					<p
 						bind:this={heroBio}
-						class="max-w-md text-gray-500 mt-6 text-lg font-normal leading-relaxed"
+						class="max-w-md text-gray-400 mt-5 text-lg font-normal leading-relaxed"
 					>
-						Building clean digital products, high-growth SaaS
-						interfaces, and optimized frontend systems.
+						I design SaaS products that reduce operational friction
+						and scale — at the intersection of product strategy,
+						design systems, and frontend execution. 7 years shipping
+						at WPMU DEV and across high-growth platforms.
 					</p>
+
+					<div class="flex flex-col sm:flex-row gap-3 mt-8">
+						<a
+							href="/#projects"
+							class="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-black rounded-full text-sm font-bold tracking-wide hover:bg-gray-100 transition-all duration-200 active:scale-95 shadow-lg shadow-black/30"
+						>
+							View Work
+							<ArrowRight class="size-3.5" />
+						</a>
+						<a
+							href="/resume.pdf"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/20 text-white rounded-full text-sm font-bold tracking-wide hover:border-white/50 hover:bg-white/5 transition-all duration-200"
+						>
+							Download Resume
+							<svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+							</svg>
+						</a>
+					</div>
 				</div>
 			</div>
 
@@ -480,7 +322,7 @@
 				</div>
 
 				<div
-					class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/[0.03] border border-white/10 text-gray-400 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:text-white hover:border-[#FF4400]/50 hover:shadow-[0_0_20px_rgba(255,68,0,0.15)] cursor-default"
+					class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/[0.03] border border-white/10 text-gray-400 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:text-white hover:border-primary/50 hover:shadow-[0_0_20px_rgba(34,68,255,0.15)] cursor-default"
 				>
 					<span
 						>Specialization: SaaS, Dashboards &amp; Atomic Systems</span
@@ -501,6 +343,7 @@
 <!-- (01) CREATIVE SPECIALIST SECTION (Light Section) -->
 <section
 	id="studio"
+	aria-label="System Architecture"
 	data-theme="light"
 	class="bg-[#f4f4f6] border-t border-neutral-200/50"
 >
@@ -513,7 +356,7 @@
 					class="mb-8 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
 				>
 					<div
-						class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+						class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"
 					></div>
 					<div
 						class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
@@ -542,11 +385,11 @@
 				<li class="flex items-start gap-4">
 					<div class="relative flex h-3 w-3 mt-1.5 flex-shrink-0">
 						<span
-							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF4400] opacity-60"
+							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60"
 							style="animation-delay: 0ms;"
 						></span>
 						<span
-							class="relative inline-flex rounded-full h-3 w-3 bg-[#FF4400]"
+							class="relative inline-flex rounded-full h-3 w-3 bg-primary"
 						></span>
 					</div>
 					<span class="text-gray-600 text-lg leading-snug">
@@ -560,11 +403,11 @@
 				<li class="flex items-start gap-4">
 					<div class="relative flex h-3 w-3 mt-1.5 flex-shrink-0">
 						<span
-							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF4400] opacity-60"
+							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60"
 							style="animation-delay: 300ms;"
 						></span>
 						<span
-							class="relative inline-flex rounded-full h-3 w-3 bg-[#FF4400]"
+							class="relative inline-flex rounded-full h-3 w-3 bg-primary"
 						></span>
 					</div>
 					<span class="text-gray-600 text-lg leading-snug">
@@ -578,11 +421,11 @@
 				<li class="flex items-start gap-4">
 					<div class="relative flex h-3 w-3 mt-1.5 flex-shrink-0">
 						<span
-							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF4400] opacity-60"
+							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60"
 							style="animation-delay: 600ms;"
 						></span>
 						<span
-							class="relative inline-flex rounded-full h-3 w-3 bg-[#FF4400]"
+							class="relative inline-flex rounded-full h-3 w-3 bg-primary"
 						></span>
 					</div>
 					<span class="text-gray-600 text-lg leading-snug">
@@ -600,7 +443,7 @@
 				class="bg-[#0a0a0a] rounded-[2rem] p-8 lg:p-10 w-full flex flex-col justify-center space-y-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
 			>
 				<p
-					class="text-xs font-mono tracking-widest text-[#FF4400] uppercase"
+					class="text-xs font-mono tracking-widest text-portfolio-success uppercase"
 				>
 					Metrics &amp; Impact
 				</p>
@@ -650,6 +493,8 @@
 
 <!-- UNIFIED WORK SECTION (Bridging The Gap, Marquee, Case Study) -->
 <section
+	id="projects"
+	aria-label="Selected Work"
 	bind:this={workSectionRef}
 	class="relative w-full overflow-hidden py-32 flex flex-col items-center gap-y-20 bg-[#f8f9fa] border-t border-gray-200"
 >
@@ -684,7 +529,7 @@
 			BRIDGING <br />
 			THE
 			<span
-				class="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4400] to-[#ff7733]"
+				class="text-neutral-300"
 				>GAP.</span
 			>
 		</h2>
@@ -709,27 +554,27 @@
 						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
 						>WPMU DEV</span
 					>
-					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 					<span
 						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
 						>Themeisle</span
 					>
-					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 					<span
 						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
 						>Searchmetrics</span
 					>
-					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 					<span
 						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
 						>Ideajam</span
 					>
-					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 					<span
 						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
 						>Eclectic</span
 					>
-					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 				</div>
 
 				<div class="flex items-center gap-16 md:gap-32 px-8 md:px-16">
@@ -737,27 +582,27 @@
 						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
 						>WPMU DEV</span
 					>
-					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 					<span
 						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
 						>Themeisle</span
 					>
-					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 					<span
 						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
 						>Searchmetrics</span
 					>
-					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 					<span
 						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
 						>Ideajam</span
 					>
-					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 					<span
 						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
 						>Eclectic</span
 					>
-					<span class="w-2 h-2 rounded-full bg-[#FF4400]"></span>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 				</div>
 			</div>
 		</div>
@@ -769,7 +614,7 @@
 				class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
 			>
 				<div
-					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"
 				></div>
 				<div
 					class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
@@ -786,10 +631,208 @@
 	</div>
 </section>
 
-<!-- (02) FEATURED PROJECTS SECTION (Light Section) -->
-<StackedProjects />
+<!-- (02) FEATURED PROJECTS SECTION -->
+<StackedProjectsV2 />
 
-<!-- (02) CAPABILITIES SECTION (Dark Section) -->
+<!-- (03) CONCEPTS & EXPLORATIONS -->
+<section class="bg-[#0a0a0b] py-28 px-6 border-t border-white/5">
+	<div class="max-w-[1320px] mx-auto">
+
+		<!-- Header -->
+		<div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-16">
+			<div>
+				<p class="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase mb-3">(03) Personal Research</p>
+				<h2 class="text-4xl md:text-6xl font-black tracking-tight text-white leading-[0.95]">
+					Concepts &<br/><span class="text-neutral-600">Explorations.</span>
+				</h2>
+			</div>
+			<p class="text-sm text-neutral-500 max-w-[32ch] leading-relaxed sm:text-right">
+				Self-initiated design research — ideas built to explore new problems, not client briefs.
+			</p>
+		</div>
+
+		<!-- Grid -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5 border border-white/5 rounded-3xl overflow-hidden">
+
+			<!-- Card 1 — WordPress -->
+			<div role="link" tabindex="0" onclick={() => window.location.href='/work/wordpress-redesign'} onkeydown={(e) => e.key === 'Enter' && (window.location.href='/work/wordpress-redesign')} class="concept-card group relative flex flex-col justify-between p-8 bg-[#0a0a0b] hover:bg-[#0d1520] transition-colors duration-300 min-h-[280px] cursor-pointer">
+				<div class="absolute top-0 left-0 w-[3px] h-full bg-[#0073aa] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+				<div class="flex items-start justify-between">
+					<div class="flex flex-col gap-3">
+						<div class="flex items-center gap-2">
+							<span class="px-2 py-0.5 rounded-full bg-[#0073aa]/15 border border-[#0073aa]/25 text-[9px] font-mono tracking-widest text-[#4da6cc] uppercase">Concept</span>
+							<span class="text-[9px] font-mono text-neutral-600">2021</span>
+						</div>
+						<h3 class="text-2xl md:text-3xl font-black tracking-tight text-white leading-tight group-hover:text-[#4da6cc] transition-colors duration-200">WordPress<br/>Admin Redesign</h3>
+					</div>
+					<span class="text-[5rem] font-black leading-none select-none text-white/[0.03] group-hover:text-[#0073aa]/10 transition-colors duration-300 -mt-2">01</span>
+				</div>
+				<div class="flex items-end justify-between mt-6">
+					<div>
+						<p class="text-xs text-neutral-500 leading-relaxed max-w-[28ch] mb-4">Modernising the Gutenberg toolbar, collapsible sidebar, and plugin management flow for large installations.</p>
+						<div class="flex flex-wrap gap-1.5">
+							{#each ['Admin UX', 'Gutenberg', 'WordPress'] as tag}
+								<span class="px-2 py-0.5 rounded-full bg-white/5 text-[9px] font-mono text-neutral-500 border border-white/5">{tag}</span>
+							{/each}
+						</div>
+					</div>
+					<div class="flex flex-col items-end gap-2 shrink-0 ml-4">
+						<span class="flex items-center gap-1 text-[10px] font-mono text-neutral-500 group-hover:text-white transition-colors">View case <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span>
+						<a href="https://www.behance.net/gallery/111596675/WordPress-Redesign-(New-Features-Changes)" target="_blank" rel="noopener noreferrer" onclick={(e) => e.stopPropagation()} class="flex items-center gap-1 text-[10px] font-mono text-[#0073aa]/60 hover:text-[#4da6cc] transition-colors">Behance ↗</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Card 2 — Effido -->
+			<div role="link" tabindex="0" onclick={() => window.location.href='/work/effido-productivity-app'} onkeydown={(e) => e.key === 'Enter' && (window.location.href='/work/effido-productivity-app')} class="concept-card group relative flex flex-col justify-between p-8 bg-[#0a0a0b] hover:bg-[#0a1a14] transition-colors duration-300 min-h-[280px] cursor-pointer">
+				<div class="absolute top-0 left-0 w-[3px] h-full bg-[#10b981] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+				<div class="flex items-start justify-between">
+					<div class="flex flex-col gap-3">
+						<div class="flex items-center gap-2">
+							<span class="px-2 py-0.5 rounded-full bg-[#10b981]/15 border border-[#10b981]/25 text-[9px] font-mono tracking-widest text-[#34d399] uppercase">Concept</span>
+							<span class="text-[9px] font-mono text-neutral-600">2021</span>
+						</div>
+						<h3 class="text-2xl md:text-3xl font-black tracking-tight text-white leading-tight group-hover:text-[#34d399] transition-colors duration-200">Effido<br/>Productivity App</h3>
+					</div>
+					<span class="text-[5rem] font-black leading-none select-none text-white/[0.03] group-hover:text-[#10b981]/10 transition-colors duration-300 -mt-2">02</span>
+				</div>
+				<div class="flex items-end justify-between mt-6">
+					<div>
+						<p class="text-xs text-neutral-500 leading-relaxed max-w-[28ch] mb-4">A 3-layer focus-first task model — Now / Today / Later — built around cognitive load reduction, not list management.</p>
+						<div class="flex flex-wrap gap-1.5">
+							{#each ['Mobile App', 'Productivity', 'Focus UX'] as tag}
+								<span class="px-2 py-0.5 rounded-full bg-white/5 text-[9px] font-mono text-neutral-500 border border-white/5">{tag}</span>
+							{/each}
+						</div>
+					</div>
+					<div class="flex flex-col items-end gap-2 shrink-0 ml-4">
+						<span class="flex items-center gap-1 text-[10px] font-mono text-neutral-500 group-hover:text-white transition-colors">View case <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span>
+						<a href="https://www.behance.net/gallery/114922057/Effido-(Productivity-App)" target="_blank" rel="noopener noreferrer" onclick={(e) => e.stopPropagation()} class="flex items-center gap-1 text-[10px] font-mono text-[#10b981]/60 hover:text-[#34d399] transition-colors">Behance ↗</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Card 3 — Resort -->
+			<div role="link" tabindex="0" onclick={() => window.location.href='/work/resort-island-design'} onkeydown={(e) => e.key === 'Enter' && (window.location.href='/work/resort-island-design')} class="concept-card group relative flex flex-col justify-between p-8 bg-[#0a0a0b] hover:bg-[#091a1a] transition-colors duration-300 min-h-[280px] cursor-pointer">
+				<div class="absolute top-0 left-0 w-[3px] h-full bg-[#0d9488] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+				<div class="flex items-start justify-between">
+					<div class="flex flex-col gap-3">
+						<div class="flex items-center gap-2">
+							<span class="px-2 py-0.5 rounded-full bg-[#0d9488]/15 border border-[#0d9488]/25 text-[9px] font-mono tracking-widest text-[#2dd4bf] uppercase">Concept</span>
+							<span class="text-[9px] font-mono text-neutral-600">2021</span>
+						</div>
+						<h3 class="text-2xl md:text-3xl font-black tracking-tight text-white leading-tight group-hover:text-[#2dd4bf] transition-colors duration-200">Island Resort<br/>Experience</h3>
+					</div>
+					<span class="text-[5rem] font-black leading-none select-none text-white/[0.03] group-hover:text-[#0d9488]/10 transition-colors duration-300 -mt-2">03</span>
+				</div>
+				<div class="flex items-end justify-between mt-6">
+					<div>
+						<p class="text-xs text-neutral-500 leading-relaxed max-w-[28ch] mb-4">Booking interface + in-resort companion app with a warm sand + deep teal brand identity system.</p>
+						<div class="flex flex-wrap gap-1.5">
+							{#each ['Hospitality', 'Brand Identity', 'Web Design'] as tag}
+								<span class="px-2 py-0.5 rounded-full bg-white/5 text-[9px] font-mono text-neutral-500 border border-white/5">{tag}</span>
+							{/each}
+						</div>
+					</div>
+					<div class="flex flex-col items-end gap-2 shrink-0 ml-4">
+						<span class="flex items-center gap-1 text-[10px] font-mono text-neutral-500 group-hover:text-white transition-colors">View case <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span>
+						<a href="https://www.behance.net/gallery/112078247/Resort-Design-(Based-on-island)" target="_blank" rel="noopener noreferrer" onclick={(e) => e.stopPropagation()} class="flex items-center gap-1 text-[10px] font-mono text-[#0d9488]/60 hover:text-[#2dd4bf] transition-colors">Behance ↗</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Card 4 — Alt News -->
+			<div role="link" tabindex="0" onclick={() => window.location.href='/work/alt-news-concept'} onkeydown={(e) => e.key === 'Enter' && (window.location.href='/work/alt-news-concept')} class="concept-card group relative flex flex-col justify-between p-8 bg-[#0a0a0b] hover:bg-[#1a1208] transition-colors duration-300 min-h-[280px] cursor-pointer">
+				<div class="absolute top-0 left-0 w-[3px] h-full bg-[#f59e0b] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+				<div class="flex items-start justify-between">
+					<div class="flex flex-col gap-3">
+						<div class="flex items-center gap-2">
+							<span class="px-2 py-0.5 rounded-full bg-[#f59e0b]/15 border border-[#f59e0b]/25 text-[9px] font-mono tracking-widest text-[#fbbf24] uppercase">Concept</span>
+							<span class="text-[9px] font-mono text-neutral-600">2021</span>
+						</div>
+						<h3 class="text-2xl md:text-3xl font-black tracking-tight text-white leading-tight group-hover:text-[#fbbf24] transition-colors duration-200">Alt News<br/>Fact Platform</h3>
+					</div>
+					<span class="text-[5rem] font-black leading-none select-none text-white/[0.03] group-hover:text-[#f59e0b]/10 transition-colors duration-300 -mt-2">04</span>
+				</div>
+				<div class="flex items-end justify-between mt-6">
+					<div>
+						<p class="text-xs text-neutral-500 leading-relaxed max-w-[28ch] mb-4">Credibility-first reading interface — verification status as a visual layer over the headline, not an afterthought.</p>
+						<div class="flex flex-wrap gap-1.5">
+							{#each ['News Platform', 'Trust Design', 'Web Design'] as tag}
+								<span class="px-2 py-0.5 rounded-full bg-white/5 text-[9px] font-mono text-neutral-500 border border-white/5">{tag}</span>
+							{/each}
+						</div>
+					</div>
+					<div class="flex flex-col items-end gap-2 shrink-0 ml-4">
+						<span class="flex items-center gap-1 text-[10px] font-mono text-neutral-500 group-hover:text-white transition-colors">View case <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span>
+						<a href="https://www.behance.net/gallery/109173469/Alt-News-(Concept-Design)" target="_blank" rel="noopener noreferrer" onclick={(e) => e.stopPropagation()} class="flex items-center gap-1 text-[10px] font-mono text-[#f59e0b]/60 hover:text-[#fbbf24] transition-colors">Behance ↗</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Card 5 — Spotify -->
+			<div role="link" tabindex="0" onclick={() => window.location.href='/work/spotify-redesign'} onkeydown={(e) => e.key === 'Enter' && (window.location.href='/work/spotify-redesign')} class="concept-card group relative flex flex-col justify-between p-8 bg-[#0a0a0b] hover:bg-[#071a0d] transition-colors duration-300 min-h-[280px] cursor-pointer">
+				<div class="absolute top-0 left-0 w-[3px] h-full bg-[#1DB954] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+				<div class="flex items-start justify-between">
+					<div class="flex flex-col gap-3">
+						<div class="flex items-center gap-2">
+							<span class="px-2 py-0.5 rounded-full bg-[#1DB954]/15 border border-[#1DB954]/25 text-[9px] font-mono tracking-widest text-[#1DB954] uppercase">Concept</span>
+							<span class="text-[9px] font-mono text-neutral-600">2018</span>
+						</div>
+						<h3 class="text-2xl md:text-3xl font-black tracking-tight text-white leading-tight group-hover:text-[#1DB954] transition-colors duration-200">Spotify<br/>Redesign Concept</h3>
+					</div>
+					<span class="text-[5rem] font-black leading-none select-none text-white/[0.03] group-hover:text-[#1DB954]/10 transition-colors duration-300 -mt-2">05</span>
+				</div>
+				<div class="flex items-end justify-between mt-6">
+					<div>
+						<p class="text-xs text-neutral-500 leading-relaxed max-w-[28ch] mb-4">Reimagined the core listening interface — now-playing hierarchy, queue management, and session-contextual playlist browsing. The project that started everything.</p>
+						<div class="flex flex-wrap gap-1.5">
+							{#each ['Music App', 'Interaction Design', 'UI Design'] as tag}
+								<span class="px-2 py-0.5 rounded-full bg-white/5 text-[9px] font-mono text-neutral-500 border border-white/5">{tag}</span>
+							{/each}
+						</div>
+					</div>
+					<div class="flex flex-col items-end gap-2 shrink-0 ml-4">
+						<span class="flex items-center gap-1 text-[10px] font-mono text-neutral-500 group-hover:text-white transition-colors">View case <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span>
+						<a href="https://www.behance.net/gallery/79737225/Spotify-Re-Design-Concept" target="_blank" rel="noopener noreferrer" onclick={(e) => e.stopPropagation()} class="flex items-center gap-1 text-[10px] font-mono text-[#1DB954]/60 hover:text-[#1DB954] transition-colors">Behance ↗</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Card 6 — Discord -->
+			<div role="link" tabindex="0" onclick={() => window.location.href='/work/discord-redesign'} onkeydown={(e) => e.key === 'Enter' && (window.location.href='/work/discord-redesign')} class="concept-card group relative flex flex-col justify-between p-8 bg-[#0a0a0b] hover:bg-[#0e0d1f] transition-colors duration-300 min-h-[280px] cursor-pointer">
+				<div class="absolute top-0 left-0 w-[3px] h-full bg-[#5865f2] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+				<div class="flex items-start justify-between">
+					<div class="flex flex-col gap-3">
+						<div class="flex items-center gap-2">
+							<span class="px-2 py-0.5 rounded-full bg-[#5865f2]/15 border border-[#5865f2]/25 text-[9px] font-mono tracking-widest text-[#818cf8] uppercase">Concept</span>
+							<span class="text-[9px] font-mono text-neutral-600">2021</span>
+						</div>
+						<h3 class="text-2xl md:text-3xl font-black tracking-tight text-white leading-tight group-hover:text-[#818cf8] transition-colors duration-200">Discord Redesign<br/>&amp; New Features</h3>
+					</div>
+					<span class="text-[5rem] font-black leading-none select-none text-white/3 group-hover:text-[#5865f2]/10 transition-colors duration-300 -mt-2">06</span>
+				</div>
+				<div class="flex items-end justify-between mt-6">
+					<div>
+						<p class="text-xs text-neutral-500 leading-relaxed max-w-[28ch] mb-4">Cross-server activity feed, interest-based Stage discovery, and notification triage for power users in 10+ servers.</p>
+						<div class="flex flex-wrap gap-1.5">
+							{#each ['Social Platform', 'Cross-server UX', 'Product Design'] as tag}
+								<span class="px-2 py-0.5 rounded-full bg-white/5 text-[9px] font-mono text-neutral-500 border border-white/5">{tag}</span>
+							{/each}
+						</div>
+					</div>
+					<div class="flex flex-col items-end gap-2 shrink-0 ml-4">
+						<span class="flex items-center gap-1 text-[10px] font-mono text-neutral-500 group-hover:text-white transition-colors">View case <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span>
+						<a href="https://www.behance.net/gallery/109150543/Discord-Re-Design-(New-Features-Changes)" target="_blank" rel="noopener noreferrer" onclick={(e) => e.stopPropagation()} class="flex items-center gap-1 text-[10px] font-mono text-[#5865f2]/60 hover:text-[#818cf8] transition-colors">Behance ↗</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+<!-- (04) CAPABILITIES SECTION (Dark Section) -->
 <section
 	id="capabilities"
 	data-theme="dark"
@@ -806,7 +849,7 @@
 					class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1px]"
 				>
 					<div
-						class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+						class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"
 					></div>
 					<div
 						class="inline-flex h-full w-full items-center justify-center rounded-full bg-neutral-950 px-6 py-2 relative z-10"
@@ -844,7 +887,7 @@
 				>
 					<div class="lg:col-span-3 flex items-start lg:items-center">
 						<span
-							class="text-sm font-mono text-gray-600 group-hover:text-[#FF4400] transition-colors duration-300"
+							class="text-sm font-mono text-gray-600 group-hover:text-primary transition-colors duration-300"
 							>{cap.id}</span
 						>
 					</div>
@@ -868,176 +911,6 @@
 	</div>
 </section>
 
-<!-- (03) MY PROCESS SECTION (Light Section) -->
-<section
-	data-theme="light"
-	class="py-32 bg-[#f4f4f6] border-t border-neutral-200/50"
->
-	<div
-		class="container mx-auto px-6 max-w-[1320px] grid grid-cols-1 lg:grid-cols-4 gap-12"
-	>
-		<div class="lg:col-span-1">
-			<div
-				class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
-			>
-				<div
-					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
-				></div>
-				<div
-					class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
-				>
-					<span
-						class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
-						>MY PROCESS</span
-					>
-				</div>
-			</div>
-			<h3
-				class="text-3xl md:text-5xl font-extrabold tracking-tight text-neutral-900 leading-none sticky top-32"
-			>
-				A Thoughtful Process Behind My Work
-			</h3>
-		</div>
-
-		<div class="lg:col-span-3 space-y-6">
-			{#each processSteps as step, i}
-				{@const isActive = activeProcessIndex === i}
-				<div
-					bind:this={processCards[i]}
-					data-index={i}
-					class="process-step w-full text-left p-8 md:p-12 border rounded-[2rem] flex flex-col justify-between bg-white transition-all duration-500 ease-out {isActive
-						? 'shadow-lg scale-[1.02]'
-						: 'border-neutral-200 opacity-60 scale-100'}"
-					style={isActive ? "border-color: rgba(255,68,0,0.35);" : ""}
-				>
-					<div class="flex items-center gap-6 mb-4">
-						<span class="font-mono text-sm text-neutral-400"
-							>{step.num}</span
-						>
-						<h4
-							class="text-2xl md:text-3xl font-semibold tracking-tight transition-colors duration-500 ease-out"
-							style="color: {isActive ? '#FF4400' : '#171717'};"
-						>
-							{step.title}
-						</h4>
-					</div>
-					<p
-						class="mt-2 text-neutral-600 text-lg leading-relaxed font-medium"
-					>
-						{step.desc}
-					</p>
-				</div>
-			{/each}
-		</div>
-	</div>
-</section>
-
-<!-- (05) ENGAGEMENT MODELS (Dark Section) -->
-<section
-	data-theme="dark"
-	class="py-32 bg-neutral-950 text-white border-t border-white/5 z-10 relative"
->
-	<div class="container mx-auto px-6 max-w-[1320px]">
-		<div
-			class="flex flex-col items-center text-center max-w-3xl mx-auto mb-20"
-		>
-			<div
-				class="mb-8 relative inline-flex overflow-hidden rounded-full p-[1px]"
-			>
-				<div
-					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
-				></div>
-				<div
-					class="inline-flex h-full w-full items-center justify-center rounded-full bg-neutral-950 px-6 py-2 relative z-10"
-				>
-					<span
-						class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
-						>ENGAGEMENT MODELS</span
-					>
-				</div>
-			</div>
-			<h2
-				class="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-tight"
-			>
-				Ways to Collaborate
-			</h2>
-		</div>
-
-		<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-			{#each engagementModels as model}
-				<a
-					href={model.ctaUrl}
-					class="group/card relative rounded-[2rem] p-[1px] overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl h-full block bg-gray-800"
-				>
-					<!-- Animated spinning border -->
-					<div
-						class="absolute inset-[-1000%] motion-safe:animate-[spin_8s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
-					></div>
-
-					<!-- Inner Card Surface -->
-					<div
-						class="relative z-10 h-full w-full bg-[#111] rounded-[calc(2rem-1px)] p-8 md:p-10 flex flex-col"
-					>
-						<!-- Ambient Glow -->
-						<div
-							class="absolute -top-12 -right-12 w-48 h-48 bg-[#FF4400]/[0.15] rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
-						></div>
-
-						<h3
-							class="relative z-10 text-sm font-mono tracking-widest text-[#FF4400] uppercase mb-4"
-						>
-							{model.title}
-						</h3>
-						<p
-							class="relative z-10 text-gray-400 leading-relaxed mb-10"
-						>
-							{model.desc}
-						</p>
-
-						<div class="relative z-10 grow flex flex-col">
-							<p
-								class="text-[11px] font-bold tracking-widest text-gray-500 uppercase mb-6"
-							>
-								What's Included
-							</p>
-							<ul class="space-y-4 mb-10">
-								{#each model.benefits as benefit}
-									<li class="flex items-start">
-										<span
-											class="w-1.5 h-1.5 rounded-full bg-[#FF4400] mt-2 mr-4 shrink-0"
-										></span>
-										<span class="text-gray-300"
-											>{benefit}</span
-										>
-									</li>
-								{/each}
-							</ul>
-						</div>
-
-						<div
-							class="relative z-10 mt-auto flex items-center justify-between text-gray-400 text-sm font-bold tracking-widest uppercase transition-colors group-hover/card:text-white pt-6 border-t border-gray-800"
-						>
-							Start Conversation
-							<svg
-								class="w-5 h-5 group-hover/card:translate-x-2 transition-transform duration-300 text-[#FF4400]"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-								><path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M17 8l4 4m0 0l-4 4m4-4H3"
-								></path></svg
-							>
-						</div>
-					</div>
-				</a>
-			{/each}
-		</div>
-	</div>
-</section>
-
 <!-- (06) PARTNER MARQUEE SECTION (Light Section) -->
 <section
 	data-theme="light"
@@ -1051,7 +924,7 @@
 				class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
 			>
 				<div
-					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"
 				></div>
 				<div
 					class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
@@ -1064,231 +937,17 @@
 			</div>
 		</div>
 		<div class="lg:col-span-3">
-			<!-- Testimonial card stays solid black for gorgeous contrast pop -->
-			<div
-				class="bg-neutral-950 border border-white/5 rounded-[2.5rem] p-10 md:p-16 flex flex-col justify-between relative overflow-hidden shadow-2xl"
-			>
-				<div class="space-y-8">
-					<span
-						class="text-6xl text-primary font-serif select-none leading-none"
-						>“</span
-					>
-					<blockquote
-						class="text-xl md:text-3xl font-medium tracking-tight text-white leading-normal"
-					>
-						"Hitanshu spearheaded the design overhauled of our WPMU
-						DEV plugins. His visual confidence combined with deep
-						technical constraints was outstanding. He brought our
-						legacy dashboards to life."
-					</blockquote>
-					<div
-						class="border-t border-white/5 pt-8 flex items-center justify-between"
-					>
-						<div>
-							<cite
-								class="not-italic font-bold text-white block text-lg"
-								>Alex Morgan</cite
-							>
-							<span class="text-xs text-neutral-500"
-								>Founder, Nietzsche & WordPress Partner</span
-							>
-						</div>
-						<div class="hidden sm:block text-right">
-							<span class="text-xs text-neutral-500 block"
-								>Scope</span
-							>
-							<span class="text-xs font-semibold text-white"
-								>Visual Design & Gutenberg UI</span
-							>
-						</div>
-					</div>
+			<div class="bg-neutral-950 border border-white/5 rounded-[2.5rem] p-10 md:p-16 relative overflow-hidden shadow-2xl">
+				<p class="text-[10px] font-mono tracking-[0.2em] text-neutral-500 uppercase mb-12 text-center">Trusted by teams at</p>
+				<div class="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-10 items-center justify-items-center">
+					<span class="text-xl md:text-2xl font-black tracking-[0.12em] text-white/60 uppercase hover:text-white transition-colors duration-300 cursor-default">WPMU DEV</span>
+					<span class="text-xl md:text-2xl font-black tracking-[0.12em] text-white/60 uppercase hover:text-white transition-colors duration-300 cursor-default">Themeisle</span>
+					<span class="text-xl md:text-2xl font-black tracking-[0.12em] text-white/60 uppercase hover:text-white transition-colors duration-300 cursor-default">Ideajam</span>
+					<span class="text-xl md:text-2xl font-black tracking-[0.12em] text-white/60 uppercase hover:text-white transition-colors duration-300 cursor-default">Eclectic</span>
+					<span class="text-xl md:text-2xl font-black tracking-[0.12em] text-white/60 uppercase hover:text-white transition-colors duration-300 cursor-default">Searchmetrics</span>
+					<span class="text-xl md:text-2xl font-black tracking-[0.12em] text-white/60 uppercase hover:text-white transition-colors duration-300 cursor-default">SomeTechWork</span>
 				</div>
 			</div>
-		</div>
-	</div>
-</section>
-
-<!-- (07) INSIGHTS SECTION (Dark Section) -->
-<section
-	id="blog"
-	data-theme="dark"
-	class="py-32 bg-neutral-950 text-white border-t border-white/5 z-10 relative"
->
-	<div class="container mx-auto px-6 max-w-[1320px]">
-		<div class="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-20">
-			<div class="lg:col-span-1">
-				<div
-					class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1px]"
-				>
-					<div
-						class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
-					></div>
-					<div
-						class="inline-flex h-full w-full items-center justify-center rounded-full bg-neutral-950 px-6 py-2 relative z-10"
-					>
-						<span
-							class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
-							>INSIGHTS WITH PURPOSE</span
-						>
-					</div>
-				</div>
-			</div>
-			<div class="lg:col-span-3">
-				<h2
-					class="text-4xl md:text-7xl font-bold tracking-tighter text-white leading-none"
-				>
-					Insights with Purpose
-				</h2>
-			</div>
-		</div>
-
-		<!-- Rows of Articles -->
-		<div class="border-t border-white/5 divide-y divide-white/5">
-			<div
-				class="py-8 md:py-10 grid grid-cols-1 md:grid-cols-4 gap-6 items-center hover:bg-neutral-900/40 transition-colors px-4 rounded-xl"
-			>
-				<div class="col-span-1">
-					<span class="text-neutral-500 font-mono text-xs"
-						>↳ Mar 28, 2026</span
-					>
-				</div>
-				<div class="md:col-span-2">
-					<h4
-						class="text-lg md:text-2xl font-bold text-white tracking-tight mb-2"
-					>
-						How Design Shapes More Than Just Reality
-					</h4>
-					<p class="text-sm text-neutral-400 leading-relaxed">
-						Why brands that start with aesthetics often stall and
-						how strategy shapes work that actually lasts.
-					</p>
-				</div>
-				<div class="text-right">
-					<span
-						class="text-xs font-semibold text-primary uppercase tracking-widest"
-						>Read Article ↳</span
-					>
-				</div>
-			</div>
-
-			<div
-				class="py-8 md:py-10 grid grid-cols-1 md:grid-cols-4 gap-6 items-center hover:bg-neutral-900/40 transition-colors px-4 rounded-xl"
-			>
-				<div class="col-span-1">
-					<span class="text-neutral-500 font-mono text-xs"
-						>↳ Feb 19, 2026</span
-					>
-				</div>
-				<div class="md:col-span-2">
-					<h4
-						class="text-lg md:text-2xl font-bold text-white tracking-tight mb-2"
-					>
-						It's decision-making. Design is not decoration.
-					</h4>
-					<p class="text-sm text-neutral-400 leading-relaxed">
-						How strong creative direction turns uncertainty into
-						clarity and why the best design choices are often
-						invisible.
-					</p>
-				</div>
-				<div class="text-right">
-					<span
-						class="text-xs font-semibold text-primary uppercase tracking-widest"
-						>Read Article ↳</span
-					>
-				</div>
-			</div>
-
-			<div
-				class="py-8 md:py-10 grid grid-cols-1 md:grid-cols-4 gap-6 items-center hover:bg-neutral-900/40 transition-colors px-4 rounded-xl"
-			>
-				<div class="col-span-1">
-					<span class="text-neutral-500 font-mono text-xs"
-						>↳ Jan 05, 2026</span
-					>
-				</div>
-				<div class="md:col-span-2">
-					<h4
-						class="text-lg md:text-2xl font-bold text-white tracking-tight mb-2"
-					>
-						Art direction in the age of short attention.
-					</h4>
-					<p class="text-sm text-neutral-400 leading-relaxed">
-						How to build visual systems that hold meaning even when
-						people scroll fast and forget faster.
-					</p>
-				</div>
-				<div class="text-right">
-					<span
-						class="text-xs font-semibold text-primary uppercase tracking-widest"
-						>Read Article ↳</span
-					>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-
-<!-- FAQ ACCORDION SECTION (Light Section) -->
-<section
-	data-theme="light"
-	class="py-32 bg-[#f4f4f6] border-t border-neutral-200/50"
->
-	<div
-		class="container mx-auto px-6 max-w-[1320px] grid grid-cols-1 lg:grid-cols-4 gap-12"
-	>
-		<div class="lg:col-span-1">
-			<div
-				class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
-			>
-				<div
-					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
-				></div>
-				<div
-					class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
-				>
-					<span
-						class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
-						>SHARED EXPECTATIONS</span
-					>
-				</div>
-			</div>
-			<h3
-				class="text-3xl md:text-5xl font-extrabold tracking-tight text-neutral-900 leading-none"
-			>
-				Ask Anything.
-			</h3>
-		</div>
-
-		<div class="lg:col-span-3 space-y-4">
-			{#each faqs as faq, index}
-				<div
-					class="bg-white border border-neutral-200 rounded-[1.5rem] overflow-hidden transition-all duration-300 shadow-sm"
-				>
-					<button
-						onclick={() =>
-							(activeFaq = activeFaq === index ? -1 : index)}
-						class="w-full text-left p-6 md:p-8 flex justify-between items-center text-neutral-900 font-semibold"
-					>
-						<span class="text-base md:text-lg tracking-tight"
-							>{faq.q}</span
-						>
-						<ChevronDown
-							class="size-4 text-neutral-450 transition-transform duration-300 {activeFaq ===
-							index
-								? 'rotate-180 text-primary'
-								: ''}"
-						/>
-					</button>
-					{#if activeFaq === index}
-						<div
-							class="px-6 md:px-8 pb-6 md:pb-8 text-neutral-600 text-sm md:text-base leading-relaxed border-t border-neutral-100 pt-4 font-medium"
-						>
-							{faq.a}
-						</div>
-					{/if}
-				</div>
-			{/each}
 		</div>
 	</div>
 </section>
@@ -1308,7 +967,7 @@
 				class="-ml-[25px] mb-8 self-start relative inline-flex overflow-hidden rounded-full p-[1px]"
 			>
 				<div
-					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"
+					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"
 				></div>
 				<div
 					class="inline-flex h-full w-full items-center justify-center rounded-full bg-[#050505] px-6 py-2.5 relative z-10"
@@ -1343,7 +1002,7 @@
 					class="group flex items-center text-gray-300 hover:text-white transition-colors text-base font-medium"
 				>
 					<svg
-						class="w-6 h-6 mr-4 text-gray-600 group-hover:text-[#FF4400] transition-colors"
+						class="w-6 h-6 mr-4 text-gray-600 group-hover:text-primary transition-colors"
 						fill="none"
 						stroke="currentColor"
 						viewBox="0 0 24 24"
@@ -1363,7 +1022,7 @@
 					class="group flex items-center text-gray-300 hover:text-white transition-colors text-base font-medium"
 				>
 					<svg
-						class="w-6 h-6 mr-4 text-gray-600 group-hover:text-[#FF4400] transition-colors"
+						class="w-6 h-6 mr-4 text-gray-600 group-hover:text-primary transition-colors"
 						fill="currentColor"
 						viewBox="0 0 24 24"
 						><path
@@ -1393,7 +1052,7 @@
 
 				<!-- Animated spinning border -->
 				<div
-					class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
+					class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
 				></div>
 
 				<!-- Inner Card Surface -->
@@ -1402,11 +1061,11 @@
 				>
 					<!-- Ambient Glow -->
 					<div
-						class="absolute -top-12 -right-12 w-48 h-48 bg-[#FF4400]/[0.15] rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+						class="absolute -top-12 -right-12 w-48 h-48 bg-primary/15 rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
 					></div>
 
 					<div
-						class="relative z-10 w-12 h-12 rounded-full bg-[#FF4400]/10 flex items-center justify-center mb-6 text-[#FF4400] shrink-0"
+						class="relative z-10 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6 text-primary shrink-0"
 					>
 						<svg
 							class="w-5 h-5"
@@ -1433,7 +1092,7 @@
 						requirements for a precise technical quote.
 					</p>
 					<div
-						class="relative z-10 flex items-center text-[#FF4400] text-sm font-bold tracking-widest uppercase mt-auto"
+						class="relative z-10 flex items-center text-primary text-sm font-bold tracking-widest uppercase mt-auto"
 					>
 						Start Brief
 						<svg
@@ -1466,7 +1125,7 @@
 
 				<!-- Animated spinning border -->
 				<div
-					class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
+					class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
 				></div>
 
 				<!-- Inner Card Surface -->
@@ -1475,7 +1134,7 @@
 				>
 					<!-- Ambient Glow -->
 					<div
-						class="absolute -top-12 -right-12 w-48 h-48 bg-[#FF4400]/[0.15] rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+						class="absolute -top-12 -right-12 w-48 h-48 bg-primary/15 rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
 					></div>
 
 					<div

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Button } from "$lib/components/ui/button";
 	import TubesBackground from "$lib/components/TubesBackground.svelte";
 </script>
 
@@ -31,17 +30,17 @@
 				>
 					<span class="relative flex h-2 w-2">
 						<span
-							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"
+							class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"
 						></span>
 						<span
-							class="relative inline-flex rounded-full h-2 w-2 bg-primary"
+							class="relative inline-flex rounded-full h-2 w-2 bg-white"
 						></span>
 					</span>
 					<span>Featured product</span>
 				</div>
 
 				<div
-					class="bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-xs font-bold text-primary uppercase tracking-wider"
+					class="bg-black/45 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 text-xs font-bold text-white/80 uppercase tracking-wider"
 				>
 					FLAGSHIP WPMU DEV WORK
 				</div>
@@ -83,11 +82,11 @@
 					</div>
 					<div class="flex flex-col text-left">
 						<span class="text-xs font-bold text-white leading-none"
-							>2M+ Smush Installs</span
+							>Trusted by 2M+ Users</span
 						>
 						<span
 							class="text-[10px] text-neutral-400 mt-1 uppercase tracking-wider"
-							>⭐ Monochrome Mode</span
+							>Monochrome Design System</span
 						>
 					</div>
 				</div>
@@ -102,12 +101,15 @@
 						Spearheaded a scalable atomic design system in Figma and
 						launched white-label monochrome dashboards.
 					</p>
-					<div
-						class="flex items-center gap-2 border border-gray-800 rounded-full p-1.5 group cursor-pointer hover:border-gray-600 transition-colors duration-300"
+					<a
+						href="/work/wpmu-dev-dashboard"
+						class="flex items-center gap-2 border border-gray-800 rounded-full p-1.5 group hover:border-gray-600 transition-colors duration-300"
+						aria-label="Explore WPMU DEV case study"
 					>
 						<!-- Circular Arrow Icon -->
 						<div
 							class="flex items-center justify-center w-10 h-10 rounded-full bg-black/50 transition-all duration-300"
+							aria-hidden="true"
 						>
 							<svg
 								class="w-4 h-4 text-white transition-transform duration-300 group-hover:translate-x-1"
@@ -125,13 +127,12 @@
 							</svg>
 						</div>
 						<!-- Main Action Button -->
-						<a
-							href="/work/wpmu-dev-dashboard"
-							class="bg-[#FF4400] text-white px-6 py-2.5 rounded-full font-semibold tracking-wide text-xs whitespace-nowrap shadow-[0_0_15px_rgba(255,68,0,0.4)] transition-all duration-300 group-hover:shadow-[0_0_25px_rgba(255,68,0,0.6)] group-hover:bg-[#ff5511]"
+						<span
+							class="bg-white text-black px-6 py-2.5 rounded-full font-semibold tracking-wide text-xs whitespace-nowrap shadow-[0_0_15px_rgba(255,255,255,0.15)] transition-all duration-300 group-hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] group-hover:bg-neutral-100"
 						>
 							EXPLORE PROJECT
-						</a>
-					</div>
+						</span>
+					</a>
 				</div>
 			</div>
 	</div>

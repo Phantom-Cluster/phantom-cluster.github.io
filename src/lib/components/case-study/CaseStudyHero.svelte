@@ -24,13 +24,13 @@
 
 <!-- bg-white here is intentional — prevents the GSAP dark-stage bleed from inverting hero text -->
 <section class="w-full bg-white px-6 pt-[160px] md:pt-[180px] pb-28 min-h-screen flex flex-col justify-center">
-	<div class="max-w-6xl mx-auto w-full">
+	<div class="max-w-7xl mx-auto w-full">
 
 		<!-- Top meta strip -->
 		<div class="flex items-center justify-between border-b border-neutral-200 pb-5 mb-12 cs-hero-element">
-			<div class="inline-flex overflow-hidden rounded-full p-px relative">
-				<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#f53500_360deg)]"></div>
-				<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white/80 backdrop-blur-sm px-5 py-2 relative z-10">
+			<div class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
+				<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"></div>
+				<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
 					<span class="text-[11px] font-mono tracking-widest text-neutral-500 uppercase">Case Study — Dashboard &amp; Plugin Suite</span>
 				</div>
 			</div>
@@ -76,7 +76,7 @@
 					<span class="text-sm font-semibold text-neutral-800">SUI 3 Atomic</span>
 				</div>
 				<div class="pt-5 border-t border-neutral-100">
-					<div class="flex items-center gap-2 text-[#FF4400]">
+					<div class="flex items-center gap-2 text-portfolio-accent">
 						<span class="text-[9px] font-mono tracking-widest uppercase">Scroll to explore</span>
 						<svg class="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
@@ -93,8 +93,8 @@
 			<div class="py-7 pr-4 md:pr-8 border-r border-neutral-200">
 				<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Smush Installs</span>
 				<div class="flex items-baseline gap-1.5 leading-none flex-wrap">
-					<span class="text-lg md:text-xl font-black text-neutral-300 tracking-tight line-through decoration-[#FF4400]/60">1M</span>
-					<span class="text-[#FF4400] font-black text-sm md:text-base leading-none">→</span>
+					<span class="text-lg md:text-xl font-black text-neutral-300 tracking-tight line-through decoration-portfolio-error">1M</span>
+					<span class="text-portfolio-accent font-black text-sm md:text-base leading-none">→</span>
 					<span class="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">2M+</span>
 				</div>
 			</div>
@@ -112,7 +112,7 @@
 			<div class="py-7 pl-3 md:pl-8">
 				<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Plugins Unified</span>
 				<div class="flex items-baseline gap-1 leading-none flex-wrap">
-					<span class="text-xl md:text-2xl font-black text-[#FF4400] tracking-tight">6+</span>
+					<span class="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">6+</span>
 					<span class="text-xs md:text-sm font-semibold text-neutral-400 leading-none">under SUI&nbsp;3</span>
 				</div>
 			</div>

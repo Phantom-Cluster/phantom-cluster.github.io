@@ -34,7 +34,10 @@
 
 	onMount(() => {
 		navTheme.set('light'); // hero is white — lock navbar to light immediately
+		document.body.style.backgroundColor = '#ffffff';
 		gsap.registerPlugin(ScrollTrigger);
+
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
@@ -43,10 +46,11 @@
 					backgroundColor: '#000000',
 					color: '#ffffff',
 					ease: 'none',
+					duration: reducedMotion ? 0 : undefined,
 					scrollTrigger: {
 						trigger: bentoTriggerEl,
 						start: 'top 90%',
-						end: 'top 60%',
+						end: reducedMotion ? 'top 90%' : 'top 60%',
 						scrub: true,
 						onEnter: () => navTheme.set('dark'),
 						onLeaveBack: () => navTheme.set('light')
@@ -59,10 +63,11 @@
 					color: '#171717',
 					ease: 'none',
 					immediateRender: false,
+					duration: reducedMotion ? 0 : undefined,
 					scrollTrigger: {
 						trigger: editorialTriggerEl,
 						start: 'top 90%',
-						end: 'top 60%',
+						end: reducedMotion ? 'top 90%' : 'top 60%',
 						scrub: true,
 						onEnter: () => navTheme.set('light'),
 						onLeaveBack: () => navTheme.set('dark')
@@ -76,6 +81,7 @@
 
 	onDestroy(() => {
 		navTheme.set(null); // hand theme control back to IntersectionObserver on other pages
+		if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
 		if (ctx) ctx.revert();
 	});
 </script>
@@ -100,7 +106,7 @@
 	<div bind:this={bentoTriggerEl} data-theme="dark">
 		<CaseStudyBento
 			narrative={{
-				heading: 'A <span class="text-[#FF4400]">full redesign</span> of the optimization flow — built for clarity, speed, and confidence at scale.',
+				heading: 'A <span class="text-shimmer-white">full redesign</span> of the optimization flow — built for clarity, speed, and confidence at scale.',
 				role: 'Product Designer',
 				product: 'Smush, Hummingbird, Snapshot & SUI 3 Atomic Design',
 			}}
@@ -147,7 +153,7 @@
 			nextDescriptor="Image optimization — Ultra, Lossy, and Lossless compression at scale."
 			nextShadow="drop-shadow(0 12px 28px rgba(0,215,255,0.28)) drop-shadow(0 2px 6px rgba(0,0,0,0.08))"
 			stats={[
-				{ label: 'Active Installs', value: '1M <span class="text-[#FF4400]">→</span> 2M+', html: true },
+				{ label: 'Active Installs', value: '1M <span class="text-white text-glow-accent">→</span> 2M+', html: true },
 				{ label: 'Bounce Rate', value: '−37%', accent: true },
 				{ label: 'Ultra vs Lossy', value: '5×' }
 			]}
@@ -162,7 +168,7 @@
 			nextDescriptor="Speed & performance optimization — Critical CSS, JS Defer, and Asset compression."
 			nextShadow="drop-shadow(0 12px 28px rgba(255,142,60,0.35)) drop-shadow(0 2px 6px rgba(0,0,0,0.10))"
 			stats={[
-				{ label: 'Page Load', value: '5s <span class="text-[#FF4400]">→</span> &lt;1s', html: true },
+				{ label: 'Page Load', value: '5s <span class="text-white text-glow-accent">→</span> &lt;1s', html: true },
 				{ label: 'Performance Gain', value: '+75%', accent: true },
 				{ label: 'Critical CSS', value: 'NEW' }
 			]}

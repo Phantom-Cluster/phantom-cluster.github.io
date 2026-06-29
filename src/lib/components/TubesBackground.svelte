@@ -14,17 +14,17 @@
 	let tubesApp: any = null;
 	let isDark = $state(true); // default dark until DOM confirms
 
-	// Dark mode: vivid warm neon oranges and crimson read well against near-black canvas
+	// Dark mode: vivid electric indigo and blue-violet neons read well against near-black canvas
 	const darkPalettes = [
-		{ tubes: ['#f53500', '#ff6200', '#ffaa00'], lights: ['#f53500', '#ff3300', '#ffaa00', '#ff0055'] },
-		{ tubes: ['#ff3300', '#ff8800', '#ff0055'], lights: ['#ff3300', '#ff9900', '#ff00aa', '#ffaa00'] },
-		{ tubes: ['#d92b00', '#f53500', '#ffcc00'], lights: ['#cc2400', '#f53500', '#ffee00', '#f53500'] },
+		{ tubes: ['#2244FF', '#7B8CFF', '#A5B4FC'], lights: ['#2244FF', '#3D52FF', '#818CF8', '#6366F1'] },
+		{ tubes: ['#4F5EFF', '#7C3AED', '#6366F1'], lights: ['#4F5EFF', '#7C3AED', '#A78BFA', '#818CF8'] },
+		{ tubes: ['#3730A3', '#2244FF', '#6366F1'], lights: ['#312E81', '#2244FF', '#818CF8', '#2244FF'] },
 	];
 
-	// Light mode: deeper, richer volcanic shades
+	// Light mode: deeper, richer indigo shades
 	const lightPalettes = [
-		{ tubes: ['#c41a00', '#d94b00', '#f55c00'], lights: ['#c41a00', '#f55c00', '#cc0055', '#ff0088'] },
-		{ tubes: ['#b31500', '#e65c00', '#b31500'], lights: ['#a30000', '#f55c00', '#990044', '#f55c00'] },
+		{ tubes: ['#3730A3', '#4338CA', '#2244FF'], lights: ['#3730A3', '#2244FF', '#4338CA', '#6366F1'] },
+		{ tubes: ['#312E81', '#4F46E5', '#3730A3'], lights: ['#1E1B4B', '#2244FF', '#312E81', '#2244FF'] },
 	];
 
 	let paletteIdx = 0;

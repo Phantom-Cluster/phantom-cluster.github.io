@@ -5,7 +5,8 @@
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { ArrowRight } from 'lucide-svelte';
 
-	const stackedProjects = projects.filter(p => p.slug !== 'wpmu-dev-dashboard');
+	const featuredSlugs = ['ideajam-kanban-saas', 'eclectic-app-design', 'themeisle-starter-templates'];
+	const stackedProjects = projects.filter(p => featuredSlugs.includes(p.slug));
 
 	let colorThief: any;
 

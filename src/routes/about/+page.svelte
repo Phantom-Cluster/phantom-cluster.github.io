@@ -2,7 +2,7 @@
 	import { onMount, onDestroy } from "svelte";
 	import { gsap } from "gsap";
 	import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-	import { Star, ExternalLink, ArrowRight } from "lucide-svelte";
+	import { ExternalLink, ArrowRight } from "lucide-svelte";
 	import profilePic from "$lib/assets/portrait.webp";
 	import starImg from "$lib/assets/Cylindrical Half Star.png";
 	import gemImg from "$lib/assets/Gem Shape.png";
@@ -13,12 +13,16 @@
 	let h1El: HTMLElement;
 	let manifestoEl: HTMLElement;
 	let pageWrapperEl: HTMLElement;
-	let coreStrengthsEl: HTMLElement;
+	// Explore row refs
+	let wpmuRowEl!: HTMLElement;
+	let ideajamRowEl!: HTMLElement;
+	let eclecticRowEl!: HTMLElement;
+	let wpmuVideoEl!: HTMLVideoElement;
 
 	const experienceYears = new Date().getFullYear() - 2018;
 
 	let ctx: gsap.Context;
-	let initTimeout: NodeJS.Timeout;
+	let initTimeout: ReturnType<typeof setTimeout>;
 
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
@@ -58,8 +62,8 @@
 				).to(
 					pageWrapperEl,
 					{
-						backgroundColor: "#0a0a0c",
-						color: "#ffffff",
+						backgroundColor: "#0E0D0C",
+						color: "#EDE8DE",
 						ease: "none",
 					},
 					0,
@@ -111,19 +115,7 @@
 					},
 				);
 
-				// Revert to light theme for Core Strengths
-				gsap.to(pageWrapperEl, {
-					backgroundColor: "#f4f4f6",
-					color: "#171717",
-					ease: "none",
-					immediateRender: false,
-					scrollTrigger: {
-						trigger: coreStrengthsEl,
-						start: "top 60%",
-						end: "top 20%",
-						scrub: true,
-					},
-				});
+				// Note: no GSAP bg revert needed — Core Strengths and below have explicit bg-[#f4f4f6]
 			}); // End gsap context
 		}, 700);
 	});
@@ -133,6 +125,20 @@
 		if (ctx) ctx.revert();
 	});
 
+	const tools = [
+		{ name: "Figma",        abbr: "Fi", bg: "rgba(242,78,30,0.14)",   color: "#F24E1E" },
+		{ name: "Framer",       abbr: "Fr", bg: "rgba(5,89,249,0.14)",    color: "#0559F9" },
+		{ name: "Svelte",       abbr: "Sv", bg: "rgba(255,62,0,0.14)",    color: "#FF3E00" },
+		{ name: "TypeScript",   abbr: "TS", bg: "rgba(49,120,198,0.14)",  color: "#3178C6" },
+		{ name: "Tailwind CSS", abbr: "Tw", bg: "rgba(6,182,212,0.14)",   color: "#06B6D4" },
+		{ name: "GSAP",         abbr: "GS", bg: "rgba(136,206,2,0.14)",   color: "#88CE02" },
+		{ name: "WordPress",    abbr: "WP", bg: "rgba(33,117,155,0.14)",  color: "#21759B" },
+		{ name: "After Effects",abbr: "Ae", bg: "rgba(153,153,255,0.14)", color: "#9999FF" },
+		{ name: "VS Code",      abbr: "VS", bg: "rgba(0,122,204,0.14)",   color: "#007ACC" },
+		{ name: "Notion",       abbr: "No", bg: "rgba(255,255,255,0.08)", color: "#e0e0e0" },
+		{ name: "Vertex AI",    abbr: "AI", bg: "rgba(66,133,244,0.14)",  color: "#4285F4" },
+	];
+
 	let activeIndex = $state(0);
 	let timelineCards: HTMLElement[] = $state([]);
 
@@ -140,7 +146,7 @@
 		const observer = new IntersectionObserver((entries) => {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
-					activeIndex = parseInt(entry.target.dataset.index || "0");
+					activeIndex = parseInt((entry.target as HTMLElement).dataset.index || "0");
 				}
 			});
 		}, {
@@ -156,6 +162,57 @@
 
 		return () => observer.disconnect();
 	});
+
+	// Explore rows: inline Svelte event handlers — no setTimeout race, no addEventListener timing issues
+	onMount(() => {
+		if (wpmuVideoEl) gsap.set(wpmuVideoEl, { opacity: 0, scale: 1.04, force3D: true });
+	});
+
+	function rowEnter(rowEl: HTMLElement, video?: HTMLVideoElement) {
+		const overlay = rowEl.querySelector<HTMLElement>('.explore-overlay');
+		const mesh    = rowEl.querySelector<HTMLElement>('.explore-mesh');
+		const glow    = rowEl.querySelector<HTMLElement>('.explore-glow');
+		const title   = rowEl.querySelector<HTMLElement>('.explore-title');
+		const sub     = rowEl.querySelector<HTMLElement>('.explore-sub');
+		const num     = rowEl.querySelector<HTMLElement>('.explore-num');
+		const year    = rowEl.querySelector<HTMLElement>('.explore-year');
+		const btn     = rowEl.querySelector<HTMLElement>('.explore-btn');
+		const arrow   = rowEl.querySelector<HTMLElement>('.explore-arrow');
+
+		if (video) { video.play().catch(() => {}); gsap.to(video, { opacity: 0.12, scale: 1, duration: 0.72, ease: 'power2.out', force3D: true, overwrite: true }); }
+		if (overlay) gsap.to(overlay, { opacity: 1, duration: 0.50, ease: 'power2.out', force3D: true, overwrite: true });
+		if (mesh)    gsap.to(mesh,    { opacity: 1, duration: 0.65, ease: 'power2.out', overwrite: true });
+		if (glow)    gsap.to(glow,    { opacity: 1, duration: 0.80, overwrite: true });
+		if (title)   gsap.to(title,   { color: '#ffffff', duration: 0.38, ease: 'power2.out', overwrite: true });
+		if (sub)     gsap.to(sub,     { color: 'rgba(255,255,255,0.44)', duration: 0.38, overwrite: true });
+		if (num)     gsap.to(num,     { color: 'rgba(255,255,255,0.27)', duration: 0.38, overwrite: true });
+		if (year)    gsap.to(year,    { color: 'rgba(255,255,255,0.27)', duration: 0.38, overwrite: true });
+		if (btn)     gsap.to(btn,     { x: 7, borderColor: 'rgba(255,255,255,0.22)', duration: 0.40, ease: 'power2.out', force3D: true, overwrite: true });
+		if (arrow)   gsap.to(arrow,   { color: '#ffffff', duration: 0.30, overwrite: true });
+	}
+
+	function rowLeave(rowEl: HTMLElement, video?: HTMLVideoElement) {
+		const overlay = rowEl.querySelector<HTMLElement>('.explore-overlay');
+		const mesh    = rowEl.querySelector<HTMLElement>('.explore-mesh');
+		const glow    = rowEl.querySelector<HTMLElement>('.explore-glow');
+		const title   = rowEl.querySelector<HTMLElement>('.explore-title');
+		const sub     = rowEl.querySelector<HTMLElement>('.explore-sub');
+		const num     = rowEl.querySelector<HTMLElement>('.explore-num');
+		const year    = rowEl.querySelector<HTMLElement>('.explore-year');
+		const btn     = rowEl.querySelector<HTMLElement>('.explore-btn');
+		const arrow   = rowEl.querySelector<HTMLElement>('.explore-arrow');
+
+		if (video)   { gsap.to(video, { opacity: 0, scale: 1.04, duration: 0.55, ease: 'power2.in', force3D: true, overwrite: true }); video.pause(); }
+		if (overlay) gsap.to(overlay, { opacity: 0, duration: 0.50, ease: 'power2.in', force3D: true, overwrite: true });
+		if (mesh)    gsap.to(mesh,    { opacity: 0, duration: 0.50, ease: 'power2.in', overwrite: true });
+		if (glow)    gsap.to(glow,    { opacity: 0, duration: 0.45, overwrite: true });
+		if (title)   gsap.to(title,   { color: '#0a0a0a', duration: 0.48, ease: 'power2.in', overwrite: true });
+		if (sub)     gsap.to(sub,     { color: '#a3a3a3', duration: 0.48, overwrite: true });
+		if (num)     gsap.to(num,     { color: '#a3a3a3', duration: 0.48, overwrite: true });
+		if (year)    gsap.to(year,    { color: '#a3a3a3', duration: 0.48, overwrite: true });
+		if (btn)     gsap.to(btn,     { x: 0, borderColor: '#d4d4d4', duration: 0.40, ease: 'power2.in', force3D: true, overwrite: true });
+		if (arrow)   gsap.to(arrow,   { color: '#737373', duration: 0.30, overwrite: true });
+	}
 
 	const experiences = [
 		{
@@ -201,7 +258,7 @@
 	let scrollY = $state(0);
 	
 	const fillPercentage = $derived.by(() => {
-		const _ = scrollY; // Force dependency
+		void scrollY; // Force reactive dependency
 		if (timelineContainer && innerHeight) {
 			const rect = timelineContainer.getBoundingClientRect();
 			// Trigger point is the vertical center of the viewport
@@ -314,22 +371,21 @@
 	<section
 		data-theme="dark"
 		id="about-bio"
-		class="w-full max-w-6xl mx-auto px-6 py-24 relative"
+		class="w-full max-w-5xl mx-auto px-6 py-24 relative"
 	>
 		<!-- 3-Column Strict Grid locked to vertical center -->
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-center">
 			<!-- Left Column: Intro -->
 			<div class="col-span-1 flex flex-col justify-center">
 				<h2
-					class="text-5xl md:text-6xl font-bold tracking-tight mb-6 text-white"
+					class="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-white leading-tight"
 				>
-					Hey!
+					I Build<br />Systems.
 				</h2>
-				<p class="text-gray-400 text-lg leading-relaxed font-medium">
-					I'm Hitanshu Sahu, a tech-obsessed Product Designer based in
-					Kanpur, India. I focus on bridging the exact gap between
-					advanced visual interfaces and technical frontend
-					architecture.
+				<p class="text-gray-400 text-base leading-relaxed">
+					Product designer with 7 years embedded inside high-growth
+					SaaS teams — not consulting from the outside, but shipping
+					inside WPMU DEV, Themeisle, Eclectic, and Ideajam.
 				</p>
 			</div>
 
@@ -343,17 +399,16 @@
 
 			<!-- Right Column: Details -->
 			<div class="col-span-1 flex flex-col justify-center space-y-6">
-				<p class="text-gray-400 text-lg leading-relaxed">
-					With over 7 years of deep ecosystem experience, I build,
-					launch, and scale intuitive UI systems for complex SaaS
-					platforms, high-growth digital products, and optimized
-					WordPress frameworks.
+				<p class="text-gray-400 text-base leading-relaxed">
+					My MCA background means engineering pushback doesn't
+					surprise me. Design decisions I make are grounded in how
+					they'll actually be built — no throwaway concepts, no
+					handoffs that go in a drawer.
 				</p>
-				<p class="text-gray-400 text-lg leading-relaxed">
-					Holding an academic foundation with a Master in Computer
-					Application (MCA), my design logic translates naturally to
-					robust developer handoffs and clean atomic systems—no
-					delays, no drama.
+				<p class="text-gray-400 text-base leading-relaxed">
+					Technical constraints are the medium, not an obstacle.
+					I design for what can scale, not just what looks sharp
+					in Figma.
 				</p>
 			</div>
 		</div>
@@ -369,7 +424,7 @@
 			<p
 				class="text-3xl md:text-5xl lg:text-[4.5rem] font-bold leading-tight tracking-tight flex flex-wrap justify-center gap-x-3 md:gap-x-4 gap-y-2"
 			>
-				{#each "From idea to launch. Clean, scalable digital products built to move fast, stay simple, and perform in real-world use. Driven by clarity, structured systems, and intentional design.".split(" ") as word}
+				{#each "Most SaaS products have three flows that account for eighty percent of user time. I find them early, design them precisely, and build systems around them that hold up when the product scales. Design is engineering with a different tool set.".split(" ") as word}
 					<span class="inline-block transition-colors">{word}</span>
 				{/each}
 			</p>
@@ -380,7 +435,7 @@
 	<section class="w-full max-w-5xl mx-auto py-24 px-6 relative border-t border-gray-900" data-theme="dark">
 		<div class="mb-20">
 			<div class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1px]">
-				<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"></div>
+				<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"></div>
 				<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-neutral-950 px-6 py-2 relative z-10">
 					<span class="text-[11px] font-mono tracking-widest text-gray-400 uppercase">PROOF OF EXECUTION</span>
 				</div>
@@ -395,8 +450,8 @@
 			<div class="absolute left-0 top-2 bottom-0 w-[2px] bg-gray-800"></div>
 
 			<!-- The Animated Draw Line -->
-			<div 
-				class="absolute left-0 top-2 w-[2px] bg-[#FF4400] transition-all duration-75 ease-out"
+			<div
+				class="absolute left-0 top-2 w-[2px] bg-[#D1D5DB] transition-all duration-75 ease-out"
 				style="height: {fillPercentage}%;"
 			></div>
 
@@ -411,9 +466,9 @@
 						<!-- The Tracking Node -->
 						<div class="absolute -left-[39px] md:-left-[55px] top-1.5 flex h-4 w-4 items-center justify-center">
 							<!-- Node Outer Pulse -->
-							<span class="absolute inline-flex h-full w-full rounded-full transition-all duration-500 {activeIndex >= i ? 'bg-[#FF4400] opacity-30 scale-150' : 'bg-gray-800 scale-100'}"></span>
+							<span class="absolute inline-flex h-full w-full rounded-full transition-all duration-500 {activeIndex >= i ? 'bg-[#D1D5DB] opacity-30 scale-150' : 'bg-gray-800 scale-100'}"></span>
 							<!-- Node Inner Core -->
-							<span class="relative inline-flex rounded-full h-2 w-2 transition-colors duration-500 {activeIndex >= i ? 'bg-[#FF4400]' : 'bg-gray-600'}"></span>
+							<span class="relative inline-flex rounded-full h-2 w-2 transition-colors duration-500 {activeIndex >= i ? 'bg-[#D1D5DB]' : 'bg-gray-600'}"></span>
 						</div>
 
 						<!-- Card Content -->
@@ -422,7 +477,7 @@
 								<h3 class="text-2xl font-semibold text-white transition-colors duration-500 {activeIndex >= i ? 'text-white' : 'text-gray-400'}">{exp.role}</h3>
 								<p class="text-lg text-gray-500 font-medium mt-1">{exp.company}</p>
 							</div>
-							<span class="text-sm font-mono tracking-widest uppercase shrink-0 transition-colors duration-500 {activeIndex >= i ? 'text-[#FF4400]' : 'text-gray-600'}">
+							<span class="text-sm font-mono tracking-widest uppercase shrink-0 transition-colors duration-500 {activeIndex >= i ? 'text-[#D1D5DB]' : 'text-gray-600'}">
 								{exp.date}
 							</span>
 						</div>
@@ -440,7 +495,7 @@
 	<section
 		data-theme="dark"
 		id="credentials-bento"
-		class="py-32 px-6 border-t border-white/5 bg-transparent"
+		class="py-32 px-6 border-t border-white/5 bg-[#0a0a0c]"
 	>
 		<div class="max-w-5xl mx-auto w-full px-6 mb-24">
 			<h3
@@ -460,7 +515,7 @@
 
 					<!-- Animated spinning border -->
 					<div
-						class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
+						class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
 					></div>
 
 					<!-- Inner Card -->
@@ -469,7 +524,7 @@
 					>
 						<!-- Ambient Glow -->
 						<div
-							class="absolute -top-12 -right-12 w-48 h-48 bg-[#FF4400]/[0.15] rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+							class="absolute -top-12 -right-12 w-48 h-48 bg-primary/15 rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
 						></div>
 
 						<div
@@ -490,22 +545,20 @@
 						</div>
 
 						<div class="flex flex-col relative z-10">
-							{#each ["Foundations of UX Design", "Prompt Design in Vertex AI", "Generative AI Explorer", "Intro to Image Generation", "Responsible AI", "MLOps for Gen AI", "Google Prompting Essentials", "Google AI Essentials"] as item}
-								<a
-									href="https://www.linkedin.com/in/phantom-cluster/details/certifications/"
-									target="_blank"
-									rel="noopener noreferrer"
-									class="group flex items-center justify-between py-4"
-								>
-									<span
-										class="font-medium text-gray-400 group-hover:text-[#FF4400] transition-colors duration-300"
-										>{item}</span
-									>
-									<ExternalLink
-										class="w-4 h-4 text-[#FF4400] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
-									/>
-								</a>
+							{#each ["Foundations of UX Design", "Prompt Design in Vertex AI", "Google Prompting Essentials", "Google AI Essentials"] as item}
+								<div class="flex items-center justify-between py-4 border-b border-gray-800/60 last:border-0">
+									<span class="font-medium text-gray-400">{item}</span>
+								</div>
 							{/each}
+							<a
+								href="https://www.linkedin.com/in/phantom-cluster/details/certifications/"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="group flex items-center gap-2 pt-5 text-xs font-mono tracking-widest text-gray-500 uppercase hover:text-primary transition-colors duration-300"
+							>
+								View all certifications
+								<ExternalLink class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+							</a>
 						</div>
 					</div>
 				</div>
@@ -521,7 +574,7 @@
 
 					<!-- Animated spinning border -->
 					<div
-						class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
+						class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
 					></div>
 
 					<!-- Inner Card -->
@@ -530,7 +583,7 @@
 					>
 						<!-- Ambient Glow -->
 						<div
-							class="absolute -top-12 -right-12 w-48 h-48 bg-[#FF4400]/[0.15] rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+							class="absolute -top-12 -right-12 w-48 h-48 bg-primary/15 rounded-full blur-3xl opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
 						></div>
 
 						<div
@@ -568,11 +621,11 @@
 									class="group flex items-center justify-between py-4"
 								>
 									<span
-										class="font-medium text-gray-400 group-hover:text-[#FF4400] transition-colors duration-300"
+										class="font-medium text-gray-400 group-hover:text-primary transition-colors duration-300"
 										>{item}</span
 									>
 									<ExternalLink
-										class="w-4 h-4 text-[#FF4400] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+										class="w-4 h-4 text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
 									/>
 								</a>
 							{/each}
@@ -582,12 +635,35 @@
 			</div>
 		</div>
 
-		<!-- Core Strengths -->
-		<div
-			data-theme="light"
-			bind:this={coreStrengthsEl}
-			class="max-w-5xl mx-auto mt-32 mb-16 px-6 text-center"
-		>
+		<!-- How I Work — compact process strip -->
+		<div class="max-w-5xl mx-auto mt-32 px-6">
+			<p class="text-[10px] font-mono tracking-[0.2em] text-gray-500 uppercase mb-8">How I Work</p>
+			<div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+				{#each [
+					{ num: "01", title: "Discover", desc: "Listen, research, map constraints." },
+					{ num: "02", title: "Define", desc: "Structure the problem, set success criteria." },
+					{ num: "03", title: "Design", desc: "Atomic components, system-first execution." },
+					{ num: "04", title: "Ship", desc: "Clean Figma handoff or production frontend." },
+					{ num: "05", title: "Iterate", desc: "Test, refine, scale what works." },
+				] as step}
+					<div class="flex flex-col gap-2 p-5 rounded-2xl bg-white/5 border border-white/[0.06]">
+						<span class="text-[10px] font-mono text-gray-600">{step.num}</span>
+						<span class="text-sm font-semibold text-white tracking-tight">{step.title}</span>
+						<span class="text-[11px] text-gray-500 leading-relaxed">{step.desc}</span>
+					</div>
+				{/each}
+			</div>
+		</div>
+
+	</section>
+
+	<!-- Core Strengths -->
+	<section
+		data-theme="light"
+	
+		class="py-20 px-6 bg-[#f4f4f6] border-t border-neutral-200/50 text-center"
+	>
+		<div class="max-w-5xl mx-auto px-6">
 			<h2
 				class="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 mb-12"
 			>
@@ -597,24 +673,28 @@
 				class="flex flex-wrap justify-center gap-3 md:gap-4"
 				aria-label="List of core strengths"
 			>
-				{#each ["Design Systems (Atomic)", "Starter Templates", "WordPress (Gutenberg/Elementor)", "UX Strategy & Psychology", "Generative AI / LLMs", "Prompt Engineering", "User Flow Mapping", "Wireframes & 3D Design", "Accessibility (WCAG)", "UI Optimization", "Interaction Design", "Animation", "Motion UI", "Agile Collaboration", "SaaS Product Design", "Developer Handoff"] as strength}
+				{#each [
+					"Atomic Design Systems (Figma → Production)",
+					"Complex SaaS Interface Design",
+					"WordPress Ecosystem (Gutenberg / Elementor)",
+					"Interaction Design & Motion",
+					"Accessibility-First UI Engineering",
+					"AI-Assisted Design Operations",
+				] as strength}
 					<li
 						class="group relative inline-flex items-center justify-center p-[1px] rounded-full overflow-hidden transition-all duration-300"
 					>
-						<!-- Default subtle border -->
 						<div
-							class="absolute inset-0 bg-neutral-200 dark:bg-white/10 group-hover:bg-transparent transition-colors duration-300"
+							class="absolute inset-0 bg-neutral-200 group-hover:bg-transparent transition-colors duration-300"
 						></div>
-						<!-- Animated border on hover (respects reduced motion) -->
 						<div
 							class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#f97316_360deg)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
 						></div>
-						<!-- Inner background -->
 						<div
-							class="relative bg-white dark:bg-[#121318] px-5 md:px-6 py-2 md:py-2.5 rounded-full w-full h-full flex items-center justify-center transition-colors"
+							class="relative bg-white px-6 md:px-8 py-3 rounded-full w-full h-full flex items-center justify-center"
 						>
 							<span
-								class="text-sm font-medium tracking-tight text-neutral-600 dark:text-neutral-300 group-hover:text-primary transition-colors duration-300"
+								class="text-sm font-semibold tracking-tight text-neutral-700 group-hover:text-primary transition-colors duration-300"
 								>{strength}</span
 							>
 						</div>
@@ -624,54 +704,233 @@
 		</div>
 	</section>
 
-	<!-- Phase 6: Ecosystem Cross-Linking -->
-	<section
-		data-theme="light"
-		id="project-routing"
-		class="py-32 px-6 border-t border-neutral-900/5 text-center bg-transparent"
-	>
-		<div class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
-			<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#FF4400_360deg)]"></div>
-			<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
-				<span class="text-[11px] font-mono tracking-widest text-gray-400 uppercase">EXPLORE</span>
+	<!-- Tools & Stack -->
+	<section data-theme="light" class="py-20 px-6 border-t border-neutral-200/50 bg-[#f4f4f6]">
+		<div class="max-w-5xl mx-auto px-6">
+			<p class="text-[10px] font-mono tracking-[0.2em] text-gray-400 uppercase mb-10">Tools & Stack</p>
+			<div class="flex flex-wrap gap-3">
+				{#each tools as tool}
+					<div class="group flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-white border border-neutral-200 hover:border-neutral-300 hover:shadow-sm transition-all duration-300 cursor-default">
+						<div class="w-6 h-6 rounded-md flex items-center justify-center text-[9px] font-black shrink-0"
+							style="background: {tool.bg}; color: {tool.color}; font-variant-numeric: tabular-nums;">
+							{tool.abbr}
+						</div>
+						<span class="text-sm font-medium text-neutral-700 group-hover:text-neutral-900 transition-colors duration-200">{tool.name}</span>
+					</div>
+				{/each}
 			</div>
 		</div>
-		<h2
-			class="text-4xl md:text-5xl font-black mb-16 tracking-tight text-neutral-900"
-		>
-			See systems in action →
-		</h2>
+	</section>
 
-		<div
-			class="flex flex-col md:flex-row items-center justify-center gap-6 max-w-4xl mx-auto"
-		>
-			<a
-				href="/#wpmudev"
-				class="group relative px-8 py-6 rounded-[2rem] bg-[#121318] border border-white/5 transition-transform hover:-translate-y-1 after:absolute after:inset-0 after:-z-10 after:shadow-[0_16px_48px_-12px_rgba(245,53,0,0.15)] after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-500 after:rounded-[2rem] flex items-center gap-4 w-full md:w-auto justify-center"
-			>
-				<span class="font-bold text-lg text-white">WPMU DEV</span>
-				<ArrowRight
-					class="w-5 h-5 text-neutral-500 group-hover:text-primary transition-colors group-hover:translate-x-1 duration-300"
-				/>
-			</a>
-			<a
-				href="/#ideajam"
-				class="group relative px-8 py-6 rounded-[2rem] bg-[#121318] border border-white/5 transition-transform hover:-translate-y-1 after:absolute after:inset-0 after:-z-10 after:shadow-[0_16px_48px_-12px_rgba(245,53,0,0.15)] after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-500 after:rounded-[2rem] flex items-center gap-4 w-full md:w-auto justify-center"
-			>
-				<span class="font-bold text-lg text-white">Ideajam</span>
-				<ArrowRight
-					class="w-5 h-5 text-neutral-500 group-hover:text-primary transition-colors group-hover:translate-x-1 duration-300"
-				/>
-			</a>
-			<a
-				href="/#eclectic"
-				class="group relative px-8 py-6 rounded-[2rem] bg-[#121318] border border-white/5 transition-transform hover:-translate-y-1 after:absolute after:inset-0 after:-z-10 after:shadow-[0_16px_48px_-12px_rgba(245,53,0,0.15)] after:opacity-0 hover:after:opacity-100 after:transition-opacity after:duration-500 after:rounded-[2rem] flex items-center gap-4 w-full md:w-auto justify-center"
-			>
-				<span class="font-bold text-lg text-white">Eclectic</span>
-				<ArrowRight
-					class="w-5 h-5 text-neutral-500 group-hover:text-primary transition-colors group-hover:translate-x-1 duration-300"
-				/>
-			</a>
+	<!-- Explore: Editorial Project Rows -->
+	<section data-theme="light" id="project-routing" class="border-t border-neutral-200/50 bg-[#f4f4f6]">
+		<!-- Section header -->
+		<div class="max-w-5xl mx-auto px-6 pt-20 pb-14">
+			<div class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
+				<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"></div>
+				<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
+					<span class="text-[11px] font-mono tracking-widest text-gray-400 uppercase">EXPLORE</span>
+				</div>
+			</div>
+			<h2 class="text-xl md:text-2xl font-medium tracking-tight text-neutral-400">
+				See systems in action
+			</h2>
+		</div>
+
+		<!-- ── WPMU DEV Row ── -->
+		<a bind:this={wpmuRowEl} href="/work/wpmu-dev-dashboard"
+			onmouseenter={() => rowEnter(wpmuRowEl, wpmuVideoEl)}
+			onmouseleave={() => rowLeave(wpmuRowEl, wpmuVideoEl)}
+			class="relative flex overflow-hidden cursor-pointer">
+			<!-- Video: GPU layer, controlled by GSAP only -->
+			<video bind:this={wpmuVideoEl}
+				src="/videos/SmushTest_Prototype.mp4"
+				muted loop playsinline preload="none"
+				style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;will-change:opacity,transform;"
+			></video>
+			<!-- Dark wash -->
+			<div class="explore-overlay absolute inset-0 bg-neutral-950" style="opacity:0;will-change:opacity;"></div>
+			<!-- Blue accent glow -->
+			<div class="explore-glow absolute bottom-0 left-0 w-64 h-32 bg-primary/20 blur-3xl pointer-events-none" style="opacity:0;"></div>
+
+			<div class="relative z-10 w-full max-w-5xl mx-auto px-6 py-16 flex items-center justify-between gap-6">
+				<div class="flex items-center gap-8 min-w-0">
+					<span class="explore-num text-[11px] font-mono text-neutral-400 shrink-0 hidden sm:block">01</span>
+					<div class="min-w-0">
+						<h3 class="explore-title text-3xl sm:text-4xl md:text-[3.25rem] font-black tracking-tight text-neutral-900 leading-none">WPMU DEV</h3>
+						<p class="explore-sub text-sm text-neutral-400 mt-2">Dashboard & Plugin Design System</p>
+					</div>
+				</div>
+				<div class="flex items-center gap-4 shrink-0">
+					<span class="explore-year text-xs font-mono text-neutral-400 hidden md:block">2022–24</span>
+					<div class="explore-btn w-10 h-10 rounded-full border border-neutral-300 flex items-center justify-center" style="will-change:transform;">
+						<ArrowRight class="explore-arrow w-4 h-4 text-neutral-500" />
+					</div>
+				</div>
+			</div>
+		</a>
+
+		<!-- ── Ideajam Row ── -->
+		<a bind:this={ideajamRowEl} href="/work/ideajam-kanban-saas"
+			onmouseenter={() => rowEnter(ideajamRowEl)}
+			onmouseleave={() => rowLeave(ideajamRowEl)}
+			class="relative flex overflow-hidden border-t border-neutral-900/[0.07] cursor-pointer">
+			<!-- Dark indigo base + mesh, both GPU-composited -->
+			<div class="explore-overlay absolute inset-0 bg-[#0d0a2e]" style="opacity:0;will-change:opacity;"></div>
+			<div class="explore-mesh absolute inset-0 pointer-events-none"
+				style="opacity:0;will-change:opacity;background:radial-gradient(ellipse at 20% 50%,rgba(88,58,255,0.38) 0%,transparent 55%),radial-gradient(ellipse at 75% 30%,rgba(130,80,255,0.22) 0%,transparent 50%),linear-gradient(rgba(255,255,255,0.05) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,rgba(255,255,255,0.05) 1px,transparent 1px) 0 0/48px 48px;">
+			</div>
+
+			<div class="relative z-10 w-full max-w-5xl mx-auto px-6 py-16 flex items-center justify-between gap-6">
+				<div class="flex items-center gap-8 min-w-0">
+					<span class="explore-num text-[11px] font-mono text-neutral-400 shrink-0 hidden sm:block">02</span>
+					<div class="min-w-0">
+						<h3 class="explore-title text-3xl sm:text-4xl md:text-[3.25rem] font-black tracking-tight text-neutral-900 leading-none">Ideajam</h3>
+						<p class="explore-sub text-sm text-neutral-400 mt-2">Kanban SaaS Redesign</p>
+					</div>
+				</div>
+				<div class="flex items-center gap-4 shrink-0">
+					<span class="explore-year text-xs font-mono text-neutral-400 hidden md:block">2021–22</span>
+					<div class="explore-btn w-10 h-10 rounded-full border border-neutral-300 flex items-center justify-center" style="will-change:transform;">
+						<ArrowRight class="explore-arrow w-4 h-4 text-neutral-500" />
+					</div>
+				</div>
+			</div>
+		</a>
+
+		<!-- ── Eclectic Row ── -->
+		<a bind:this={eclecticRowEl} href="/work/eclectic-app-design"
+			onmouseenter={() => rowEnter(eclecticRowEl)}
+			onmouseleave={() => rowLeave(eclecticRowEl)}
+			class="relative flex overflow-hidden border-t border-neutral-900/[0.07] cursor-pointer">
+			<!-- Deep teal base + mesh -->
+			<div class="explore-overlay absolute inset-0 bg-[#03141a]" style="opacity:0;will-change:opacity;"></div>
+			<div class="explore-mesh absolute inset-0 pointer-events-none"
+				style="opacity:0;will-change:opacity;background:radial-gradient(ellipse at 75% 50%,rgba(0,200,160,0.30) 0%,transparent 55%),radial-gradient(ellipse at 20% 60%,rgba(0,120,200,0.20) 0%,transparent 50%),repeating-linear-gradient(45deg,rgba(255,255,255,0.03) 0px,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 32px);">
+			</div>
+
+			<div class="relative z-10 w-full max-w-5xl mx-auto px-6 py-16 flex items-center justify-between gap-6">
+				<div class="flex items-center gap-8 min-w-0">
+					<span class="explore-num text-[11px] font-mono text-neutral-400 shrink-0 hidden sm:block">03</span>
+					<div class="min-w-0">
+						<h3 class="explore-title text-3xl sm:text-4xl md:text-[3.25rem] font-black tracking-tight text-neutral-900 leading-none">Eclectic</h3>
+						<p class="explore-sub text-sm text-neutral-400 mt-2">AI-Powered App Design</p>
+					</div>
+				</div>
+				<div class="flex items-center gap-4 shrink-0">
+					<span class="explore-year text-xs font-mono text-neutral-400 hidden md:block">2025</span>
+					<div class="explore-btn w-10 h-10 rounded-full border border-neutral-300 flex items-center justify-center" style="will-change:transform;">
+						<ArrowRight class="explore-arrow w-4 h-4 text-neutral-500" />
+					</div>
+				</div>
+			</div>
+		</a>
+
+		<!-- Closing hairline -->
+		<div class="border-t border-neutral-900/[0.07]"></div>
+
+		<!-- ── IMPACT LEDGER ──────────────────────────────────────────────── -->
+		<div class="max-w-5xl mx-auto px-6 pt-20 pb-24">
+
+			<div class="flex items-center gap-4 mb-10">
+				<span class="text-[9px] font-mono tracking-[0.35em] text-neutral-400 uppercase">Impact at a glance</span>
+				<div class="h-px flex-1 bg-neutral-200"></div>
+			</div>
+
+			<!-- Ledger rows -->
+			<div class="divide-y divide-neutral-200/70">
+				{#each [
+					{
+						slug: 'wpmu-dev-dashboard',
+						title: 'WPMU DEV',
+						sub: 'Dashboard & Plugin System',
+						hookStat: '+47%',
+						hookLabel: 'Pro Conversions',
+						accent: '#2244ff',
+						accentRgb: '34,68,255',
+						pills: ['2M → 3M installs', '−37% bounce', 'Atomic system'],
+						year: '2022–24',
+						role: 'Product Designer',
+					},
+					{
+						slug: 'ideajam-kanban-saas',
+						title: 'Ideajam',
+						sub: 'Kanban SaaS Redesign',
+						hookStat: '−68%',
+						hookLabel: 'Task Steps',
+						accent: '#e0533c',
+						accentRgb: '224,83,60',
+						pills: ['White-label system', 'B2B SaaS', 'Zero-training UX'],
+						year: '2021–22',
+						role: 'UI/UX Designer',
+					},
+					{
+						slug: 'eclectic-app-design',
+						title: 'Eclectic',
+						sub: 'AI-Powered App Design',
+						hookStat: '3×',
+						hookLabel: 'Regional Markets',
+						accent: '#14b8a6',
+						accentRgb: '20,184,166',
+						pills: ['AI asset pipeline', 'Mobile-first DLS', 'Multi-locale'],
+						year: '2025',
+						role: 'Product Designer',
+					},
+				] as item, i}
+					<a
+						href="/work/{item.slug}"
+						class="impact-row group relative flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8 py-9 pl-5 pr-2 -mx-5 rounded-2xl transition-all duration-250 hover:bg-white hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] overflow-hidden"
+					>
+						<!-- Accent bar — left edge, slides in on hover -->
+						<div
+							class="absolute left-0 top-3 bottom-3 w-[3px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+							style="background: {item.accent};"
+						></div>
+
+						<!-- Decorative background counter -->
+						<span
+							class="absolute right-2 top-1/2 -translate-y-1/2 text-[7rem] font-black leading-none select-none pointer-events-none transition-opacity duration-300 opacity-[0.025] group-hover:opacity-[0.055]"
+							style="color: {item.accent};"
+							aria-hidden="true"
+						>0{i + 1}</span>
+
+						<!-- Counter -->
+						<span class="shrink-0 text-[9px] font-mono text-neutral-400 group-hover:text-neutral-600 transition-colors w-6">0{i+1}</span>
+
+						<!-- Title + meta -->
+						<div class="flex-1 min-w-0">
+							<div class="flex items-baseline gap-3 flex-wrap mb-1.5">
+								<h3 class="text-2xl sm:text-[1.75rem] font-black tracking-tight text-neutral-900 leading-none">{item.title}</h3>
+								<span class="text-xs font-mono text-neutral-400">{item.role} · {item.year}</span>
+							</div>
+							<p class="text-xs text-neutral-400 mb-3">{item.sub}</p>
+							<!-- Pills -->
+							<div class="flex flex-wrap gap-1.5">
+								{#each item.pills as pill}
+									<span
+										class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-mono border transition-all duration-300"
+										style="color: rgba({item.accentRgb},0.8); border-color: rgba({item.accentRgb},0.18); background: rgba({item.accentRgb},0.05);"
+									>
+										<span class="w-1 h-1 rounded-full shrink-0" style="background: {item.accent};"></span>
+										{pill}
+									</span>
+								{/each}
+							</div>
+						</div>
+
+						<!-- Hook stat + CTA -->
+						<div class="shrink-0 flex items-center gap-5 sm:gap-6 relative z-10">
+							<div class="text-right">
+								<p class="text-[2.4rem] sm:text-[2.8rem] font-black tracking-tighter leading-none" style="color: {item.accent};">{item.hookStat}</p>
+								<p class="text-[9px] font-mono tracking-widest uppercase text-neutral-400 mt-0.5">{item.hookLabel}</p>
+							</div>
+							<div class="w-9 h-9 rounded-full border-2 border-neutral-200 flex items-center justify-center group-hover:border-neutral-900 group-hover:bg-neutral-900 transition-all duration-300 shrink-0">
+								<ArrowRight class="size-3.5 text-neutral-400 group-hover:text-white transition-colors" />
+							</div>
+						</div>
+					</a>
+				{/each}
+			</div>
 		</div>
 	</section>
 </div>

@@ -16,7 +16,7 @@
   Usage example (WPMU Dev):
   <CaseStudyBento
     narrative={{
-      heading: 'A <span class="text-[#FF4400]">full redesign</span> ...',
+      heading: 'A <span class="text-shimmer-white">full redesign</span> ...',
       role: 'Product Designer',
       product: 'Smush, Hummingbird, Snapshot & SUI 3 Atomic Design',
     }}
@@ -109,39 +109,46 @@
 		conversion: Conversion;
 	} = $props();
 
-	// ── Stagger entrance state ────────────────────────────────────────────────
-	let visible: boolean[] = $state([false, false, false, false, false, false]);
-
 	// ── DOM refs for GSAP ────────────────────────────────────────────────────
+	let bentoGridEl!: HTMLElement;
 	let arrowEl: HTMLElement;
 	let perf80El: HTMLElement;
 	let bounce37El: HTMLElement;
 	let conv47El: HTMLElement;
 
 	onMount(() => {
-		// Stagger cards in
-		visible.forEach((_, i) => {
-			setTimeout(() => { visible[i] = true; }, 100 + i * 70);
-		});
+		// GSAP stagger entrance — clearProps:'all' removes every inline style after
+		// animation so no residual compositing layers block CSS :hover hit-testing
+		if (bentoGridEl) {
+			const cards = Array.from(bentoGridEl.querySelectorAll(':scope > div'));
+			gsap.set(cards, { opacity: 0, y: 26, scale: 0.97, force3D: true });
+			gsap.to(cards, {
+				opacity: 1, y: 0, scale: 1,
+				duration: 0.68,
+				ease: 'power2.out',
+				stagger: 0.08,
+				delay: 0.1,
+				clearProps: 'all',
+				force3D: true,
+			});
+		}
 
 		// ── GPU-optimised infinite animations (force3D → compositor thread) ──
 
-		// Arrow: elastic slingshot + drop-shadow glow
+		// Arrow: smooth breath — soft rightward drift, no elastic physics
 		if (arrowEl) {
 			gsap.timeline({ repeat: -1, yoyo: true })
 				.to(arrowEl, {
-					scaleX: 1.25, scaleY: 1.1, x: 4,
-					filter: 'drop-shadow(0 0 12px rgba(255,68,0,1))',
-					duration: 0.8, ease: 'back.inOut(2)', force3D: true,
+					x: 9, opacity: 0.85,
+					duration: 2.2, ease: 'sine.inOut', force3D: true,
 				})
 				.to(arrowEl, {
-					scaleX: 1, scaleY: 1, x: 0,
-					filter: 'drop-shadow(0 0 2px rgba(255,68,0,0.3))',
-					duration: 1.2, ease: 'power2.inOut', force3D: true,
+					x: 0, opacity: 0.38,
+					duration: 2.2, ease: 'sine.inOut', force3D: true,
 				});
 		}
 
-		// Metric2 number: float + % sign glow pulse
+		// Metric2 number: float + % sign glow pulse (electric mint #00E676)
 		if (perf80El) {
 			gsap.to(perf80El, {
 				y: -6, duration: 2.4, ease: 'sine.inOut',
@@ -150,51 +157,44 @@
 			const pctSign = perf80El.querySelector('.pct-sign') as HTMLElement;
 			if (pctSign) {
 				gsap.to(pctSign, {
-					textShadow: '0 0 18px rgba(255,68,0,0.9)',
+					textShadow: '0 0 22px rgba(0,230,118,1), 0 0 50px rgba(0,230,118,0.45)',
 					scale: 1.1, duration: 1.0, ease: 'sine.inOut',
 					yoyo: true, repeat: -1, force3D: true,
 				});
 			}
 		}
 
-		// Metric1 stat: counter-tick jolt + elastic settle
+		// Metric1 stat: counter-tick jolt + elastic settle (electric mint #00E676)
 		if (bounce37El) {
 			gsap.timeline({ repeat: -1, repeatDelay: 2.5 })
 				.to(bounce37El, {
 					y: -3, skewX: -3,
-					textShadow: '0 0 20px rgba(255,68,0,1)',
+					textShadow: '0 0 24px rgba(0,230,118,1), 0 0 55px rgba(0,230,118,0.5)',
 					duration: 0.18, ease: 'power3.out', force3D: true,
 				})
 				.to(bounce37El, {
 					y: 0, skewX: 0,
-					textShadow: '0 0 6px rgba(255,68,0,0.3)',
+					textShadow: '0 0 8px rgba(0,230,118,0.4)',
 					duration: 0.5, ease: 'elastic.out(1.2, 0.4)', force3D: true,
 				});
 		}
 
-		// Conversion chip: scale bounce + glow
+		// Conversion chip: scale bounce + glow (electric mint #00E676)
 		if (conv47El) {
 			gsap.timeline({ repeat: -1, repeatDelay: 1.8 })
 				.to(conv47El, {
 					scale: 1.12,
-					textShadow: '0 0 16px rgba(255,68,0,0.8)',
+					textShadow: '0 0 20px rgba(0,230,118,0.95), 0 0 45px rgba(0,230,118,0.4)',
 					duration: 0.3, ease: 'back.out(2)', force3D: true,
 				})
 				.to(conv47El, {
 					scale: 1,
-					textShadow: '0 0 0px rgba(255,68,0,0)',
+					textShadow: '0 0 0px rgba(0,230,118,0)',
 					duration: 0.6, ease: 'power3.inOut', force3D: true,
 				});
 		}
 	});
 
-	// Entrance stagger inline style
-	const getStyle = (i: number) => `
-		opacity: ${visible[i] ? 1 : 0};
-		transform: ${visible[i] ? 'translateY(0) scale(1)' : 'translateY(28px) scale(0.97)'};
-		transition: opacity 0.7s cubic-bezier(0.2,0.7,0.2,1), transform 0.7s cubic-bezier(0.2,0.7,0.2,1);
-		will-change: transform, opacity;
-	`;
 </script>
 
 <!-- ─────────────────────────────────────────────────────────────────────────
@@ -214,12 +214,12 @@
 		background: rgba(255, 255, 255, 0.055);
 		transition: background 0.9s ease, box-shadow 0.9s ease;
 	}
-	/* Hover: whisper-thin orange ambient bloom */
+	/* Hover: whisper-thin white ambient bloom */
 	.csb-wrap:hover {
 		background: rgba(255, 255, 255, 0.03);
 		box-shadow:
-			0 0 18px 1px rgba(255, 68, 0, 0.055),
-			0 0 55px 6px rgba(255, 68, 0, 0.028);
+			0 0 18px 1px rgba(255, 255, 255, 0.055),
+			0 0 55px 6px rgba(255, 255, 255, 0.028);
 	}
 	/* Spinning arc — creeps in on hover, never snaps */
 	.csb-wrap .csb-spin {
@@ -227,7 +227,7 @@
 		inset: -1000%;
 		background: conic-gradient(
 			transparent 260deg,
-			rgba(255, 68, 0, 0.6) 360deg
+			rgba(255, 255, 255, 0.7) 360deg
 		);
 		opacity: 0;
 		animation: spin-border 4s linear infinite;
@@ -244,20 +244,48 @@
 		border-radius: 1.75rem;
 		overflow: hidden;
 	}
+
+	/* Adoption card — metallic shimmer sweep (Apple polished-aluminum quality) */
+	@keyframes shimmer-sweep {
+		0%   { background-position: 200% center; }
+		100% { background-position: -200% center; }
+	}
+	.stat-hero {
+		background: linear-gradient(
+			105deg,
+			rgba(155,155,155,1)  0%,
+			rgba(255,255,255,1) 28%,
+			rgba(195,195,195,1) 50%,
+			rgba(255,255,255,1) 72%,
+			rgba(155,155,155,1) 100%
+		);
+		background-size: 220% auto;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		animation: shimmer-sweep 5s linear infinite;
+	}
+	/* Ghost "before" state — barely there, thin crossed-out */
+	.stat-from {
+		color: rgba(255,255,255,0.20);
+		text-decoration: line-through;
+		text-decoration-color: rgba(255,255,255,0.12);
+		text-decoration-thickness: 2px;
+	}
 </style>
 
 <section class="w-full px-4 md:px-6 pt-24 pb-28 bg-transparent">
 	<div class="max-w-7xl mx-auto">
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5
+		<div bind:this={bentoGridEl}
+		     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5
 		            auto-rows-[minmax(220px,auto)] lg:auto-rows-[280px] grid-flow-row-dense">
 
 			<!-- ── 1. Narrative (Wide 2×1) ──────────────────────────────────── -->
-			<div class="col-span-1 md:col-span-2 lg:col-span-2 lg:row-span-1 lg:col-start-1 lg:row-start-1 csb-wrap"
-			     style={getStyle(0)}>
+			<div class="col-span-1 md:col-span-2 lg:col-span-2 lg:row-span-1 lg:col-start-1 lg:row-start-1 csb-wrap">
 				<div class="csb-spin"></div>
 				<div class="csb-inner bg-[#0d0d0d] p-7 md:p-9 lg:p-10 flex flex-col justify-between group
 				            shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset]">
-					<div class="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-transparent pointer-events-none"></div>
+					<div class="absolute inset-0 bg-gradient-to-br from-white/1.5 via-transparent to-transparent pointer-events-none"></div>
 					<div class="relative z-20 flex flex-col h-full">
 						<h3 class="text-[clamp(1.2rem,3.2vw,1.65rem)] font-extrabold text-white leading-[1.22] tracking-tight mb-0 max-w-lg flex-1 flex items-center">
 							<!-- eslint-disable-next-line svelte/no-at-html-tags -->
@@ -278,8 +306,7 @@
 			</div>
 
 			<!-- ── 2. Video Anchor (2×2 top-right) ──────────────────────────── -->
-			<div class="col-span-1 md:col-span-2 lg:col-span-2 md:row-span-2 lg:row-span-2 lg:col-start-3 lg:row-start-1 csb-wrap"
-			     style={getStyle(1)}>
+			<div class="col-span-1 md:col-span-2 lg:col-span-2 md:row-span-2 lg:row-span-2 lg:col-start-3 lg:row-start-1 csb-wrap">
 				<div class="csb-spin"></div>
 				<div class="csb-inner bg-[#050505] cursor-crosshair group">
 					<video src={anchor.videoSrc} autoplay loop muted playsinline
@@ -298,7 +325,7 @@
 						<span class="text-white font-bold text-2xl tracking-tight mb-1">{anchor.brandName}</span>
 						<span class="text-[10px] font-mono tracking-[0.2em] text-gray-400 uppercase mb-8">{anchor.brandSub}</span>
 						<div class="flex items-center gap-3 text-white/80 text-[10px] font-mono uppercase tracking-widest bg-white/[0.08] px-5 py-2.5 rounded-full backdrop-blur-md border border-white/[0.1]">
-							<span class="w-2 h-2 rounded-full bg-[#FF4400] animate-pulse shrink-0"></span>
+							<span class="w-2 h-2 rounded-full bg-portfolio-accent-vivid animate-pulse shrink-0"></span>
 							Hover to view UI
 						</div>
 					</div>
@@ -308,21 +335,23 @@
 			</div>
 
 			<!-- ── 3. Adoption (Wide 2×1) ────────────────────────────────────── -->
-			<div class="col-span-1 md:col-span-2 lg:col-span-2 lg:row-span-1 lg:col-start-1 lg:row-start-2 csb-wrap"
-			     style={getStyle(2)}>
+			<div class="col-span-1 md:col-span-2 lg:col-span-2 lg:row-span-1 lg:col-start-1 lg:row-start-2 csb-wrap">
 				<div class="csb-spin"></div>
 				<div class="csb-inner bg-[#0d0d0d] p-8 md:p-10 flex flex-col justify-center group
 				            shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset]">
-					<div class="absolute inset-0 bg-gradient-to-tr from-[#FF4400]/[0.03] to-transparent pointer-events-none"></div>
+					<!-- Ambient bloom behind the hero number -->
+					<div class="absolute right-[18%] top-1/2 -translate-y-1/2 w-56 h-56 rounded-full bg-white/[0.028] blur-3xl pointer-events-none"></div>
 					<div class="relative z-20 flex flex-col">
-						<span class="text-[9px] font-mono tracking-[0.18em] text-gray-500 uppercase mb-3 block">{adoption.label}</span>
-						<div class="flex items-baseline gap-0 leading-none mb-3">
-							<span class="text-[clamp(3rem,8vw,5rem)] font-black text-white tracking-tighter">{adoption.from}</span>
+						<span class="text-[9px] font-mono tracking-[0.18em] text-gray-500 uppercase mb-4 block">{adoption.label}</span>
+						<div class="flex items-baseline leading-none mb-4" style="gap: 0;">
+							<!-- Before: ghost state, barely visible -->
+							<span class="stat-from text-[clamp(2.2rem,5.5vw,3.4rem)] font-black tracking-tighter">{adoption.from}</span>
+							<!-- Arrow: smooth breathing drift -->
 							<span bind:this={arrowEl}
-							      class="text-[#FF4400] font-black text-[clamp(2.5rem,7vw,4.5rem)] mx-1 md:mx-2 inline-block will-change-transform"
-							      style="display:inline-block; filter: drop-shadow(0 0 2px rgba(255,68,0,0.3));">→</span>
-							<span class="text-[clamp(3rem,8vw,5rem)] font-black text-white tracking-tighter">{adoption.to}</span>
-							<span class="text-[#FF4400] font-black text-[clamp(3rem,8vw,5rem)] tracking-tighter">+</span>
+							      class="font-black text-[clamp(2rem,5vw,3rem)] mx-3 md:mx-5 inline-block will-change-transform"
+							      style="display:inline-block; color: rgba(255,255,255,0.45);">→</span>
+							<!-- Hero number: metallic shimmer -->
+							<span class="stat-hero text-[clamp(3rem,8vw,5rem)] font-black tracking-tighter">{adoption.to}+</span>
 						</div>
 						<p class="text-sm text-gray-400 leading-relaxed max-w-sm">{adoption.description}</p>
 					</div>
@@ -330,15 +359,14 @@
 			</div>
 
 			<!-- ── 4. Metric 1 (Square 1×1) ─────────────────────────────────── -->
-			<div class="col-span-1 md:col-span-1 lg:col-span-1 lg:row-span-1 lg:col-start-1 lg:row-start-3 csb-wrap"
-			     style={getStyle(3)}>
+			<div class="col-span-1 md:col-span-1 lg:col-span-1 lg:row-span-1 lg:col-start-1 lg:row-start-3 csb-wrap">
 				<div class="csb-spin"></div>
 				<div class="csb-inner bg-[#0d0d0d] p-8 md:p-10 flex flex-col justify-center group
 				            shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset]">
-					<div class="absolute inset-0 bg-gradient-to-br from-[#FF4400]/[0.04] to-transparent pointer-events-none"></div>
+					<div class="absolute inset-0 pointer-events-none"></div>
 					<div class="relative z-20">
 						<span bind:this={bounce37El}
-						      class="text-[clamp(2rem,5vw,2.75rem)] font-black text-[#FF4400] tracking-tighter block mb-1 will-change-transform"
+						      class="text-[clamp(2rem,5vw,2.75rem)] font-black text-portfolio-success tracking-tighter block mb-1 will-change-transform"
 						      style="display:block;">{metric1.stat}</span>
 						<h4 class="text-base font-semibold text-white leading-tight tracking-tight mb-2">{metric1.label}</h4>
 						<span class="text-[9px] font-mono tracking-[0.18em] text-gray-500 uppercase">{metric1.context}</span>
@@ -347,16 +375,15 @@
 			</div>
 
 			<!-- ── 5. Metric 2 (Square 1×1) ─────────────────────────────────── -->
-			<div class="col-span-1 md:col-span-1 lg:col-span-1 lg:row-span-1 lg:col-start-2 lg:row-start-3 csb-wrap"
-			     style={getStyle(4)}>
+			<div class="col-span-1 md:col-span-1 lg:col-span-1 lg:row-span-1 lg:col-start-2 lg:row-start-3 csb-wrap">
 				<div class="csb-spin"></div>
 				<div class="csb-inner bg-[#0d0d0d] p-8 md:p-10 flex flex-col justify-center group
 				            shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset]">
-					<div class="absolute inset-0 bg-gradient-to-tl from-[#FF4400]/[0.04] to-transparent pointer-events-none"></div>
+					<div class="absolute inset-0 pointer-events-none"></div>
 					<div class="relative z-20" bind:this={perf80El}>
 						<div class="flex items-baseline gap-0 leading-none mb-2">
 							<span class="text-[clamp(2.5rem,6vw,3.5rem)] font-black text-white tracking-tighter">{metric2.number}</span>
-							<span class="pct-sign text-[#FF4400] font-black text-[clamp(1.8rem,4vw,2.5rem)] will-change-transform"
+							<span class="pct-sign text-portfolio-success font-black text-[clamp(1.8rem,4vw,2.5rem)] will-change-transform"
 							      style="display:inline-block;">{metric2.unit}</span>
 						</div>
 						<span class="text-[9px] font-mono tracking-[0.18em] text-gray-500 uppercase block mb-1.5">{metric2.label}</span>
@@ -366,8 +393,7 @@
 			</div>
 
 			<!-- ── 6. Conversion (Wide 2×1) ──────────────────────────────────── -->
-			<div class="col-span-1 md:col-span-2 lg:col-span-2 lg:row-span-1 lg:col-start-3 lg:row-start-3 csb-wrap"
-			     style={getStyle(5)}>
+			<div class="col-span-1 md:col-span-2 lg:col-span-2 lg:row-span-1 lg:col-start-3 lg:row-start-3 csb-wrap">
 				<div class="csb-spin"></div>
 				<div class="csb-inner bg-[#0d0d0d] p-8 md:p-10
 				            flex flex-col md:flex-row items-start md:items-center justify-between gap-6
@@ -378,11 +404,11 @@
 						<p class="text-base text-gray-400 max-w-xs leading-relaxed">{conversion.description}</p>
 					</div>
 					<!-- Sweep chip -->
-					<div class="relative overflow-hidden rounded-full bg-[#FF4400]/10 border border-[#FF4400]/20
+					<div class="relative overflow-hidden rounded-full bg-portfolio-success/10 border border-portfolio-success/20
 					            px-8 py-5 shrink-0 mt-4 md:mt-0
-					            shadow-[0_0_20px_rgba(255,68,0,0.08)]">
+					            shadow-[0_0_20px_rgba(61,204,17,0.08)]">
 						<span bind:this={conv47El}
-						      class="text-[#FF4400] font-black text-[clamp(1.5rem,3vw,1.875rem)] tracking-tight relative z-20 inline-block will-change-transform"
+						      class="text-portfolio-success font-black text-[clamp(1.5rem,3vw,1.875rem)] tracking-tight relative z-20 inline-block will-change-transform"
 						>{conversion.chip}</span>
 						<!-- Glass sweep blade -->
 						<div class="absolute top-0 -inset-full h-full w-[150%] z-10 block transform -skew-x-12

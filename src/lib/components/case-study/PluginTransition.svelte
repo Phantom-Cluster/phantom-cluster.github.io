@@ -40,7 +40,7 @@
 
 <div class="full-bleed bg-neutral-950" data-theme="dark">
 	<section
-		class="max-w-6xl mx-auto px-4 md:px-6 pt-12 pb-16 md:pb-20 relative overflow-hidden"
+		class="max-w-7xl mx-auto px-4 md:px-6 pt-12 pb-16 md:pb-20 relative overflow-hidden"
 		aria-label="Chapter transition: {prevName} complete, entering {nextName}">
 
 		<!-- Ghost chapter numeral — left-anchored texture -->
@@ -59,8 +59,8 @@
 			</div>
 			<div class="flex-1 h-px bg-white/10" aria-hidden="true"></div>
 			<div class="flex items-center gap-2 shrink-0">
-				<span class="w-1 h-1 rounded-full bg-[#FF4400] animate-pulse" aria-hidden="true"></span>
-				<span class="text-[9px] font-mono tracking-[0.28em] text-[#FF4400] uppercase">{nextNum} — {nextName}</span>
+				<span class="w-1 h-1 rounded-full bg-portfolio-accent-vivid animate-pulse" aria-hidden="true"></span>
+				<span class="text-[9px] font-mono tracking-[0.28em] text-portfolio-accent-vivid uppercase">{nextNum} — {nextName}</span>
 			</div>
 		</div>
 
@@ -92,7 +92,7 @@
 						{#if stat.html}
 							<span class="text-xl font-black text-white tracking-tight">{@html stat.value}</span>
 						{:else}
-							<span class="text-xl font-black tracking-tight {stat.accent ? 'text-[#FF4400]' : 'text-white'}">{stat.value}</span>
+							<span class="text-xl font-black tracking-tight {stat.accent ? 'text-portfolio-success' : 'text-white'}">{stat.value}</span>
 						{/if}
 					</div>
 				{/each}

@@ -38,6 +38,16 @@
   --radius-sm: calc(var(--radius) - 4px);
   --radius-bento: 2.5rem;
 
+  /* ── Portfolio Design System Tokens ─────────────────────────────── */
+  --color-portfolio-base:    #050505;
+  --color-portfolio-surface: #0A0A0A;
+  --color-portfolio-border:  #222222;
+  --color-portfolio-accent:       #6B7280;  /* neutral-500 — UI chrome, arrows on light bg */
+  --color-portfolio-accent-vivid: #9CA3AF;  /* neutral-400 — hypothesis labels, pulse dots */
+  --color-portfolio-accent-deep:  #3D4E63;
+  --color-portfolio-success: #00E676;   /* 12.4:1 on dark — electric mint, never use on white */
+  --color-portfolio-error:   #FF3B30;
+
   --font-sans: 'Geist', 'Satoshi', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Space Mono', monospace;
 }
@@ -51,11 +61,10 @@
     --card-foreground: #09090b;
     --popover: #ffffff;
     --popover-foreground: #09090b;
-    
-    /* Electric Orange / Vermilion */
-    --primary: #f53500;
+
+    --primary: #111111;
     --primary-foreground: #ffffff;
-    
+
     --secondary: #e4e4e7; /* Zinc 200 */
     --secondary-foreground: #09090b;
     --muted: #f4f4f5;
@@ -66,7 +75,7 @@
     --destructive-foreground: #ffffff;
     --border: rgba(0, 0, 0, 0.08);
     --input: rgba(0, 0, 0, 0.08);
-    --ring: #f53500;
+    --ring: #111111;
     --radius: 1.25rem; /* 20px smooth corners */
   }
 
@@ -78,8 +87,8 @@
     --card-foreground: #ffffff;
     --popover: #121214;
     --popover-foreground: #ffffff;
-    --primary: #f53500;
-    --primary-foreground: #ffffff;
+    --primary: #EBEBEB;
+    --primary-foreground: #111111;
     --secondary: #18181b; /* Zinc 900 */
     --secondary-foreground: #f4f4f5;
     --muted: #18181b;
@@ -90,7 +99,13 @@
     --destructive-foreground: #ffffff;
     --border: rgba(255, 255, 255, 0.08);
     --input: rgba(255, 255, 255, 0.08);
-    --ring: #f53500;
+    --ring: #EBEBEB;
+  }
+
+  [data-theme="dark"] {
+    --primary: #EBEBEB;
+    --primary-foreground: #111111;
+    --ring: #EBEBEB;
   }
 }
 
@@ -101,7 +116,7 @@
   body {
     @apply bg-background text-foreground font-sans antialiased selection:bg-primary selection:text-primary-foreground;
   }
-  
+
   /* WCAG 2.2 AA standard high-contrast keyboard focus indicators */
   :focus-visible {
     outline: 2px solid var(--primary) !important;
@@ -116,6 +131,78 @@
   textarea:focus:not(:focus-visible) {
     outline: none !important;
   }
+}
+
+/* ── Red shimmer sweep — for problem/negative emphasis words ─────────── */
+@keyframes shimmer-bar {
+  0%   { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+.shimmer-red {
+  background: linear-gradient(90deg, #7a1010 20%, #EF4444 50%, #7a1010 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-bar 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* ── White glow — for arrows/marks on dark backgrounds ──────────────── */
+.text-glow-accent {
+  text-shadow:
+    0 0 6px  rgba(255, 255, 255, 0.70),
+    0 0 22px rgba(255, 255, 255, 0.25);
+}
+
+/* ── Stat glow utilities — luminous metric numbers on dark backgrounds ── */
+.stat-glow-green {
+  text-shadow:
+    0 0 18px rgba(0, 230, 118, 0.80),
+    0 0 48px rgba(0, 230, 118, 0.35),
+    0 0 80px rgba(0, 230, 118, 0.12);
+}
+/* Deep blue glow — rich anchor, for accent arrows/small marks on dark */
+.stat-glow-blue {
+  text-shadow:
+    0 0 18px rgba(34, 68, 255, 0.90),
+    0 0 48px rgba(34, 68, 255, 0.45),
+    0 0 80px rgba(34, 68, 255, 0.15);
+}
+/* Vivid blue glow — bright, luminous — for large stat numbers on dark cards */
+.stat-glow-blue-vivid {
+  text-shadow:
+    0 0 16px rgba(107, 141, 255, 0.95),
+    0 0 44px rgba(107, 141, 255, 0.50),
+    0 0 80px rgba(107, 141, 255, 0.18);
+}
+.stat-glow-white {
+  text-shadow:
+    0 0 12px rgba(255, 255, 255, 0.50),
+    0 0 36px rgba(255, 255, 255, 0.20);
+}
+
+/* ── Narrative heading: iridescent light sweep ───────────────────────── */
+@keyframes shimmer-iridescent {
+  0%        { background-position: 200% center; }
+  70%, 100% { background-position: -200% center; }
+}
+
+.text-shimmer-white {
+  background: linear-gradient(
+    90deg,
+    rgba(185, 175, 155, 0.85)  0%,
+    rgba(220, 215, 200, 1)     18%,
+    rgba(255, 255, 255, 1)     32%,
+    rgba(210, 228, 255, 1)     50%,
+    rgba(255, 255, 255, 1)     68%,
+    rgba(220, 215, 200, 1)     82%,
+    rgba(185, 175, 155, 0.85)  100%
+  );
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-iridescent 8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 @layer utilities {
@@ -159,4 +246,3 @@
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
   }
 }
-
