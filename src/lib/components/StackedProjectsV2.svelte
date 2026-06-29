@@ -2,6 +2,7 @@
 	import { projects } from '$lib/data/projects';
 	import { ArrowRight } from 'lucide-svelte';
 	import { onMount, onDestroy } from 'svelte';
+	import { browser } from '$app/environment';
 	import { gsap } from 'gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -192,6 +193,7 @@
 	// Without this, stale instances from the previous mount conflict with the new ones on return,
 	// leaving cards stuck at opacity:0 from the fromTo initial state.
 	onDestroy(() => {
+		if (!browser) return;
 		ScrollTrigger.getAll().forEach(t => t.kill());
 		gsap.killTweensOf('.v2-stack-card, .v2-tilt-inner, .v2-project-img, .v2-glow, .v2-overlay');
 	});
