@@ -24,6 +24,14 @@ vite.config.ts.timestamp-*
 
 # AI and IDE specific files
 .agents/
+.claude/
+.gemini/
+.cursor/
+.windsurf/
+.continue/
+.codeium/
+.aider*
+CLAUDE.md
+.claudeignore
 skills-lock.json
 *.code-workspace
-.claude/
