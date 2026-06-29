@@ -467,7 +467,7 @@
 		opacity: 1;
 	}
 	/* Keep all content above the ::before fill */
-	.v2-cta > * {
+	.v2-cta > :global(*) {
 		position: relative;
 		z-index: 1;
 	}
