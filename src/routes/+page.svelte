@@ -271,7 +271,7 @@
 							<ArrowRight class="size-3.5" />
 						</a>
 						<a
-							href="/resume.pdf"
+							href="/Hitanshu_Sahu___Resume_JUN_Updated.pdf"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/20 text-white rounded-full text-sm font-bold tracking-wide hover:border-white/50 hover:bg-white/5 transition-all duration-200"

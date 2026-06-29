@@ -274,7 +274,7 @@
 						<span class="text-[11px] font-mono tracking-widest text-neutral-500 uppercase">Case Study — Consumer App Redesign</span>
 					</div>
 				</div>
-				<span class="text-[11px] font-mono tracking-widest text-neutral-400 uppercase hidden sm:block">2024 — Present</span>
+				<span class="text-[11px] font-mono tracking-widest text-neutral-400 uppercase hidden sm:block">Mar 2025 — Present</span>
 			</div>
 
 			<div class="flex items-start gap-10 cs-hero-element">
