@@ -13,11 +13,6 @@
 	let h1El: HTMLElement;
 	let manifestoEl: HTMLElement;
 	let pageWrapperEl: HTMLElement;
-	// Explore row refs
-	let wpmuRowEl!: HTMLElement;
-	let ideajamRowEl!: HTMLElement;
-	let eclecticRowEl!: HTMLElement;
-	let wpmuVideoEl!: HTMLVideoElement;
 
 	const experienceYears = new Date().getFullYear() - 2018;
 
@@ -163,56 +158,6 @@
 		return () => observer.disconnect();
 	});
 
-	// Explore rows: inline Svelte event handlers — no setTimeout race, no addEventListener timing issues
-	onMount(() => {
-		if (wpmuVideoEl) gsap.set(wpmuVideoEl, { opacity: 0, scale: 1.04, force3D: true });
-	});
-
-	function rowEnter(rowEl: HTMLElement, video?: HTMLVideoElement) {
-		const overlay = rowEl.querySelector<HTMLElement>('.explore-overlay');
-		const mesh    = rowEl.querySelector<HTMLElement>('.explore-mesh');
-		const glow    = rowEl.querySelector<HTMLElement>('.explore-glow');
-		const title   = rowEl.querySelector<HTMLElement>('.explore-title');
-		const sub     = rowEl.querySelector<HTMLElement>('.explore-sub');
-		const num     = rowEl.querySelector<HTMLElement>('.explore-num');
-		const year    = rowEl.querySelector<HTMLElement>('.explore-year');
-		const btn     = rowEl.querySelector<HTMLElement>('.explore-btn');
-		const arrow   = rowEl.querySelector<HTMLElement>('.explore-arrow');
-
-		if (video) { video.play().catch(() => {}); gsap.to(video, { opacity: 0.12, scale: 1, duration: 0.72, ease: 'power2.out', force3D: true, overwrite: true }); }
-		if (overlay) gsap.to(overlay, { opacity: 1, duration: 0.50, ease: 'power2.out', force3D: true, overwrite: true });
-		if (mesh)    gsap.to(mesh,    { opacity: 1, duration: 0.65, ease: 'power2.out', overwrite: true });
-		if (glow)    gsap.to(glow,    { opacity: 1, duration: 0.80, overwrite: true });
-		if (title)   gsap.to(title,   { color: '#ffffff', duration: 0.38, ease: 'power2.out', overwrite: true });
-		if (sub)     gsap.to(sub,     { color: 'rgba(255,255,255,0.44)', duration: 0.38, overwrite: true });
-		if (num)     gsap.to(num,     { color: 'rgba(255,255,255,0.27)', duration: 0.38, overwrite: true });
-		if (year)    gsap.to(year,    { color: 'rgba(255,255,255,0.27)', duration: 0.38, overwrite: true });
-		if (btn)     gsap.to(btn,     { x: 7, borderColor: 'rgba(255,255,255,0.22)', duration: 0.40, ease: 'power2.out', force3D: true, overwrite: true });
-		if (arrow)   gsap.to(arrow,   { color: '#ffffff', duration: 0.30, overwrite: true });
-	}
-
-	function rowLeave(rowEl: HTMLElement, video?: HTMLVideoElement) {
-		const overlay = rowEl.querySelector<HTMLElement>('.explore-overlay');
-		const mesh    = rowEl.querySelector<HTMLElement>('.explore-mesh');
-		const glow    = rowEl.querySelector<HTMLElement>('.explore-glow');
-		const title   = rowEl.querySelector<HTMLElement>('.explore-title');
-		const sub     = rowEl.querySelector<HTMLElement>('.explore-sub');
-		const num     = rowEl.querySelector<HTMLElement>('.explore-num');
-		const year    = rowEl.querySelector<HTMLElement>('.explore-year');
-		const btn     = rowEl.querySelector<HTMLElement>('.explore-btn');
-		const arrow   = rowEl.querySelector<HTMLElement>('.explore-arrow');
-
-		if (video)   { gsap.to(video, { opacity: 0, scale: 1.04, duration: 0.55, ease: 'power2.in', force3D: true, overwrite: true }); video.pause(); }
-		if (overlay) gsap.to(overlay, { opacity: 0, duration: 0.50, ease: 'power2.in', force3D: true, overwrite: true });
-		if (mesh)    gsap.to(mesh,    { opacity: 0, duration: 0.50, ease: 'power2.in', overwrite: true });
-		if (glow)    gsap.to(glow,    { opacity: 0, duration: 0.45, overwrite: true });
-		if (title)   gsap.to(title,   { color: '#0a0a0a', duration: 0.48, ease: 'power2.in', overwrite: true });
-		if (sub)     gsap.to(sub,     { color: '#a3a3a3', duration: 0.48, overwrite: true });
-		if (num)     gsap.to(num,     { color: '#a3a3a3', duration: 0.48, overwrite: true });
-		if (year)    gsap.to(year,    { color: '#a3a3a3', duration: 0.48, overwrite: true });
-		if (btn)     gsap.to(btn,     { x: 0, borderColor: '#d4d4d4', duration: 0.40, ease: 'power2.in', force3D: true, overwrite: true });
-		if (arrow)   gsap.to(arrow,   { color: '#737373', duration: 0.30, overwrite: true });
-	}
 
 	const experiences = [
 		{
@@ -291,13 +236,14 @@
 	>
 		<!-- Experience Badge -->
 		<div
-			class="relative z-20 inline-flex items-center justify-center p-[1.5px] rounded-full overflow-hidden mb-8 shadow-sm bg-neutral-200"
+			class="relative z-20 inline-flex items-center justify-center p-[1.5px] rounded-full overflow-hidden mb-8 shadow-sm"
+			style="isolation: isolate;"
 		>
 			<div
 				class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#f97316_360deg)]"
 			></div>
 			<div
-				class="relative bg-white px-5 py-2 rounded-full w-full h-full flex items-center justify-center"
+				class="relative z-10 bg-white px-5 py-2 rounded-full w-full h-full flex items-center justify-center"
 			>
 				<span
 					class="text-xs font-semibold tracking-tight text-neutral-800"
@@ -314,14 +260,14 @@
 			<img
 				src={starImg}
 				alt="3D Star"
-				class="floating-shape absolute object-contain pointer-events-none"
+				class="floating-shape absolute object-contain pointer-events-none hidden lg:block"
 				style="z-index: -1; top: -3vw; left: -6vw; width: clamp(80px, 7vw, 140px);"
 			/>
 			Product <br /> Designer
 			<img
 				src={gemImg}
 				alt="3D Gem"
-				class="floating-shape absolute object-contain pointer-events-none"
+				class="floating-shape absolute object-contain pointer-events-none hidden lg:block"
 				style="z-index: -1; bottom: -3vw; right: -6vw; width: clamp(80px, 7vw, 140px);"
 			/>
 		</h1>
@@ -497,9 +443,9 @@
 		id="credentials-bento"
 		class="py-32 px-6 border-t border-white/5 bg-[#0a0a0c]"
 	>
-		<div class="max-w-5xl mx-auto w-full px-6 mb-24">
+		<div class="max-w-5xl mx-auto w-full mb-24">
 			<h3
-				class="text-sm font-mono text-primary tracking-widest uppercase mb-12 text-center md:text-left"
+				class="text-sm font-mono text-gray-400 tracking-widest uppercase mb-12 text-center md:text-left"
 			>
 				Verifiable Credentials
 			</h3>
@@ -638,7 +584,7 @@
 		<!-- How I Work — compact process strip -->
 		<div class="max-w-5xl mx-auto mt-32 px-6">
 			<p class="text-[10px] font-mono tracking-[0.2em] text-gray-500 uppercase mb-8">How I Work</p>
-			<div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+			<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
 				{#each [
 					{ num: "01", title: "Discover", desc: "Listen, research, map constraints." },
 					{ num: "02", title: "Define", desc: "Structure the problem, set success criteria." },
@@ -706,8 +652,9 @@
 
 	<!-- Tools & Stack -->
 	<section data-theme="light" class="py-20 px-6 border-t border-neutral-200/50 bg-[#f4f4f6]">
-		<div class="max-w-5xl mx-auto px-6">
-			<p class="text-[10px] font-mono tracking-[0.2em] text-gray-400 uppercase mb-10">Tools & Stack</p>
+		<div class="max-w-5xl mx-auto">
+			<p class="text-[10px] font-mono tracking-[0.3em] text-neutral-400 uppercase mb-3">My toolkit</p>
+			<h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-neutral-900 mb-10">Tools & Stack</h2>
 			<div class="flex flex-wrap gap-3">
 				{#each tools as tool}
 					<div class="group flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-white border border-neutral-200 hover:border-neutral-300 hover:shadow-sm transition-all duration-300 cursor-default">
@@ -722,112 +669,8 @@
 		</div>
 	</section>
 
-	<!-- Explore: Editorial Project Rows -->
+	<!-- Impact Ledger: Project rows with metrics -->
 	<section data-theme="light" id="project-routing" class="border-t border-neutral-200/50 bg-[#f4f4f6]">
-		<!-- Section header -->
-		<div class="max-w-5xl mx-auto px-6 pt-20 pb-14">
-			<div class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
-				<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"></div>
-				<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
-					<span class="text-[11px] font-mono tracking-widest text-gray-400 uppercase">EXPLORE</span>
-				</div>
-			</div>
-			<h2 class="text-xl md:text-2xl font-medium tracking-tight text-neutral-400">
-				See systems in action
-			</h2>
-		</div>
-
-		<!-- ── WPMU DEV Row ── -->
-		<a bind:this={wpmuRowEl} href="/work/wpmu-dev-dashboard"
-			onmouseenter={() => rowEnter(wpmuRowEl, wpmuVideoEl)}
-			onmouseleave={() => rowLeave(wpmuRowEl, wpmuVideoEl)}
-			class="relative flex overflow-hidden cursor-pointer">
-			<!-- Video: GPU layer, controlled by GSAP only -->
-			<video bind:this={wpmuVideoEl}
-				src="/videos/SmushTest_Prototype.mp4"
-				muted loop playsinline preload="none"
-				style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;will-change:opacity,transform;"
-			></video>
-			<!-- Dark wash -->
-			<div class="explore-overlay absolute inset-0 bg-neutral-950" style="opacity:0;will-change:opacity;"></div>
-			<!-- Blue accent glow -->
-			<div class="explore-glow absolute bottom-0 left-0 w-64 h-32 bg-primary/20 blur-3xl pointer-events-none" style="opacity:0;"></div>
-
-			<div class="relative z-10 w-full max-w-5xl mx-auto px-6 py-16 flex items-center justify-between gap-6">
-				<div class="flex items-center gap-8 min-w-0">
-					<span class="explore-num text-[11px] font-mono text-neutral-400 shrink-0 hidden sm:block">01</span>
-					<div class="min-w-0">
-						<h3 class="explore-title text-3xl sm:text-4xl md:text-[3.25rem] font-black tracking-tight text-neutral-900 leading-none">WPMU DEV</h3>
-						<p class="explore-sub text-sm text-neutral-400 mt-2">Dashboard & Plugin Design System</p>
-					</div>
-				</div>
-				<div class="flex items-center gap-4 shrink-0">
-					<span class="explore-year text-xs font-mono text-neutral-400 hidden md:block">2022–24</span>
-					<div class="explore-btn w-10 h-10 rounded-full border border-neutral-300 flex items-center justify-center" style="will-change:transform;">
-						<ArrowRight class="explore-arrow w-4 h-4 text-neutral-500" />
-					</div>
-				</div>
-			</div>
-		</a>
-
-		<!-- ── Ideajam Row ── -->
-		<a bind:this={ideajamRowEl} href="/work/ideajam-kanban-saas"
-			onmouseenter={() => rowEnter(ideajamRowEl)}
-			onmouseleave={() => rowLeave(ideajamRowEl)}
-			class="relative flex overflow-hidden border-t border-neutral-900/[0.07] cursor-pointer">
-			<!-- Dark indigo base + mesh, both GPU-composited -->
-			<div class="explore-overlay absolute inset-0 bg-[#0d0a2e]" style="opacity:0;will-change:opacity;"></div>
-			<div class="explore-mesh absolute inset-0 pointer-events-none"
-				style="opacity:0;will-change:opacity;background:radial-gradient(ellipse at 20% 50%,rgba(88,58,255,0.38) 0%,transparent 55%),radial-gradient(ellipse at 75% 30%,rgba(130,80,255,0.22) 0%,transparent 50%),linear-gradient(rgba(255,255,255,0.05) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,rgba(255,255,255,0.05) 1px,transparent 1px) 0 0/48px 48px;">
-			</div>
-
-			<div class="relative z-10 w-full max-w-5xl mx-auto px-6 py-16 flex items-center justify-between gap-6">
-				<div class="flex items-center gap-8 min-w-0">
-					<span class="explore-num text-[11px] font-mono text-neutral-400 shrink-0 hidden sm:block">02</span>
-					<div class="min-w-0">
-						<h3 class="explore-title text-3xl sm:text-4xl md:text-[3.25rem] font-black tracking-tight text-neutral-900 leading-none">Ideajam</h3>
-						<p class="explore-sub text-sm text-neutral-400 mt-2">Kanban SaaS Redesign</p>
-					</div>
-				</div>
-				<div class="flex items-center gap-4 shrink-0">
-					<span class="explore-year text-xs font-mono text-neutral-400 hidden md:block">2021–22</span>
-					<div class="explore-btn w-10 h-10 rounded-full border border-neutral-300 flex items-center justify-center" style="will-change:transform;">
-						<ArrowRight class="explore-arrow w-4 h-4 text-neutral-500" />
-					</div>
-				</div>
-			</div>
-		</a>
-
-		<!-- ── Eclectic Row ── -->
-		<a bind:this={eclecticRowEl} href="/work/eclectic-app-design"
-			onmouseenter={() => rowEnter(eclecticRowEl)}
-			onmouseleave={() => rowLeave(eclecticRowEl)}
-			class="relative flex overflow-hidden border-t border-neutral-900/[0.07] cursor-pointer">
-			<!-- Deep teal base + mesh -->
-			<div class="explore-overlay absolute inset-0 bg-[#03141a]" style="opacity:0;will-change:opacity;"></div>
-			<div class="explore-mesh absolute inset-0 pointer-events-none"
-				style="opacity:0;will-change:opacity;background:radial-gradient(ellipse at 75% 50%,rgba(0,200,160,0.30) 0%,transparent 55%),radial-gradient(ellipse at 20% 60%,rgba(0,120,200,0.20) 0%,transparent 50%),repeating-linear-gradient(45deg,rgba(255,255,255,0.03) 0px,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 32px);">
-			</div>
-
-			<div class="relative z-10 w-full max-w-5xl mx-auto px-6 py-16 flex items-center justify-between gap-6">
-				<div class="flex items-center gap-8 min-w-0">
-					<span class="explore-num text-[11px] font-mono text-neutral-400 shrink-0 hidden sm:block">03</span>
-					<div class="min-w-0">
-						<h3 class="explore-title text-3xl sm:text-4xl md:text-[3.25rem] font-black tracking-tight text-neutral-900 leading-none">Eclectic</h3>
-						<p class="explore-sub text-sm text-neutral-400 mt-2">AI-Powered App Design</p>
-					</div>
-				</div>
-				<div class="flex items-center gap-4 shrink-0">
-					<span class="explore-year text-xs font-mono text-neutral-400 hidden md:block">2025</span>
-					<div class="explore-btn w-10 h-10 rounded-full border border-neutral-300 flex items-center justify-center" style="will-change:transform;">
-						<ArrowRight class="explore-arrow w-4 h-4 text-neutral-500" />
-					</div>
-				</div>
-			</div>
-		</a>
-
-		<!-- Closing hairline -->
-		<div class="border-t border-neutral-900/[0.07]"></div>
 
 		<!-- ── IMPACT LEDGER ──────────────────────────────────────────────── -->
 		<div class="max-w-5xl mx-auto px-6 pt-20 pb-24">

@@ -54,11 +54,12 @@
 	let activeCard = $state(0);
 	let pillsVisible = $state(false);
 	let sectionEl: HTMLElement;
+	let gsapCtx: gsap.Context;
 
 	onMount(async () => {
 		gsap.registerPlugin(ScrollTrigger);
 
-		// ── ColorThief: extract dominant color per thumbnail ─────────────────
+		// ColorThief runs outside the GSAP context — no animations involved
 		try {
 			const ColorThiefModule = await import('colorthief');
 			const colorThief = new (ColorThiefModule as any).default();
@@ -76,126 +77,121 @@
 			});
 		} catch {}
 
-		const cards = gsap.utils.toArray<HTMLElement>('.v2-stack-card');
+		// gsap.context tracks every ScrollTrigger and tween created here.
+		// revert() on destroy clears inline styles AND only kills our triggers —
+		// not global ones from the layout or other pages.
+		gsapCtx = gsap.context(() => {
+			// Scope toArray explicitly to sectionEl so we never pick up
+			// .v2-stack-card elements that belong to a concurrent page transition.
+			const cards = gsap.utils.toArray<HTMLElement>('.v2-stack-card', sectionEl);
 
-		// ── Pill nav: show only while section is in view ──────────────────────
-		ScrollTrigger.create({
-			trigger: sectionEl,
-			start: 'top 60%',
-			end: 'bottom 15%',
-			invalidateOnRefresh: true,
-			onEnter:      () => { pillsVisible = true;  },
-			onLeave:      () => { pillsVisible = false; },
-			onEnterBack:  () => { pillsVisible = true;  },
-			onLeaveBack:  () => { pillsVisible = false; },
-		});
-
-		// Track which cards are currently stacked behind another — tilt disabled when stacked
-		const isStacked = new Array(cards.length).fill(false);
-
-		cards.forEach((card, i) => {
-			const tiltEl  = card.querySelector<HTMLElement>('.v2-tilt-inner');
-			const imgEl   = card.querySelector<HTMLElement>('.v2-project-img');
-			const glowEl  = card.querySelector<HTMLElement>('.v2-glow');
-			const overlay = card.querySelector<HTMLElement>('.v2-overlay');
-
-			// Active pill tracking — onToggle fires on both enter and leave
+			// ── Pill nav: show only while section is in view ──────────────────
 			ScrollTrigger.create({
-				trigger: card,
-				start: 'top 55%',
-				end:   'bottom 45%',
+				trigger: sectionEl,
+				start: 'top 60%',
+				end: 'bottom 15%',
 				invalidateOnRefresh: true,
-				onEnter:      () => { activeCard = i; },
-				onEnterBack:  () => { activeCard = i; },
-				// Keep pill on this card while it's the topmost visible one
-				onLeave:      () => { if (i < cards.length - 1) activeCard = i + 1; },
-				onLeaveBack:  () => { if (i > 0) activeCard = i - 1; },
+				onEnter:      () => { pillsVisible = true;  },
+				onLeave:      () => { pillsVisible = false; },
+				onEnterBack:  () => { pillsVisible = true;  },
+				onLeaveBack:  () => { pillsVisible = false; },
 			});
 
-			// Entry: flip-drop from above (GPU: transform + opacity)
-			gsap.fromTo(
-				card,
-				{ y: 70, opacity: 0, rotateX: 10, scale: 0.97 },
-				{
-					y: 0, opacity: 1, rotateX: 0, scale: 1,
+			const isStacked = new Array(cards.length).fill(false);
+
+			cards.forEach((card, i) => {
+				const tiltEl  = card.querySelector<HTMLElement>('.v2-tilt-inner');
+				const imgEl   = card.querySelector<HTMLElement>('.v2-project-img');
+				const glowEl  = card.querySelector<HTMLElement>('.v2-glow');
+				const overlay = card.querySelector<HTMLElement>('.v2-overlay');
+
+				// Active pill tracking
+				ScrollTrigger.create({
+					trigger: card,
+					start: 'top 55%',
+					end:   'bottom 45%',
+					invalidateOnRefresh: true,
+					onEnter:      () => { activeCard = i; },
+					onEnterBack:  () => { activeCard = i; },
+					onLeave:      () => { if (i < cards.length - 1) activeCard = i + 1; },
+					onLeaveBack:  () => { if (i > 0) activeCard = i - 1; },
+				});
+
+				// immediateRender: false — prevents GSAP from setting opacity:0 as
+				// an inline style on tween creation. Cards stay at natural visible CSS
+				// until the trigger fires, so back-nav never leaves them invisible.
+				gsap.from(card, {
+					immediateRender: false,
+					y: 70, opacity: 0, rotateX: 10, scale: 0.97,
 					duration: 1.1, ease: 'expo.out',
 					scrollTrigger: { trigger: card, start: 'top 88%', once: true, invalidateOnRefresh: true },
-				},
-			);
+				});
 
-			// Mouse-tracking 3D tilt — subtle values, disabled while card is stacked behind another
-			card.addEventListener('mousemove', (e: MouseEvent) => {
-				if (isStacked[i]) return;
-				const rect = card.getBoundingClientRect();
-				const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
-				const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
-				if (tiltEl) gsap.to(tiltEl, { rotateY: dx * 2.5, rotateX: -dy * 1.5, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
-				if (imgEl)  gsap.to(imgEl,  { x: -dx * 14, y: -dy * 9, duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
-			});
+				// Mouse-tracking 3D tilt
+				card.addEventListener('mousemove', (e: MouseEvent) => {
+					if (isStacked[i]) return;
+					const rect = card.getBoundingClientRect();
+					const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
+					const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
+					if (tiltEl) gsap.to(tiltEl, { rotateY: dx * 2.5, rotateX: -dy * 1.5, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+					if (imgEl)  gsap.to(imgEl,  { x: -dx * 14, y: -dy * 9,               duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
+				});
 
-			card.addEventListener('mouseenter', () => {
-				if (isStacked[i]) return;
-				if (glowEl) gsap.to(glowEl, { opacity: 1, duration: 0.5, ease: 'power2.out', overwrite: true });
-			});
+				card.addEventListener('mouseenter', () => {
+					if (isStacked[i]) return;
+					if (glowEl) gsap.to(glowEl, { opacity: 1, duration: 0.5, ease: 'power2.out', overwrite: true });
+				});
 
-			card.addEventListener('mouseleave', () => {
-				if (tiltEl) gsap.to(tiltEl, { rotateY: 0, rotateX: 0, duration: 0.8, ease: 'power3.out', overwrite: 'auto' });
-				if (imgEl)  gsap.to(imgEl,  { x: 0, y: 0,              duration: 0.8, ease: 'power3.out', overwrite: 'auto' });
-				if (glowEl) gsap.to(glowEl, { opacity: 0,               duration: 0.4, ease: 'power2.in',  overwrite: true  });
-			});
+				card.addEventListener('mouseleave', () => {
+					if (tiltEl) gsap.to(tiltEl, { rotateY: 0, rotateX: 0, duration: 0.8, ease: 'power3.out', overwrite: 'auto' });
+					if (imgEl)  gsap.to(imgEl,  { x: 0, y: 0,              duration: 0.8, ease: 'power3.out', overwrite: 'auto' });
+					if (glowEl) gsap.to(glowEl, { opacity: 0,              duration: 0.4, ease: 'power2.in',  overwrite: true  });
+				});
 
-			// Scroll-driven stacking — GPU: scale + rotateX + yPercent (on outer card)
-			if (i === cards.length - 1) return;
-			const nextCard = cards[i + 1];
+				if (i === cards.length - 1) return;
+				const nextCard = cards[i + 1];
 
-			// When next card enters view: lock out tilt on this card and snap it neutral
-			ScrollTrigger.create({
-				trigger: nextCard,
-				start: 'top 88%',
-				invalidateOnRefresh: true,
-				onEnter: () => {
-					isStacked[i] = true;
-					if (tiltEl) gsap.to(tiltEl, { rotateY: 0, rotateX: 0, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
-					if (imgEl)  gsap.to(imgEl,  { x: 0, y: 0,              duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
-					if (glowEl) gsap.to(glowEl, { opacity: 0,               duration: 0.3, ease: 'power2.in',  overwrite: true  });
-				},
-				onLeaveBack: () => {
-					isStacked[i] = false;
-					// Nothing to restore — user will naturally re-hover to re-enable tilt
-				},
-			});
-
-			// Stacking animation — no anticipatePin (CSS sticky, not GSAP pin)
-			const tl = gsap.timeline({
-				scrollTrigger: {
+				ScrollTrigger.create({
 					trigger: nextCard,
-					start: 'top 75%',
-					end: () => `top ${100 + (i + 1) * 24}px`,
-					scrub: 0.6,
+					start: 'top 88%',
 					invalidateOnRefresh: true,
-				},
-			});
-			tl.to(card, {
-				scale: 0.96 - (cards.length - 1 - i) * 0.01,
-				rotateX: 8,
-				yPercent: -4,
-				transformOrigin: 'top center',
-				ease: 'none',
-			}, 0);
-			if (overlay) tl.to(overlay, { opacity: 0.55, ease: 'none' }, 0);
-		});
+					onEnter: () => {
+						isStacked[i] = true;
+						if (tiltEl) gsap.to(tiltEl, { rotateY: 0, rotateX: 0, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+						if (imgEl)  gsap.to(imgEl,  { x: 0, y: 0,              duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
+						if (glowEl) gsap.to(glowEl, { opacity: 0,              duration: 0.3, ease: 'power2.in',  overwrite: true  });
+					},
+					onLeaveBack: () => { isStacked[i] = false; },
+				});
 
-		// Ensure all measurements are fresh after full DOM paint
-		ScrollTrigger.refresh();
+				const tl = gsap.timeline({
+					scrollTrigger: {
+						trigger: nextCard,
+						start: 'top 75%',
+						end: () => `top ${100 + (i + 1) * 24}px`,
+						scrub: 0.6,
+						invalidateOnRefresh: true,
+					},
+				});
+				tl.to(card, {
+					scale: 0.96 - (cards.length - 1 - i) * 0.01,
+					rotateX: 8,
+					yPercent: -4,
+					transformOrigin: 'top center',
+					ease: 'none',
+				}, 0);
+				if (overlay) tl.to(overlay, { opacity: 0.55, ease: 'none' }, 0);
+			});
+
+			ScrollTrigger.refresh();
+		}, sectionEl);
 	});
 
-	// Kill all ScrollTriggers and card tweens when navigating away (e.g. to a case study).
-	// Without this, stale instances from the previous mount conflict with the new ones on return,
-	// leaving cards stuck at opacity:0 from the fromTo initial state.
 	onDestroy(() => {
 		if (!browser) return;
-		ScrollTrigger.getAll().forEach(t => t.kill());
-		gsap.killTweensOf('.v2-stack-card, .v2-tilt-inner, .v2-project-img, .v2-glow, .v2-overlay');
+		// revert() kills only our ScrollTriggers and clears all GSAP inline styles,
+		// so cards are never left at opacity:0 when the user navigates back.
+		gsapCtx?.revert();
 	});
 
 	// scrollToCard: compute document position dynamically (not cached) so reverse navigation
@@ -240,7 +236,7 @@
 				Does NOT have overflow:hidden so sticky behaviour is unaffected.
 			-->
 			<div
-				class="v2-stack-card group relative mb-[15vh] lg:mb-[35vh]"
+				class="v2-stack-card group relative mb-[8vh] lg:mb-[35vh]"
 				style="
 					--card-idx: {i};
 					z-index: {i + 10};
@@ -260,9 +256,8 @@
 					overflow:hidden here clips the project image correctly.
 				-->
 				<div
-					class="v2-tilt-inner relative w-full rounded-[2.5rem] overflow-hidden"
+					class="v2-tilt-inner relative w-full rounded-4xl sm:rounded-bento overflow-hidden"
 					style="
-						min-height: 540px;
 						will-change: transform;
 						background: #0e0e10;
 						box-shadow:
@@ -280,16 +275,15 @@
 					<!-- Two-column layout -->
 					<div
 						class="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_420px]"
-						style="min-height: 540px;"
 					>
 
 						<!-- LEFT: Editorial panel ──────────────────────────────── -->
-						<div class="flex flex-col justify-between p-10 md:p-14 border-r border-white/[0.06]">
+						<div class="flex flex-col justify-between p-7 sm:p-10 md:p-14 border-r border-white/6">
 
 							<!-- Top: meta + title + description -->
 							<div>
 								<!-- Role · Year with accent dot -->
-								<div class="flex items-center gap-3 mb-8">
+								<div class="flex items-center gap-3 mb-5 sm:mb-8">
 									<span
 										class="w-1.5 h-1.5 rounded-full shrink-0"
 										style="background: {a.hex};"
@@ -309,8 +303,8 @@
 							</div>
 
 							<!-- Bottom: pills + CTA -->
-							<div class="mt-10">
-								<div class="flex flex-wrap gap-2 mb-8">
+							<div class="mt-6 sm:mt-10">
+								<div class="flex flex-wrap gap-2 mb-6 sm:mb-8">
 									{#each m.pills as pill}
 										<span
 											class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono border"
@@ -338,7 +332,7 @@
 						</div>
 
 						<!-- RIGHT: Image panel ──────────────────────────────────── -->
-						<div class="relative overflow-hidden" style="background: #141416; min-height: 360px;">
+						<div class="relative overflow-hidden min-h-[220px] sm:min-h-[280px] lg:min-h-[360px]" style="background: #141416;">
 
 							<!-- Project screenshot — GPU: transform (parallax + scale on hover) -->
 							<img
