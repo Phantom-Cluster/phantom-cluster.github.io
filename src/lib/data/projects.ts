@@ -78,27 +78,38 @@ export const projects: Project[] = [
 		outcome: 'This concept, alongside the Effido productivity app, were the portfolio pieces that led directly to the WPMU DEV product design role. The WordPress depth signalled domain knowledge; Effido showed product thinking. Together they opened the door.',
 		metrics: ['6 Admin Task Flows Redesigned', 'Unified Block Toolbar System', 'Led to WPMU DEV Role'],
 		tags: ['WordPress', 'Concept', 'UI Design', 'Admin UX'],
-		thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000',
+		thumbnail: '/images/projects/wordpress/dashboard.webp',
 		images: [
-			'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1600',
-			'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1600'
+			'/images/projects/wordpress/hero.webp',
+			'/images/projects/wordpress/dashboard.webp',
+			'/images/projects/wordpress/search-bar.webp',
+			'/images/projects/wordpress/page-post.webp',
 		]
 	},
 	{
 		title: 'Effido Productivity App',
 		slug: 'effido-productivity-app',
-		description: 'Concept design for a productivity app built around a focus-first task model — reducing visible tasks to what matters now rather than surfacing everything at once.',
+		description: 'Concept design for a cross-device productivity app that unifies task management, calendar, and Pomodoro timer in one surface — synced across Desktop, iPad, and SmartWatch.',
 		role: 'UI/UX Designer',
-		problem: 'Most productivity apps optimise for list completeness over focus — creating a paradox where the tool designed to reduce cognitive load adds more items to track. Effido was designed to invert this: fewer visible tasks, deeper context per task, no inbox anxiety.',
-		process: 'Researched productivity frameworks (GTD, time-blocking, Pomodoro) and designed around the cognitive principle that task visibility should be proportional to time horizon — today\'s critical tasks take full focus, tomorrow\'s stay hidden until they\'re relevant.',
-		solution: 'Designed a 3-layer task visibility model: Now (1–3 tasks visible), Today (daily list), Later (backlog). Each layer has a distinct visual register to prevent context-switching anxiety, with focus session timers baked directly into the task card.',
-		outcome: 'This concept, alongside the WordPress admin redesign, were the two pieces that led directly to the WPMU DEV product design role. Effido demonstrated product thinking and independent research — that you could take an unsolved UX problem and work it through to a complete, considered solution.',
-		metrics: ['3-Layer Task Visibility Model', 'Focus Session Built into Task Card', 'Led to WPMU DEV Role'],
-		tags: ['Mobile App', 'Productivity', 'UI Design', 'Concept'],
-		thumbnail: 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1000',
+		problem: 'Productivity tools are scattered. Calendar in one tab. Pomodoro timer in another. Task list somewhere else. Every context switch adds friction — and the apps built to reduce cognitive load end up multiplying it. Effido started from a personal frustration: having to jump between a calendar and a Pomodoro timer every single work session.',
+		process: 'Mapped the full productivity workflow from planning (Upcoming) to execution (Pomodoro + Today) to review (Dashboard), then designed each screen to feed into the next. Labels became the central organisation system — every task gets a label, every view filters by it, every insight reports by it. Designed with full light and dark mode parity using Inter and Poppins, with a blue-primary palette and label-specific accent colours.',
+		solution: 'A five-screen productivity app — Dashboard, Today, Upcoming, Pomodoro Timer, and Task List — all sharing the same underlying data, synced across Desktop, iPad, and SmartWatch. Labels categorise every task and double as an accessibility aid. Today\'s timeline lets you hover a task to read full details and add new tasks without leaving the view. Upcoming supports custom date ranges alongside Day, Week, and Month. Pomodoro pins your most important project and shows live work efficiency. Task cards show collaborator avatars so you can see who is currently connected to a project.',
+		outcome: 'This concept, alongside the WordPress admin redesign, were the two pieces that led directly to the WPMU DEV product design role. Effido demonstrated product thinking under real constraints — identifying a genuine friction point and designing a cohesive multi-screen, multi-device solution from scratch.',
+		metrics: ['Desktop · iPad · SmartWatch — one synced data layer', 'Labels as the core org system — categories + accessibility', 'Led directly to WPMU DEV product design role'],
+		tags: ['Multi-platform', 'Productivity', 'UI Design', 'Concept'],
+		thumbnail: '/images/projects/effido/Main Dashboard.png',
 		images: [
-			'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=1600',
-			'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=1600'
+			'/images/projects/effido/Hero cover of presentation. .png',
+			'/images/projects/effido/Main Dashboard.png',
+			'/images/projects/effido/Dashboard - Dark mode.png',
+			'/images/projects/effido/Today task.png',
+			'/images/projects/effido/Today task - Dark mode.png',
+			'/images/projects/effido/Upcoming task.png',
+			'/images/projects/effido/Upcoming task dark mode.png',
+			'/images/projects/effido/Pomodoro timer.png',
+			'/images/projects/effido/Pomodoro timer dark mode.png',
+			'/images/projects/effido/Task list - currently working, in progress not working in present time , already done .png',
+			'/images/projects/effido/Task list dark mode .png',
 		]
 	},
 	{
@@ -112,10 +123,13 @@ export const projects: Project[] = [
 		outcome: 'Concept exploration demonstrating a hospitality-first digital experience with a cohesive brand-to-product visual language — showing how premium resort positioning can be maintained through the digital interface.',
 		metrics: ['End-to-End Brand System', 'Booking Flow + In-Resort App', 'Concept Exploration'],
 		tags: ['Web Design', 'Hospitality', 'Brand Identity', 'Concept'],
-		thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1000',
+		thumbnail: '/images/projects/resort/homepage.webp',
 		images: [
-			'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80&w=1600',
-			'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&q=80&w=1600'
+			'/images/projects/resort/hero.webp',
+			'/images/projects/resort/homepage.webp',
+			'/images/projects/resort/about.webp',
+			'/images/projects/resort/location.webp',
+			'/images/projects/resort/room-details.webp',
 		]
 	},
 	{
@@ -129,10 +143,12 @@ export const projects: Project[] = [
 		outcome: 'Concept exploration proposing a credibility-first reading interface for fact-checking journalism, demonstrating that trust signals and readability are not in opposition.',
 		metrics: ['Credibility-First Content Hierarchy', 'Inline Verification Layer System', 'Concept Exploration'],
 		tags: ['Web Design', 'News Platform', 'UI Design', 'Concept'],
-		thumbnail: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=1000',
+		thumbnail: '/images/projects/alt-news/trending.webp',
 		images: [
-			'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=1600',
-			'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&q=80&w=1600'
+			'/images/projects/alt-news/hero.webp',
+			'/images/projects/alt-news/trending.webp',
+			'/images/projects/alt-news/videos.webp',
+			'/images/projects/alt-news/newsletter.webp',
 		]
 	},
 	{
@@ -146,8 +162,13 @@ export const projects: Project[] = [
 		outcome: 'Themeisle discovered this project on Behance and reached out. It was the piece that started everything — the first role, the first professional team, the first shipped product work. Built in 2019 as a personal exploration; it ended up being the most consequential project in the portfolio.',
 		metrics: ['First InVision Studio Prototype', '351 Behance Views · 8 Appreciations', 'Led to Themeisle Role'],
 		tags: ['Concept', 'Music App', 'UI Design', 'Interaction Design'],
-		thumbnail: 'https://images.unsplash.com/photo-1614680376408-81e91ffe3db7?auto=format&fit=crop&q=80&w=1000',
-		images: []
+		thumbnail: '/images/projects/spotify/home.webp',
+		images: [
+			'/images/projects/spotify/home.webp',
+			'/images/projects/spotify/browse.webp',
+			'/images/projects/spotify/artist.webp',
+			'/images/projects/spotify/profile.webp',
+		]
 	},
 	{
 		title: 'Discord Redesign',
@@ -160,10 +181,12 @@ export const projects: Project[] = [
 		outcome: 'Concept exploration proposing a cross-server navigation layer and smarter notification model for power users, demonstrating how Discord can scale its UX for community-heavy use cases.',
 		metrics: ['Cross-Server Activity Feed', 'Interest-Based Stage Discovery', 'Concept Exploration'],
 		tags: ['Product Design', 'Social Platform', 'UI Design', 'Concept'],
-		thumbnail: 'https://images.unsplash.com/photo-1614680376408-81e91ffe3db7?auto=format&fit=crop&q=80&w=1000',
+		thumbnail: '/images/projects/discord/main-screen.webp',
 		images: [
-			'https://images.unsplash.com/photo-1614680376408-81e91ffe3db7?auto=format&fit=crop&q=80&w=1600',
-			'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&q=80&w=1600'
+			'/images/projects/discord/intro.webp',
+			'/images/projects/discord/main-screen.webp',
+			'/images/projects/discord/server-screen.webp',
+			'/images/projects/discord/live-screen.webp',
 		]
 	},
 	{

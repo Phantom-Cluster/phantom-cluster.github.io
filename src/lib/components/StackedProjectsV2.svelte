@@ -3,6 +3,7 @@
 	import { ArrowRight } from 'lucide-svelte';
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
+	import { goto } from '$app/navigation';
 	import { gsap } from 'gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
@@ -51,8 +52,6 @@
 		return `${r},${g},${b}`;
 	}
 
-	let activeCard = $state(0);
-	let pillsVisible = $state(false);
 	let sectionEl: HTMLElement;
 	let gsapCtx: gsap.Context;
 
@@ -85,18 +84,6 @@
 			// .v2-stack-card elements that belong to a concurrent page transition.
 			const cards = gsap.utils.toArray<HTMLElement>('.v2-stack-card', sectionEl);
 
-			// ── Pill nav: show only while section is in view ──────────────────
-			ScrollTrigger.create({
-				trigger: sectionEl,
-				start: 'top 60%',
-				end: 'bottom 15%',
-				invalidateOnRefresh: true,
-				onEnter:      () => { pillsVisible = true;  },
-				onLeave:      () => { pillsVisible = false; },
-				onEnterBack:  () => { pillsVisible = true;  },
-				onLeaveBack:  () => { pillsVisible = false; },
-			});
-
 			const isStacked = new Array(cards.length).fill(false);
 
 			cards.forEach((card, i) => {
@@ -105,36 +92,24 @@
 				const glowEl  = card.querySelector<HTMLElement>('.v2-glow');
 				const overlay = card.querySelector<HTMLElement>('.v2-overlay');
 
-				// Active pill tracking
-				ScrollTrigger.create({
-					trigger: card,
-					start: 'top 55%',
-					end:   'bottom 45%',
-					invalidateOnRefresh: true,
-					onEnter:      () => { activeCard = i; },
-					onEnterBack:  () => { activeCard = i; },
-					onLeave:      () => { if (i < cards.length - 1) activeCard = i + 1; },
-					onLeaveBack:  () => { if (i > 0) activeCard = i - 1; },
-				});
-
 				// immediateRender: false — prevents GSAP from setting opacity:0 as
 				// an inline style on tween creation. Cards stay at natural visible CSS
 				// until the trigger fires, so back-nav never leaves them invisible.
 				gsap.from(card, {
 					immediateRender: false,
-					y: 70, opacity: 0, rotateX: 10, scale: 0.97,
+					y: 60, opacity: 0, scale: 0.97,
 					duration: 1.1, ease: 'expo.out',
 					scrollTrigger: { trigger: card, start: 'top 88%', once: true, invalidateOnRefresh: true },
 				});
 
-				// Mouse-tracking 3D tilt
+				// Mouse-tracking 3D tilt — subtle values to avoid dizzying perspective
 				card.addEventListener('mousemove', (e: MouseEvent) => {
 					if (isStacked[i]) return;
 					const rect = card.getBoundingClientRect();
 					const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
 					const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
-					if (tiltEl) gsap.to(tiltEl, { rotateY: dx * 2.5, rotateX: -dy * 1.5, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
-					if (imgEl)  gsap.to(imgEl,  { x: -dx * 14, y: -dy * 9,               duration: 0.7, ease: 'power2.out', overwrite: 'auto' });
+					if (tiltEl) gsap.to(tiltEl, { rotateY: dx * 1.2, rotateX: -dy * 0.8, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+					if (imgEl)  gsap.to(imgEl,  { x: -dx * 8, y: -dy * 5,                duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
 				});
 
 				card.addEventListener('mouseenter', () => {
@@ -194,19 +169,6 @@
 		gsapCtx?.revert();
 	});
 
-	// scrollToCard: compute document position dynamically (not cached) so reverse navigation
-	// always works even if page height changed since mount (images loading, responsive reflows)
-	function scrollToCard(i: number) {
-		const cards = document.querySelectorAll<HTMLElement>('.v2-stack-card');
-		const card = cards[i];
-		if (!card) return;
-		let top = 0;
-		let el: HTMLElement | null = card;
-		while (el) { top += el.offsetTop; el = el.offsetParent as HTMLElement | null; }
-		const cardHeight = card.offsetHeight;
-		const scrollTarget = top - (window.innerHeight - cardHeight) / 2;
-		window.scrollTo({ top: Math.max(0, scrollTarget), behavior: 'smooth' });
-	}
 </script>
 
 <!-- ── SECTION ────────────────────────────────────────────────────────────── -->
@@ -236,13 +198,18 @@
 				Does NOT have overflow:hidden so sticky behaviour is unaffected.
 			-->
 			<div
-				class="v2-stack-card group relative mb-[8vh] lg:mb-[35vh]"
+				class="v2-stack-card group relative mb-[8vh] lg:mb-[35vh] cursor-pointer"
 				style="
 					--card-idx: {i};
 					z-index: {i + 10};
 					will-change: transform;
 					transform-style: preserve-3d;
 				"
+				role="link"
+				tabindex="0"
+				aria-label="View {project.title} case study"
+				onclick={(e) => { if (!(e.target as HTMLElement).closest('a')) goto(`/work/${project.slug}`); }}
+				onkeydown={(e) => { if (e.key === 'Enter') goto(`/work/${project.slug}`); }}
 			>
 				<!-- Stacking dimmer overlay — GPU: opacity only -->
 				<div
@@ -320,14 +287,17 @@
 									{/each}
 								</div>
 
-								<a
-									href="/work/{project.slug}"
-									class="v2-cta group/cta inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-sm font-bold text-white border border-white/15 w-fit"
-									style="--accent: {a.hex};"
-								>
-									Explore Case
-									<ArrowRight class="size-4 transition-transform duration-300 group-hover/cta:translate-x-1.5" />
-								</a>
+								<div class="v2-cta-wrap">
+									<a
+										href="/work/{project.slug}"
+										class="v2-cta group/cta inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-sm font-bold text-white border border-white/30 w-fit"
+										style="--accent: {a.hex};"
+									>
+										Explore Case
+										<ArrowRight class="size-4 transition-transform duration-300 group-hover/cta:translate-x-1.5" />
+									</a>
+									<span class="v2-cta-ring" aria-hidden="true"></span>
+								</div>
 							</div>
 						</div>
 
@@ -383,54 +353,6 @@
 	</div>
 </section>
 
-<!-- ── FIXED PILL NAV — liquid glass matching navbar ─────────────────────── -->
-<div
-	class="v2-pill-nav"
-	style="
-		position: fixed;
-		bottom: 28px;
-		left: 50%;
-		transform: translate(-50%, {pillsVisible ? '0px' : '16px'});
-		opacity: {pillsVisible ? 1 : 0};
-		pointer-events: {pillsVisible ? 'auto' : 'none'};
-		z-index: 200;
-		transition: opacity 0.35s ease, transform 0.35s ease;
-	"
->
-	<div class="pill-glass relative flex gap-1 p-1 rounded-[20px]">
-		{#each stackedProjects as project, i}
-			{@const a = accent(i)}
-			<button
-				onclick={() => scrollToCard(i)}
-				class="pill-btn relative px-5 py-2.5 rounded-2xl text-[10px] font-mono tracking-widest uppercase overflow-hidden"
-			>
-				<!-- Active accent fill — GPU: opacity only -->
-				<div
-					class="absolute inset-0 rounded-2xl"
-					style="
-						background: {a.hex};
-						opacity: {activeCard === i ? 1 : 0};
-						transition: opacity 0.3s ease;
-						box-shadow: inset 0 1px 0 rgba(255,255,255,0.22);
-					"
-				></div>
-				<!-- Hover fill — GPU: opacity only -->
-				<div class="pill-hover-fill absolute inset-0 rounded-2xl bg-black/6 opacity-0 transition-opacity duration-150"></div>
-				<!-- Dark label — GPU: fades out when active (no color change) -->
-				<span
-					class="absolute inset-0 flex items-center justify-center whitespace-nowrap pointer-events-none"
-					aria-hidden="true"
-					style="opacity: {activeCard === i ? 0 : 1}; transition: opacity 0.25s ease; color: rgba(23,23,28,0.7);"
-				>{project.title.split(' ')[0]}</span>
-				<!-- White label — GPU: fades in when active -->
-				<span
-					class="relative z-10 whitespace-nowrap text-white"
-					style="opacity: {activeCard === i ? 1 : 0}; transition: opacity 0.25s ease;"
-				>{project.title.split(' ')[0]}</span>
-			</button>
-		{/each}
-	</div>
-</div>
 
 <style>
 	/* Sticky stacking — GPU composited */
@@ -440,11 +362,34 @@
 		transform-style: preserve-3d;
 	}
 
+	/* CTA wrapper — positions the pulsing ring relative to the button */
+	.v2-cta-wrap {
+		position: relative;
+		width: fit-content;
+	}
+
+	/* Pulsing attention ring — GPU: transform + opacity only */
+	.v2-cta-ring {
+		position: absolute;
+		inset: -5px;
+		border-radius: 9999px;
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		pointer-events: none;
+		will-change: transform, opacity;
+		animation: ring-expand 2.4s ease-out infinite;
+	}
+
+	@keyframes ring-expand {
+		0%   { transform: scale(1);    opacity: 0.55; }
+		100% { transform: scale(1.22); opacity: 0;    }
+	}
+
 	/* CTA hover — GPU: opacity on ::before fill, no background/color paint */
 	.v2-cta {
 		position: relative;
 		overflow: hidden;
 		isolation: isolate;
+		transition: transform 0.12s ease, border-color 0.2s ease;
 	}
 	.v2-cta::before {
 		content: '';
@@ -453,12 +398,23 @@
 		border-radius: inherit;
 		background: var(--accent);
 		opacity: 0;
-		transition: opacity 0.2s ease; /* GPU: opacity only */
+		transition: opacity 0.22s ease; /* GPU: opacity only */
 		pointer-events: none;
 		z-index: 0;
 	}
+	.v2-cta:hover {
+		border-color: rgba(255, 255, 255, 0.55);
+	}
 	.v2-cta:hover::before {
 		opacity: 1;
+	}
+	.v2-cta:active {
+		transform: scale(0.96);
+	}
+	/* Pause ring on hover — user is already engaged */
+	.v2-cta-wrap:hover .v2-cta-ring {
+		animation-play-state: paused;
+		opacity: 0;
 	}
 	/* Keep all content above the ::before fill */
 	.v2-cta > :global(*) {
@@ -472,31 +428,4 @@
 		-webkit-backface-visibility: hidden;
 	}
 
-	/* Liquid glass pill container — matches navbar exactly */
-	.pill-glass {
-		-webkit-backdrop-filter: blur(22px) saturate(1.85) brightness(1.05);
-		backdrop-filter: blur(22px) saturate(1.85) brightness(1.05);
-		background: rgba(255, 255, 255, 0.68);
-		border: 1px solid rgba(255, 255, 255, 0.6);
-		box-shadow:
-			0 1px 0 rgba(255, 255, 255, 0.9) inset,
-			0 -1px 0 rgba(0, 0, 0, 0.06) inset,
-			0 8px 24px rgba(0, 0, 0, 0.10);
-		transform: translateZ(0);
-	}
-
-	/* Specular highlight — mirrors navbar ::after */
-	.pill-glass::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		border-radius: inherit;
-		background: linear-gradient(140deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 35%, transparent 65%);
-		pointer-events: none;
-		z-index: 0;
-	}
-
-	.pill-btn:hover .pill-hover-fill {
-		opacity: 1;
-	}
 </style>

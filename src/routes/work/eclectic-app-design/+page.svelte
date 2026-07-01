@@ -471,7 +471,7 @@
 					{#each [
 						{ src: '/videos/Eclectic/New UI second screenshot.png', label: 'App UI — View 2', caption: 'Second primary screen' },
 						{ src: '/videos/Eclectic/New Walkthrough.png',           label: 'New Walkthrough',  caption: 'Onboarding walkthrough flow' },
-						{ src: '/videos/Eclectic/New Sign up and sign in process..png', label: 'Auth Flow', caption: 'Sign-up & sign-in redesign' },
+						{ src: '/videos/Eclectic/New Sign up and sign in process.png', label: 'Auth Flow', caption: 'Sign-up & sign-in redesign' },
 					] as screen}
 						<CsImageCard
 							src={screen.src}
@@ -721,7 +721,7 @@
 					{ src: '/videos/Eclectic/User dropping feedback.png',                                       label: 'User Feedback', caption: 'User feedback drop flow' },
 					{ src: '/videos/Eclectic/FAQ and support.png',                                             label: 'FAQ & Support', caption: 'FAQ and support screen' },
 					{ src: '/videos/Eclectic/effect.png',                                                      label: 'Motion Details', caption: 'Motion and effect details' },
-					{ src: '/videos/Eclectic/New Sign up and sign in process..png',                            label: 'Auth Flow', caption: 'Sign-up and sign-in redesigned flow' },
+					{ src: '/videos/Eclectic/New Sign up and sign in process.png',                             label: 'Auth Flow', caption: 'Sign-up and sign-in redesigned flow' },
 				] as screen}
 					<CsImageCard
 						src={screen.src}
