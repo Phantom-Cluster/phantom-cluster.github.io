@@ -6,6 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { gsap } from 'gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+	import Chip from '$lib/components/Chip.svelte';
 
 	const featuredSlugs = ['ideajam-kanban-saas', 'eclectic-app-design', 'themeisle-starter-templates'];
 	const stackedProjects = projects.filter(p => featuredSlugs.includes(p.slug));
@@ -179,8 +180,12 @@
 	class="py-0 bg-[#f4f4f4] relative flex flex-col items-center"
 >
 	<!-- Section wordmark (decorative) -->
-	<div class="relative z-0 w-full text-center select-none pointer-events-none pt-24 pb-12 px-6">
-		<p class="text-[10px] font-mono tracking-widest text-neutral-400 uppercase mb-3">(02) Proof of Execution</p>
+	<div class="relative z-0 w-full text-center select-none pt-24 pb-12 px-6 flex flex-col items-center pointer-events-none">
+		<div class="pointer-events-auto">
+			<Chip theme="light" spin="always" class="mb-6" innerClass="px-6 py-2">
+				<span class="text-[11px] font-mono tracking-widest text-neutral-500 uppercase">Proof of Execution</span>
+			</Chip>
+		</div>
 		<h3 class="text-[10vw] sm:text-[12vw] font-black tracking-[-0.05em] uppercase leading-none text-neutral-200/50">
 			Recent Works
 		</h3>
@@ -241,11 +246,11 @@
 
 					<!-- Two-column layout -->
 					<div
-						class="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_420px]"
+						class="relative z-10 grid grid-cols-1 md:grid-cols-[1fr_320px] lg:grid-cols-[1fr_420px]"
 					>
 
 						<!-- LEFT: Editorial panel ──────────────────────────────── -->
-						<div class="flex flex-col justify-between p-7 sm:p-10 md:p-14 border-r border-white/6">
+						<div class="flex flex-col justify-between p-7 sm:p-10 md:p-10 lg:p-14 md:border-r border-white/6">
 
 							<!-- Top: meta + title + description -->
 							<div>

@@ -30,9 +30,9 @@
 	input[type='range'] { accent-color: #2244CC; }
 	input[type='range']:hover { accent-color: #ffffff; }
 	@keyframes ripple {
-		0%   { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
-		70%  { box-shadow: 0 0 0 7px rgba(74, 222, 128, 0); }
-		100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+		0%   { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.4); }
+		70%  { box-shadow: 0 0 0 7px rgba(0, 230, 118, 0); }
+		100% { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0); }
 	}
 	.dot-ripple { animation: ripple 2.5s ease-out infinite; border-radius: 9999px; }
 
@@ -49,15 +49,19 @@
 		100% { background-position: -200% center; }
 	}
 	.shimmer-num {
-		background: linear-gradient(90deg, #1a1a1a 25%, #4a4a4a 50%, #1a1a1a 75%);
+		background: linear-gradient(90deg, #111111 25%, #888888 50%, #111111 75%);
 		background-size: 200% auto;
 		-webkit-background-clip: text;
 		background-clip: text;
 		-webkit-text-fill-color: transparent;
 		animation: shimmer-bar 5s cubic-bezier(0.45,0,0.55,1) infinite;
 	}
+	:global(.dark) .shimmer-num {
+		background: linear-gradient(90deg, #444444 25%, #ffffff 50%, #444444 75%);
+		background-size: 200% auto;
+	}
 	.shimmer-red {
-		background: linear-gradient(90deg, #7a1010 20%, #EF4444 50%, #7a1010 80%);
+		background: linear-gradient(90deg, #4A0507 20%, #FF3B30 50%, #4A0507 80%);
 		background-size: 200% auto;
 		-webkit-background-clip: text;
 		background-clip: text;
@@ -129,16 +133,16 @@
 
 	<!-- ── VIDEO 1 ──────────────────────────────────────────── -->
 	<div class="max-w-7xl mx-auto px-4 md:px-6 mt-12">
-		<div class="bg-transparent rounded-3xl border border-neutral-300/70
+		<div class="bg-transparent rounded-3xl border border-neutral-200 dark:border-[#222222]
 		            shadow-[0_12px_48px_rgba(0,0,0,0.11),0_2px_8px_rgba(0,0,0,0.05)]
 		            p-2">
 			<div class="relative overflow-hidden rounded-2xl bg-black group"
 			     bind:this={playerWrapper}>
 
 				<div class="absolute top-5 left-6 z-40 flex items-center gap-3
-				            bg-black/50 backdrop-blur-md border border-white/10 rounded-full px-4 py-2">
-					<span class="w-1.5 h-1.5 rounded-full bg-portfolio-accent-vivid animate-pulse shrink-0"></span>
-					<span class="text-[10px] font-mono tracking-widest text-white/70 uppercase">SUI&nbsp;3 · Background Rules</span>
+				            bg-[#0A0A0A] border border-[#222222] rounded-full px-4 py-2">
+					<span class="w-1.5 h-1.5 rounded-full bg-[#00E676] animate-pulse shrink-0"></span>
+					<span class="text-[10px] font-mono tracking-widest text-[#9CA3AF] uppercase">SUI&nbsp;3 · Background Rules</span>
 				</div>
 
 				<!-- svelte-ignore a11y_media_has_caption -->
@@ -159,18 +163,18 @@
 				></video>
 
 				<div class="absolute bottom-5 inset-x-5 flex flex-col gap-3 px-5 py-4 rounded-2xl
-				            bg-black/60 backdrop-blur-xl border border-white/10
-				            opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+				            bg-[#0A0A0A] border border-[#222222] shadow-[0_16px_32px_rgba(0,0,0,0.5)]
+				            opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-[transform,opacity] duration-300 ease-out transform-gpu will-change-[transform,opacity]">
 					<div class="flex items-center gap-4 w-full">
-						<span class="text-white/70 text-[10px] font-mono w-8 text-right">{formatTime(currentTime)}</span>
+						<span class="text-[#9CA3AF] text-[10px] font-mono w-8 text-right">{formatTime(currentTime)}</span>
 						<input type="range" min="0" max={duration || 100} step="0.01" bind:value={currentTime}
 							aria-label="Seek" aria-valuetext="{formatTime(currentTime)} of {formatTime(duration)}"
-							class="flex-1 h-1.5 bg-white/20 rounded-full appearance-none cursor-pointer transition-all" />
-						<span class="text-white/70 text-[10px] font-mono w-8">{formatTime(duration)}</span>
+							class="flex-1 h-1 bg-[#222222] rounded-full appearance-none cursor-pointer hover:bg-[#333333] transition-colors focus:outline-none" />
+						<span class="text-[#9CA3AF] text-[10px] font-mono w-8">{formatTime(duration)}</span>
 					</div>
 					<div class="flex items-center justify-between w-full">
 						<div class="flex items-center gap-6">
-							<button aria-label="Skip back 5 seconds" onclick={skipBackward} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
+							<button aria-label="Skip back 5 seconds" onclick={skipBackward} class="text-[#D4D4D8] hover:text-white transition-colors flex items-center gap-1 group/btn">
 								<svg class="w-5 h-5 group-active/btn:-rotate-45 transition-transform" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.333 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"/></svg>
 								<span class="text-[10px] font-mono tracking-widest mt-1" aria-hidden="true">-5s</span>
 							</button>
@@ -181,17 +185,16 @@
 									<svg class="w-4 h-4" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
 								{/if}
 							</button>
-							<button aria-label="Skip forward 10 seconds" onclick={skipForward} class="text-white/80 hover:text-white transition-colors flex items-center gap-1 group/btn">
+							<button aria-label="Skip forward 10 seconds" onclick={skipForward} class="text-[#D4D4D8] hover:text-white transition-colors flex items-center gap-1 group/btn">
 								<span class="text-[10px] font-mono tracking-widest mt-1" aria-hidden="true">+10s</span>
 								<svg class="w-5 h-5 group-active/btn:rotate-45 transition-transform" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.334-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.334-4z"/></svg>
 							</button>
 						</div>
-						<button aria-label="Toggle fullscreen" onclick={() => toggleFullScreen(playerWrapper)} class="text-white/80 hover:text-white transition-colors">
+						<button aria-label="Toggle fullscreen" onclick={() => toggleFullScreen(playerWrapper)} class="text-[#D4D4D8] hover:text-white transition-colors">
 							<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
 						</button>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
@@ -201,7 +204,7 @@
 		<div class="rounded-3xl overflow-hidden shadow-[0_16px_64px_rgba(0,0,0,0.12)]">
 
 			<!-- Core finding + quote -->
-			<div class="bg-black px-8 md:px-12 py-10 border-b border-white/5">
+			<div class="bg-[#050505] px-8 md:px-12 py-10 border-b border-[#222222]">
 				<div class="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-10">
 					<div class="flex flex-col justify-between gap-6">
 						<span class="text-[9px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Core research finding · SUI 3 Atomic</span>
@@ -210,32 +213,32 @@
 							It was in the <span class="shimmer-red">design language.</span>
 						</p>
 						<div class="flex flex-wrap gap-2">
-							<span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-mono text-neutral-400 uppercase tracking-widest">200+ components audited</span>
-							<span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-mono text-neutral-400 uppercase tracking-widest">6 plugins</span>
-							<span class="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-mono text-neutral-400 uppercase tracking-widest">SUI 3 audit</span>
+							<span class="px-3 py-1.5 rounded-full bg-[#111111] border border-[#222222] text-[9px] font-mono text-neutral-400 uppercase tracking-widest">200+ components audited</span>
+							<span class="px-3 py-1.5 rounded-full bg-[#111111] border border-[#222222] text-[9px] font-mono text-neutral-400 uppercase tracking-widest">6 plugins</span>
+							<span class="px-3 py-1.5 rounded-full bg-[#111111] border border-[#222222] text-[9px] font-mono text-neutral-400 uppercase tracking-widest">SUI 3 audit</span>
 						</div>
 					</div>
-					<blockquote class="bg-white/3 border border-white/10 rounded-2xl px-7 pt-8 pb-7 relative overflow-hidden flex flex-col justify-between gap-8 min-h-[180px]">
-						<span class="absolute -top-4 -left-2 text-[8rem] font-black leading-none select-none pointer-events-none" style="color: rgba(255,255,255,0.05);">"</span>
+					<blockquote class="bg-[#0A0A0A] border border-[#222222] rounded-2xl px-7 pt-8 pb-7 relative overflow-hidden flex flex-col justify-between gap-8 min-h-[180px]">
+						<span class="absolute -top-4 -left-2 text-[8rem] font-black leading-none select-none pointer-events-none" style="color: #121212;">"</span>
 						<p class="text-sm text-neutral-300 italic leading-relaxed relative z-10">
 							I spend more time figuring out where to click than actually using the plugin. Everything looks different.
 						</p>
-						<span class="self-start px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-mono text-neutral-500 relative z-10">User research · pre-SUI 3</span>
+						<span class="self-start px-2.5 py-1 rounded-full bg-[#111111] border border-[#222222] text-[9px] font-mono text-neutral-500 relative z-10">User research · pre-SUI 3</span>
 					</blockquote>
 				</div>
 			</div>
 
 			<!-- Severity signal cards -->
-			<div class="bg-neutral-950 px-8 md:px-12 py-8 border-b border-white/5">
+			<div class="bg-[#0A0A0A] px-8 md:px-12 py-8 border-b border-[#222222]">
 				<span class="text-[9px] font-mono tracking-[0.3em] text-neutral-500 uppercase block mb-5">Research signals · 200+ component audit · 6 plugin analysis</span>
 				<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
 					{#each [
-						{ severity: 'Critical', bg: 'bg-red-950/60 border-red-800/60',     pill: 'text-red-400 bg-red-950 border-red-800/70',         stat: '6×',     insight: 'plugins each with siloed UI patterns — different buttons, spacing, and feedback states', tag: 'Pattern silos' },
-						{ severity: 'Critical', bg: 'bg-red-950/60 border-red-800/60',     pill: 'text-red-400 bg-red-950 border-red-800/70',         stat: '43%',    insight: 'drop-off rate in the first 3 settings screens before the redesign shipped', tag: 'Onboarding drop-off' },
-						{ severity: 'High',     bg: 'bg-amber-950/50 border-amber-800/50', pill: 'text-amber-400 bg-amber-950/80 border-amber-800/60', stat: '200+',   insight: 'existing components with no shared token mapping before the audit began', tag: 'Component debt' },
-						{ severity: 'High',     bg: 'bg-amber-950/50 border-amber-800/50', pill: 'text-amber-400 bg-amber-950/80 border-amber-800/60', stat: '3×',     insight: 'longer to complete identical tasks across different plugins due to inconsistent affordances', tag: 'Cognitive load' },
-						{ severity: 'Medium',   bg: 'bg-neutral-800/50 border-neutral-700',pill: 'text-neutral-400 bg-neutral-800 border-neutral-700', stat: '0',      insight: 'shared Figma libraries before the SUI 3 audit — each plugin had its own isolated file', tag: 'No source of truth' },
-						{ severity: 'Medium',   bg: 'bg-neutral-800/50 border-neutral-700',pill: 'text-neutral-400 bg-neutral-800 border-neutral-700', stat: 'Manual', insight: 'every plugin used hand-coded spacing, color values, and radii — no token pipeline', tag: 'Token gap' },
+						{ severity: 'Critical', bg: 'bg-[#1A0A0A] border-[#3D0A0C]',     pill: 'text-[#FF3B30] bg-[#2D0D10] border-[#5A1C20]',         stat: '6×',     insight: 'plugins each with siloed UI patterns — different buttons, spacing, and feedback states', tag: 'Pattern silos' },
+						{ severity: 'Critical', bg: 'bg-[#1A0A0A] border-[#3D0A0C]',     pill: 'text-[#FF3B30] bg-[#2D0D10] border-[#5A1C20]',         stat: '43%',    insight: 'drop-off rate in the first 3 settings screens before the redesign shipped', tag: 'Onboarding drop-off' },
+						{ severity: 'High',     bg: 'bg-[#1A0A0A] border-[#3D0A0C]',     pill: 'text-[#FF3B30] bg-[#2D0D10] border-[#5A1C20]',         stat: '200+',   insight: 'existing components with no shared token mapping before the audit began', tag: 'Component debt' },
+						{ severity: 'High',     bg: 'bg-[#1A0A0A] border-[#3D0A0C]',     pill: 'text-[#FF3B30] bg-[#2D0D10] border-[#5A1C20]',         stat: '3×',     insight: 'longer to complete identical tasks across different plugins due to inconsistent affordances', tag: 'Cognitive load' },
+						{ severity: 'Medium',   bg: 'bg-[#0A0A0A] border-[#222222]',     pill: 'text-[#9CA3AF] bg-[#1A1A1A] border-[#2E2E2E]',         stat: '0',      insight: 'shared Figma libraries before the SUI 3 audit — each plugin had its own isolated file', tag: 'No source of truth' },
+						{ severity: 'Medium',   bg: 'bg-[#0A0A0A] border-[#222222]',     pill: 'text-[#9CA3AF] bg-[#1A1A1A] border-[#2E2E2E]',         stat: 'Manual', insight: 'every plugin used hand-coded spacing, color values, and radii — no token pipeline', tag: 'Token gap' },
 					] as card}
 						<div class="rounded-2xl border {card.bg} px-5 py-5 flex flex-col gap-3">
 							<div class="flex items-center justify-between">
@@ -244,31 +247,31 @@
 							</div>
 							<span class="text-2xl font-black text-white tracking-tight leading-none">{card.stat}</span>
 							<p class="text-xs text-neutral-400 leading-relaxed flex-1">{card.insight}</p>
-							<span class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase border-t border-white/5 pt-2.5 mt-auto">{card.tag}</span>
+							<span class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase border-t border-[#222222] pt-2.5 mt-auto">{card.tag}</span>
 						</div>
 					{/each}
 				</div>
 			</div>
 
 			<!-- Hypothesis strip -->
-			<div class="bg-neutral-900 px-8 md:px-12 py-7 border-b border-white/5">
+			<div class="bg-[#0D0D0D] px-8 md:px-12 py-7 border-b border-[#222222]">
 				<div class="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
 					<div class="shrink-0 flex items-center gap-2 md:pt-0.5">
-						<div class="w-1.5 h-1.5 rounded-full bg-portfolio-accent-vivid animate-pulse shrink-0"></div>
-						<span class="text-[9px] font-bold font-mono tracking-[0.3em] text-portfolio-accent-vivid uppercase">Hypothesis</span>
+						<div class="w-1.5 h-1.5 rounded-full bg-[#2244CC] animate-pulse shrink-0"></div>
+						<span class="text-[9px] font-bold font-mono tracking-[0.3em] text-[#2244CC] uppercase">Hypothesis</span>
 					</div>
-					<div class="hidden md:block w-px h-10 bg-white/10 shrink-0"></div>
+					<div class="hidden md:block w-px h-10 bg-[#222222] shrink-0"></div>
 					<p class="text-base font-semibold text-white leading-relaxed">
 						Building SUI 3 Atomic — a single token system, shared component library, and unified Figma Variables — before redesigning any plugin screen would eliminate UI inconsistency and cut onboarding drop-off across all six plugins.
 					</p>
 				</div>
 			</div>
 
-			<!-- Orange divider -->
-			<div class="h-[3px] bg-portfolio-accent w-full"></div>
+			<!-- Divider -->
+			<div class="h-[1px] bg-[#222222] w-full"></div>
 
-			<!-- White bottom: What we changed + Proof -->
-			<div class="bg-white px-8 md:px-12 pt-10 pb-6 grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-10">
+			<!-- Bottom: What we changed + Proof -->
+			<div class="bg-white dark:bg-[#0A0A0A] px-8 md:px-12 pt-10 pb-6 grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-10">
 
 				<div class="flex flex-col gap-5">
 					<span class="text-[9px] font-mono tracking-[0.3em] text-neutral-400 uppercase">What we changed</span>
@@ -282,8 +285,8 @@
 							<div class="flex gap-4">
 								<span class="text-[#6B7280] text-[11px] font-black font-mono shrink-0 mt-0.5">{step.n}</span>
 								<div>
-									<p class="text-sm font-bold text-neutral-900 leading-snug mb-1">{step.action}</p>
-									<p class="text-xs text-neutral-500 leading-relaxed">{step.detail}</p>
+									<p class="text-sm font-bold text-neutral-900 dark:text-white leading-snug mb-1">{step.action}</p>
+									<p class="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">{step.detail}</p>
 								</div>
 							</div>
 						{/each}
@@ -299,26 +302,26 @@
 							{ stat: '6',    label: 'Plugins unified',    sub: 'one system' },
 							{ stat: '−43%', label: 'Onboarding drop-off',sub: 'post-launch' },
 						] as m}
-							<div class="bg-neutral-950 rounded-xl px-4 py-4 border border-neutral-800">
-								<span class="text-[clamp(1.4rem,3vw,2rem)] font-black text-portfolio-success tracking-tight leading-none block">{m.stat}</span>
+							<div class="bg-neutral-950 dark:bg-[#050505] rounded-xl px-4 py-4 border border-[#222222]">
+								<span class="text-[clamp(1.4rem,3vw,2rem)] font-black text-[#00E676] tracking-tight leading-none block">{m.stat}</span>
 								<span class="text-xs font-semibold text-white block mt-1">{m.label}</span>
 								<span class="text-[10px] text-neutral-500">{m.sub}</span>
 							</div>
 						{/each}
 					</div>
-					<div class="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
-						<div class="dot-ripple w-2 h-2 bg-green-500 shrink-0 mt-0.5"></div>
-						<p class="text-xs font-semibold text-green-700 leading-snug">Hypothesis confirmed — onboarding drop-off fell 43% and support tickets citing UI confusion dropped within 4 weeks of the SUI 3 rollout.</p>
+					<div class="flex items-start gap-3 bg-green-50 dark:bg-[#042010] border border-green-200 dark:border-[#083E20] rounded-xl px-4 py-3">
+						<div class="dot-ripple w-2 h-2 bg-[#00E676] shrink-0 mt-0.5"></div>
+						<p class="text-xs font-semibold text-green-700 dark:text-[#00E676] leading-snug">Hypothesis confirmed — onboarding drop-off fell 43% and support tickets citing UI confusion dropped within 4 weeks of the SUI 3 rollout.</p>
 					</div>
 				</div>
 
 			</div>
 
 			<!-- Full-width note strip -->
-			<div class="bg-white px-8 md:px-12 pb-10 border-t border-neutral-100 pt-5">
-				<div class="flex items-start gap-3 bg-neutral-50 border border-neutral-200 rounded-xl px-5 py-4">
-					<div class="w-2 h-2 rounded-full bg-neutral-300 shrink-0 mt-0.5"></div>
-					<p class="text-[10px] text-neutral-500 leading-snug">Onboarding drop-off measured across new free-tier installs in the 8 weeks post-SUI 3 rollout compared to the same period prior year.</p>
+			<div class="bg-white dark:bg-[#0A0A0A] px-8 md:px-12 pb-10 border-t border-neutral-100 dark:border-[#222222] pt-5">
+				<div class="flex items-start gap-3 bg-neutral-50 dark:bg-[#111111] border border-neutral-200 dark:border-[#222222] rounded-xl px-5 py-4">
+					<div class="w-2 h-2 rounded-full bg-neutral-300 dark:bg-neutral-700 shrink-0 mt-0.5"></div>
+					<p class="text-[10px] text-neutral-500 dark:text-neutral-400 leading-snug">Onboarding drop-off measured across new free-tier installs in the 8 weeks post-SUI 3 rollout compared to the same period prior year.</p>
 				</div>
 			</div>
 

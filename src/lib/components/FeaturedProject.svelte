@@ -93,7 +93,7 @@
 
 				<!-- Right column: Tags summary statement and CTA trigger button -->
 				<div
-					class="flex flex-col md:flex-row md:items-center justify-end gap-6 w-full"
+					class="flex flex-col md:flex-row md:items-center justify-end gap-6 md:gap-10 w-full"
 				>
 					<p
 						class="text-sm text-neutral-300 max-w-[32ch] leading-snug md:text-right font-medium drop-shadow-md"

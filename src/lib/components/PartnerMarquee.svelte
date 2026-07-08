@@ -7,7 +7,7 @@
 		class="mb-12 relative z-20 inline-flex items-center justify-center p-[1.5px] rounded-full overflow-hidden shadow-sm bg-neutral-200"
 	>
 		<div
-			class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"
+			class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(0,0,0,0.75)_360deg)]"
 		></div>
 		<div
 			class="relative h-full w-full items-center justify-center rounded-full bg-white px-5 py-2 flex text-[10px] font-mono tracking-widest text-gray-500 uppercase z-10"

@@ -4,6 +4,8 @@
 	import { gsap } from 'gsap';
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { navTheme } from '$lib/stores/navTheme';
+	import LightboxModal from '$lib/components/LightboxModal.svelte';
+	import ExploreProjectComponent from '$lib/components/ExploreProjectComponent.svelte';
 
 	let { data }: { data: PageData } = $props();
 	let project = $derived(data.project);
@@ -31,26 +33,13 @@
 		return `${Math.floor(s / 60).toString().padStart(2, '0')}:${Math.floor(s % 60).toString().padStart(2, '0')}`;
 	}
 
-	// Lightbox state
 	let modalImg = $state<{ src: string; alt: string } | null>(null);
 	function openModal(src: string, alt: string) { modalImg = { src, alt }; }
-
-	const features = [
-		{ icon: '◉', title: 'Dashboard Command Centre', desc: 'Performance graph, task stats donut, live Pomodoro widget, and pending tasks by label — all on a single glanceable screen.' },
-		{ icon: '▦', title: 'Time-Blocked Today View', desc: 'Hourly timeline that turns your task list into a schedule. Hover any block to read full details inline without leaving the view.' },
-		{ icon: '▣', title: 'Upcoming Calendar', desc: 'Day / Week / Month / Custom range. Every task and meeting colour-coded by label — shape of your week readable in one glance.' },
-		{ icon: '◈', title: 'Pomodoro Timer', desc: 'Sessions, schedule, and task list side by side. Every completed round feeds directly into Dashboard stats automatically.' },
-		{ icon: '⊑', title: 'Task List + Collaborators', desc: 'Working / In Progress / Recently Complete. Collaborator avatars on every card so you see who is connected to each project.' },
-		{ icon: '◐', title: 'Light & Dark Full Theming', desc: 'Every screen ships in both modes. Colour-coded label system works across both themes for instant visual categorisation.' },
-	];
 
 	onMount(() => {
 		navTheme.set('light');
 		document.body.style.backgroundColor = '#ffffff';
 		gsap.registerPlugin(ScrollTrigger);
-
-		const handleKeydown = (e: KeyboardEvent) => { if (e.key === 'Escape') modalImg = null; };
-		window.addEventListener('keydown', handleKeydown);
 
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
@@ -96,10 +85,7 @@
 			});
 		}, 400);
 
-		return () => {
-			clearTimeout(t);
-			window.removeEventListener('keydown', handleKeydown);
-		};
+		return () => clearTimeout(t);
 	});
 
 	onDestroy(() => {
@@ -113,16 +99,7 @@
 	<title>EffiDo Productivity App | Hitanshu Sahu</title>
 </svelte:head>
 
-{#if modalImg}
-	<div class="img-modal-backdrop" role="dialog" aria-modal="true" aria-label="Image preview" onclick={() => modalImg = null}>
-		<div class="img-modal-inner" onclick={(e) => e.stopPropagation()}>
-			<img src={modalImg.src} alt={modalImg.alt} style="max-width: 92vw; max-height: 92vh; width: auto; height: auto; display: block; border-radius: 12px;" />
-			<button onclick={() => modalImg = null} class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors" aria-label="Close preview">
-				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-			</button>
-		</div>
-	</div>
-{/if}
+<LightboxModal bind:modalImg />
 
 <div bind:this={pageWrapperEl} class="min-h-screen bg-white text-neutral-900" style="background-color: #ffffff;">
 
@@ -132,7 +109,7 @@
 
 			<div class="flex items-center justify-between border-b border-neutral-200 pb-5 mb-12 cs-hero-element">
 				<div class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
-					<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#2244CC_360deg)]"></div>
+					<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(0,0,0,0.75)_360deg)]"></div>
 					<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
 						<span class="text-[11px] font-mono tracking-widest text-neutral-500 uppercase">Concept — Multi-Platform Productivity App</span>
 					</div>
@@ -610,146 +587,218 @@
 	<!-- ── EDITORIAL ─────────────────────────────────────────────────────── -->
 	<div bind:this={editorialTriggerEl} data-theme="light">
 		<section class="bg-white px-6 py-32">
-			<div class="max-w-7xl mx-auto space-y-32">
+			<div class="max-w-7xl mx-auto space-y-28">
 
 				<!-- 01 Problem -->
-				<div class="flex flex-col md:flex-row gap-12 md:gap-24 cs-fade-up">
-					<div class="md:w-1/3">
-						<div class="sticky top-32">
-							<div class="flex items-center gap-3 mb-5">
-								<span class="text-[10px] font-mono tracking-[0.3em] text-neutral-300 uppercase">01</span>
-								<div class="h-px flex-1 bg-neutral-200"></div>
-							</div>
-							<h2 class="text-[34px] md:text-5xl font-black tracking-tight text-neutral-900 leading-[0.95]">The<br/>Problem</h2>
-						</div>
+				<div class="cs-fade-up">
+					<div class="flex items-center gap-4 mb-10">
+						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase">01</span>
+						<div class="h-px flex-1 bg-neutral-200"></div>
+						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase">Problem</span>
 					</div>
-					<div class="md:w-2/3 pt-2 md:pt-0 space-y-8">
-						<p class="text-xl md:text-2xl font-light text-neutral-500 leading-relaxed">{project.problem}</p>
-						<div class="grid grid-cols-3 gap-3">
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-10">
+						<h2 class="text-[34px] md:text-5xl font-black tracking-tight text-neutral-900 leading-[0.95]">The<br/>Problem</h2>
+						<p class="text-xl font-light text-neutral-500 leading-relaxed pt-2">{project.problem}</p>
+					</div>
+					<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+						{#each [
+							{ n: '3+', label: 'Apps to juggle', sub: 'Per focused work session' },
+							{ n: '0',  label: 'Unified view',   sub: 'No single surface existed' },
+							{ n: '∞',  label: 'Context switches', sub: 'Per session, every day' },
+						] as s}
 							<div class="border border-neutral-200 rounded-2xl p-5">
-								<span class="text-[clamp(1.5rem,3vw,2.2rem)] font-black text-neutral-900 block leading-none mb-2">3+</span>
-								<span class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase block">Apps to Juggle</span>
-								<span class="text-[10px] text-neutral-400 block mt-1 leading-snug">per work session</span>
+								<span class="text-4xl font-black text-neutral-900 block leading-none mb-2">{s.n}</span>
+								<span class="text-[9px] font-mono text-neutral-400 uppercase tracking-widest block">{s.label}</span>
+								<span class="text-xs text-neutral-400 mt-1 block">{s.sub}</span>
 							</div>
-							<div class="border border-neutral-200 rounded-2xl p-5">
-								<span class="text-[clamp(1.5rem,3vw,2.2rem)] font-black text-neutral-900 block leading-none mb-2">0</span>
-								<span class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase block">Unified View</span>
-								<span class="text-[10px] text-neutral-400 block mt-1 leading-snug">no single surface</span>
-							</div>
-							<div class="border border-neutral-200 rounded-2xl p-5">
-								<span class="text-[clamp(1.5rem,3vw,2.2rem)] font-black text-neutral-900 block leading-none mb-2">∞</span>
-								<span class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase block">Context Switches</span>
-								<span class="text-[10px] text-neutral-400 block mt-1 leading-snug">per session</span>
-							</div>
-						</div>
+						{/each}
 					</div>
 				</div>
 
 				<!-- 02 Process -->
-				<div class="flex flex-col md:flex-row gap-12 md:gap-24 cs-fade-up">
-					<div class="md:w-1/3">
-						<div class="sticky top-32">
-							<div class="flex items-center gap-3 mb-5">
-								<span class="text-[10px] font-mono tracking-[0.3em] text-neutral-300 uppercase">02</span>
-								<div class="h-px flex-1 bg-neutral-200"></div>
-							</div>
-							<h2 class="text-[34px] md:text-5xl font-black tracking-tight text-neutral-900 leading-[0.95]">Process<br/>&amp;&nbsp;Strategy</h2>
-						</div>
+				<div class="cs-fade-up">
+					<div class="flex items-center gap-4 mb-10">
+						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase">02</span>
+						<div class="h-px flex-1 bg-neutral-200"></div>
+						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase">Process</span>
 					</div>
-					<div class="md:w-2/3 pt-2 md:pt-0 space-y-5">
-						<p class="text-xl md:text-2xl font-light text-neutral-500 leading-relaxed mb-2">{project.process}</p>
-						<div class="flex flex-col gap-3">
-							<div class="flex gap-5 items-start border border-neutral-100 rounded-2xl p-5 hover:border-neutral-300 transition-colors duration-300">
-								<span class="text-[10px] font-black font-mono text-neutral-300 shrink-0 mt-0.5 w-5">01</span>
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-10">
+						<h2 class="text-[34px] md:text-5xl font-black tracking-tight text-neutral-900 leading-[0.95]">Process<br/>&amp;&nbsp;Strategy</h2>
+						<p class="text-xl font-light text-neutral-500 leading-relaxed pt-2">{project.process}</p>
+					</div>
+					<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+						{#each [
+							{ n: '01', title: 'Workflow Mapping', desc: 'Mapped the full productivity lifecycle from planning (Upcoming) → execution (Pomodoro + Today) → review (Dashboard). Each screen owns exactly one phase.' },
+							{ n: '02', title: 'Label System as Core', desc: 'Labels became the primary organisation layer — colour-coded categories that filter across every screen. One label touch-point, universal effect.' },
+							{ n: '03', title: 'Full Light + Dark Theming', desc: 'Every screen ships in both modes using Inter for UI copy and Poppins for display headings. Blue as the primary accent.' },
+						] as s}
+							<div class="border border-neutral-100 rounded-2xl p-5 flex gap-5 hover:border-neutral-300 transition-colors">
+								<span class="text-[11px] font-black font-mono text-neutral-300 shrink-0 mt-0.5">{s.n}</span>
 								<div>
-									<h4 class="text-sm font-bold text-neutral-900 mb-1.5">Workflow Mapping</h4>
-									<p class="text-sm text-neutral-500 leading-relaxed">Mapped the full productivity lifecycle from planning (Upcoming) → execution (Pomodoro + Today) → review (Dashboard). Each screen owns exactly one phase — no overlap.</p>
+									<p class="text-sm font-bold text-neutral-900 mb-2">{s.title}</p>
+									<p class="text-sm text-neutral-500 leading-relaxed">{s.desc}</p>
 								</div>
 							</div>
-							<div class="flex gap-5 items-start border border-neutral-100 rounded-2xl p-5 hover:border-neutral-300 transition-colors duration-300">
-								<span class="text-[10px] font-black font-mono text-neutral-300 shrink-0 mt-0.5 w-5">02</span>
-								<div>
-									<h4 class="text-sm font-bold text-neutral-900 mb-1.5">Label System as Core Architecture</h4>
-									<p class="text-sm text-neutral-500 leading-relaxed">Labels became the primary organisation layer — colour-coded categories (Work, Personal, Shopping…) that filter across every screen. One label touch-point, universal effect.</p>
-								</div>
-							</div>
-							<div class="flex gap-5 items-start border border-neutral-100 rounded-2xl p-5 hover:border-neutral-300 transition-colors duration-300">
-								<span class="text-[10px] font-black font-mono text-neutral-300 shrink-0 mt-0.5 w-5">03</span>
-								<div>
-									<h4 class="text-sm font-bold text-neutral-900 mb-1.5">Full Light + Dark Theming</h4>
-									<p class="text-sm text-neutral-500 leading-relaxed">Every screen ships in both modes using Inter for UI copy and Poppins for display headings. Blue as the primary accent — readable across both themes at every text size.</p>
-								</div>
-							</div>
-						</div>
+						{/each}
 					</div>
 				</div>
 
-				<!-- 03 Solution -->
-				<div class="flex flex-col md:flex-row gap-12 md:gap-24 cs-fade-up">
-					<div class="md:w-1/3">
-						<div class="sticky top-32">
-							<div class="flex items-center gap-3 mb-5">
-								<span class="text-[10px] font-mono tracking-[0.3em] text-neutral-300 uppercase">03</span>
-								<div class="h-px flex-1 bg-neutral-200"></div>
-							</div>
-							<h2 class="text-[34px] md:text-5xl font-black tracking-tight text-neutral-900 leading-[0.95]">The<br/>Solution</h2>
-						</div>
+				<!-- 03 Design / Solution -->
+				<div class="cs-fade-up">
+					<div class="flex items-center gap-4 mb-10">
+						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase">03</span>
+						<div class="h-px flex-1 bg-neutral-200"></div>
+						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase">Design</span>
 					</div>
-					<div class="md:w-2/3 pt-2 md:pt-0 space-y-8">
-						<p class="text-xl md:text-2xl font-light text-neutral-500 leading-relaxed">{project.solution}</p>
-						<!-- Before → After comparison table -->
-						<div class="border border-neutral-200 rounded-2xl overflow-hidden">
-							<div class="grid grid-cols-[1fr_110px_150px] border-b border-neutral-200 bg-neutral-50 px-5 py-2.5">
-								<span class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase">What changed</span>
-								<span class="text-[8px] font-mono tracking-widest text-[#C40E0B] uppercase">Before</span>
-								<span class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase">After</span>
-							</div>
-							{#each [
-								{ what: 'Focus session setup', before: 'Switch apps', after: 'One Pomodoro screen' },
-								{ what: 'Daily schedule view', before: 'Calendar app', after: 'Time-blocked Today' },
-								{ what: 'Task organisation', before: 'Folder hierarchy', after: 'Label-first system' },
-								{ what: 'Progress tracking', before: 'Manual check-in', after: 'Live Dashboard stats' },
-								{ what: 'Device coverage', before: 'Desktop only', after: 'Desktop · iPad · Watch' },
-							] as row, i}
-								<div class="grid grid-cols-[1fr_110px_150px] items-center px-5 py-4 {i < 4 ? 'border-b border-neutral-100' : ''}">
-									<span class="text-sm font-medium text-neutral-600">{row.what}</span>
-									<span class="text-sm font-bold text-neutral-300 line-through">{row.before}</span>
-									<span class="text-sm font-bold text-neutral-900">{row.after}</span>
-								</div>
-							{/each}
+					<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-10">
+						<h2 class="text-[34px] md:text-5xl font-black tracking-tight text-neutral-900 leading-[0.95]">The<br/>Solution</h2>
+						<p class="text-xl font-light text-neutral-500 leading-relaxed pt-2">{project.solution}</p>
+					</div>
+					<div class="border border-neutral-200 rounded-2xl overflow-hidden">
+						<div class="grid grid-cols-[1fr_130px_180px] border-b border-neutral-200 bg-neutral-50 px-6 py-3">
+							<span class="text-[9px] font-mono tracking-widest text-neutral-400 uppercase">What changed</span>
+							<span class="text-[9px] font-mono tracking-widest text-[#C40E0B] uppercase">Before</span>
+							<span class="text-[9px] font-mono tracking-widest uppercase" style="color: #2244CC;">After</span>
 						</div>
+						{#each [
+							{ what: 'Focus session setup', before: 'Switch apps',      after: 'One Pomodoro screen' },
+							{ what: 'Daily schedule view', before: 'Calendar app',     after: 'Time-blocked Today' },
+							{ what: 'Task organisation',   before: 'Folder hierarchy', after: 'Label-first system' },
+							{ what: 'Progress tracking',   before: 'Manual check-in',  after: 'Live Dashboard stats' },
+							{ what: 'Device coverage',     before: 'Desktop only',     after: 'Desktop · iPad · Watch' },
+						] as row}
+							<div class="grid grid-cols-[1fr_130px_180px] border-b border-neutral-100 last:border-0 px-6 py-4 items-center">
+								<span class="text-sm font-semibold text-neutral-700">{row.what}</span>
+								<span class="text-sm text-[#C40E0B] line-through">{row.before}</span>
+								<span class="text-sm font-semibold" style="color: #2244CC;">{row.after}</span>
+							</div>
+						{/each}
 					</div>
 				</div>
 
 				<!-- 04 Outcome -->
 				<div class="cs-fade-up">
-					<div class="bg-neutral-950 rounded-bento p-10 md:p-16">
-						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-500 uppercase block mb-6">04 — Outcome</span>
-						<h2 class="text-4xl md:text-6xl font-black tracking-tight text-white leading-[0.95] mb-8">Results.</h2>
-						<p class="text-xl md:text-2xl font-light text-neutral-400 leading-relaxed mb-16 max-w-3xl">{project.outcome}</p>
-						<div class="grid grid-cols-1 sm:grid-cols-3 gap-5 border-t border-white/5 pt-10">
-							{#each project.metrics as metric}
-								<div class="bg-white/4 rounded-2xl p-6 border border-white/5">
-									<div class="w-1.5 h-1.5 rounded-full bg-portfolio-accent mb-4 animate-pulse"></div>
-									<p class="font-bold text-base text-white leading-snug tracking-tight">{metric}</p>
+					<div class="bg-neutral-950 rounded-3xl overflow-hidden">
+						<div class="px-10 md:px-16 pt-12 pb-10 border-b border-white/5">
+							<div class="flex items-center gap-3 mb-8">
+								<span class="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">04</span>
+								<div class="h-px flex-1 bg-white/5"></div>
+								<span class="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Outcome</span>
+							</div>
+							<h2 class="text-4xl md:text-6xl font-black tracking-tight text-white leading-tight">Where it <span class="text-shimmer-white">Led.</span></h2>
+						</div>
+						<div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/5">
+							<div class="p-8 md:p-10 flex flex-col">
+								<div class="flex items-center gap-2 mb-5">
+									<div class="w-1.5 h-1.5 rounded-full bg-portfolio-accent shrink-0 animate-pulse"></div>
+									<span class="text-[8px] font-mono tracking-[0.3em] text-portfolio-accent/70 uppercase">The Impact</span>
 								</div>
-							{/each}
+								<p class="text-2xl font-black text-white leading-snug mb-3">The piece that opened the WPMU DEV door.</p>
+								<p class="text-sm text-neutral-500 leading-relaxed flex-1">{project.outcome}</p>
+							</div>
+							<div class="p-8 md:p-10 flex flex-col">
+								<div class="flex items-center gap-2 mb-5">
+									<div class="w-1.5 h-1.5 rounded-full bg-neutral-500 shrink-0"></div>
+									<span class="text-[8px] font-mono tracking-[0.3em] text-neutral-500 uppercase">The Lesson</span>
+								</div>
+								<p class="text-2xl font-black text-white leading-snug mb-3">A product is a system problem, not a screen problem.</p>
+								<p class="text-sm text-neutral-500 leading-relaxed flex-1">The challenge wasn't designing one great screen — it was ensuring five screens felt like one coherent product. Labels as the data spine. Each screen owning exactly one phase. Sync as a design constraint, not a feature.</p>
+							</div>
 						</div>
 					</div>
 				</div>
 
-				<!-- What got designed: 6 feature cards -->
+				<!-- 05 Feature Highlights — motion icons -->
 				<div class="cs-fade-up">
-					<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase mb-4 block">05 — Feature Highlights</span>
-					<h2 class="text-3xl md:text-4xl font-black tracking-tight text-neutral-900 mb-10">What got designed.</h2>
+					<div class="flex items-center gap-4 mb-10">
+						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase">Key Design Decisions</span>
+						<div class="h-px flex-1 bg-neutral-200"></div>
+					</div>
 					<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-						{#each features as f}
-							<div class="border border-neutral-200 rounded-2xl p-6 hover:border-neutral-300 transition-colors duration-300 flex flex-col gap-3">
-								<span class="text-xl text-neutral-300">{f.icon}</span>
-								<h4 class="text-sm font-black text-neutral-900">{f.title}</h4>
-								<p class="text-sm text-neutral-500 leading-relaxed flex-1">{f.desc}</p>
+
+						<!-- 1. Dashboard — rings ping -->
+						<div class="eff-card border border-neutral-200 rounded-2xl p-6 hover:border-neutral-300 transition-colors">
+							<div class="mb-5 w-6 h-6 text-neutral-900">
+								<svg viewBox="0 0 24 24" fill="none" class="w-full h-full" aria-hidden="true">
+									<circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+									<circle cx="12" cy="12" r="6"    stroke="currentColor" stroke-width="1.5" class="fi-e-r1"/>
+									<circle cx="12" cy="12" r="10.5" stroke="currentColor" stroke-width="1.5" class="fi-e-r2"/>
+								</svg>
 							</div>
-						{/each}
+							<p class="text-sm font-bold text-neutral-900 mb-2">Dashboard Command Centre</p>
+							<p class="text-sm text-neutral-500 leading-relaxed">Performance graph, task stats donut, live Pomodoro widget, and pending tasks by label — all on a single glanceable screen.</p>
+						</div>
+
+						<!-- 2. Time-Blocked Today — bars slide in -->
+						<div class="eff-card border border-neutral-200 rounded-2xl p-6 hover:border-neutral-300 transition-colors">
+							<div class="mb-5 w-6 h-6 text-neutral-900">
+								<svg viewBox="0 0 24 24" fill="currentColor" class="w-full h-full" aria-hidden="true">
+									<rect x="2" y="3"  width="13" height="4" rx="1" class="fi-e-t1"/>
+									<rect x="2" y="10" width="20" height="4" rx="1" class="fi-e-t2"/>
+									<rect x="2" y="17" width="9"  height="4" rx="1" class="fi-e-t3"/>
+								</svg>
+							</div>
+							<p class="text-sm font-bold text-neutral-900 mb-2">Time-Blocked Today View</p>
+							<p class="text-sm text-neutral-500 leading-relaxed">Hourly timeline that turns your task list into a schedule. Hover any block to read full details inline without leaving the view.</p>
+						</div>
+
+						<!-- 3. Upcoming Calendar — dots pop in -->
+						<div class="eff-card border border-neutral-200 rounded-2xl p-6 hover:border-neutral-300 transition-colors">
+							<div class="mb-5 w-6 h-6 text-neutral-900">
+								<svg viewBox="0 0 24 24" fill="currentColor" class="w-full h-full" aria-hidden="true">
+									<rect x="2" y="2" width="20" height="3.5" rx="1"/>
+									<circle cx="5.5"  cy="11" r="1.8" class="fi-e-d1"/>
+									<circle cx="12"   cy="11" r="1.8" class="fi-e-d2"/>
+									<circle cx="18.5" cy="11" r="1.8" class="fi-e-d3"/>
+									<circle cx="5.5"  cy="18" r="1.8" class="fi-e-d4"/>
+									<circle cx="12"   cy="18" r="1.8" class="fi-e-d5"/>
+									<circle cx="18.5" cy="18" r="1.8" class="fi-e-d6"/>
+								</svg>
+							</div>
+							<p class="text-sm font-bold text-neutral-900 mb-2">Upcoming Calendar</p>
+							<p class="text-sm text-neutral-500 leading-relaxed">Day / Week / Month / Custom range. Every task and meeting colour-coded by label — shape of your week readable in one glance.</p>
+						</div>
+
+						<!-- 4. Pomodoro — arc sweeps -->
+						<div class="eff-card border border-neutral-200 rounded-2xl p-6 hover:border-neutral-300 transition-colors">
+							<div class="mb-5 w-6 h-6 text-neutral-900">
+								<svg viewBox="0 0 24 24" fill="none" class="w-full h-full" aria-hidden="true">
+									<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" opacity="0.2"/>
+									<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"
+										stroke-dasharray="56.5" stroke-linecap="round"
+										class="fi-e-arc" style="transform: rotate(-90deg); transform-origin: 12px 12px;"/>
+									<circle cx="12" cy="12" r="2" fill="currentColor"/>
+								</svg>
+							</div>
+							<p class="text-sm font-bold text-neutral-900 mb-2">Pomodoro Timer</p>
+							<p class="text-sm text-neutral-500 leading-relaxed">Sessions, schedule, and task list side by side. Every completed round feeds directly into Dashboard stats automatically.</p>
+						</div>
+
+						<!-- 5. Task List — check draws -->
+						<div class="eff-card border border-neutral-200 rounded-2xl p-6 hover:border-neutral-300 transition-colors">
+							<div class="mb-5 w-6 h-6 text-neutral-900">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full" aria-hidden="true">
+									<polyline points="3 13 8 18 21 7" class="fi-e-check"/>
+								</svg>
+							</div>
+							<p class="text-sm font-bold text-neutral-900 mb-2">Task List + Collaborators</p>
+							<p class="text-sm text-neutral-500 leading-relaxed">Working / In Progress / Recently Complete. Collaborator avatars on every card so you see who is connected to each project.</p>
+						</div>
+
+						<!-- 6. Theming — half circle spins -->
+						<div class="eff-card border border-neutral-200 rounded-2xl p-6 hover:border-neutral-300 transition-colors">
+							<div class="mb-5 w-6 h-6 text-neutral-900">
+								<svg viewBox="0 0 24 24" fill="none" class="w-full h-full" aria-hidden="true">
+									<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
+									<g class="fi-e-half">
+										<path d="M12 3 A9 9 0 0 1 12 21 Z" fill="currentColor"/>
+									</g>
+								</svg>
+							</div>
+							<p class="text-sm font-bold text-neutral-900 mb-2">Light &amp; Dark Full Theming</p>
+							<p class="text-sm text-neutral-500 leading-relaxed">Every screen ships in both modes. Colour-coded label system works across both themes for instant visual categorisation.</p>
+						</div>
+
 					</div>
 				</div>
 
@@ -758,6 +807,8 @@
 	</div>
 
 </div>
+
+<ExploreProjectComponent currentSlug="effido-productivity-app" />
 
 <style>
 	.effido-video-card {
@@ -837,27 +888,57 @@
 	}
 	.img-trigger:hover .img-expand-icon { opacity: 1; transform: scale(1); }
 
-	/* ── Lightbox modal ── */
-	.img-modal-backdrop {
-		position: fixed;
-		inset: 0;
-		z-index: 9999;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: rgba(0, 0, 0, 0.92);
-		backdrop-filter: blur(10px);
-		animation: modal-fade-in 0.18s ease;
+	/* ── Effido motion icons ─────────────────────────────────────── */
+	@keyframes eff-ring-ping {
+		0%   { transform: scale(1); opacity: 1; }
+		65%  { transform: scale(1.6); opacity: 0; }
+		100% { transform: scale(1); opacity: 1; }
 	}
-	@keyframes modal-fade-in { from { opacity: 0; } to { opacity: 1; } }
-	.img-modal-inner {
-		position: relative;
-		max-width: 92vw;
-		max-height: 92vh;
-		animation: modal-scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+	.fi-e-r1, .fi-e-r2 { transform-box: fill-box; transform-origin: center; }
+	.eff-card:hover .fi-e-r1 { animation: eff-ring-ping 0.55s cubic-bezier(0.22,1,0.36,1) 0s both; }
+	.eff-card:hover .fi-e-r2 { animation: eff-ring-ping 0.55s cubic-bezier(0.22,1,0.36,1) 0.1s both; }
+
+	@keyframes eff-bar-slide {
+		from { transform: translateX(-6px); opacity: 0.3; }
+		to   { transform: translateX(0);    opacity: 1; }
 	}
-	@keyframes modal-scale-in {
-		from { transform: scale(0.94); opacity: 0; }
-		to   { transform: scale(1);    opacity: 1; }
+	.fi-e-t1, .fi-e-t2, .fi-e-t3 { transform-box: fill-box; }
+	.eff-card:hover .fi-e-t1 { animation: eff-bar-slide 0.3s cubic-bezier(0.34,1.56,0.64,1) 0s both; }
+	.eff-card:hover .fi-e-t2 { animation: eff-bar-slide 0.3s cubic-bezier(0.34,1.56,0.64,1) 0.07s both; }
+	.eff-card:hover .fi-e-t3 { animation: eff-bar-slide 0.3s cubic-bezier(0.34,1.56,0.64,1) 0.14s both; }
+
+	@keyframes eff-dot-pop {
+		0%   { transform: scale(0); opacity: 0; }
+		75%  { transform: scale(1.35); opacity: 1; }
+		100% { transform: scale(1); opacity: 1; }
 	}
+	.fi-e-d1,.fi-e-d2,.fi-e-d3,.fi-e-d4,.fi-e-d5,.fi-e-d6 { transform-box: fill-box; transform-origin: center; }
+	.eff-card:hover .fi-e-d1 { animation: eff-dot-pop 0.35s cubic-bezier(0.34,1.56,0.64,1) 0s both; }
+	.eff-card:hover .fi-e-d2 { animation: eff-dot-pop 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.06s both; }
+	.eff-card:hover .fi-e-d3 { animation: eff-dot-pop 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.12s both; }
+	.eff-card:hover .fi-e-d4 { animation: eff-dot-pop 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.18s both; }
+	.eff-card:hover .fi-e-d5 { animation: eff-dot-pop 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.24s both; }
+	.eff-card:hover .fi-e-d6 { animation: eff-dot-pop 0.35s cubic-bezier(0.34,1.56,0.64,1) 0.30s both; }
+
+	@keyframes eff-arc-draw {
+		from { stroke-dashoffset: 56.5; }
+		to   { stroke-dashoffset: 14; }
+	}
+	.fi-e-arc { stroke-dashoffset: 56.5; }
+	.eff-card:hover .fi-e-arc { animation: eff-arc-draw 0.55s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+	@keyframes eff-check-draw {
+		from { stroke-dashoffset: 30; opacity: 0.4; }
+		to   { stroke-dashoffset: 0;  opacity: 1; }
+	}
+	.fi-e-check { stroke-dasharray: 30; stroke-dashoffset: 30; }
+	.eff-card:hover .fi-e-check { animation: eff-check-draw 0.45s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+	@keyframes eff-half-spin {
+		from { transform: rotate(0deg); }
+		to   { transform: rotate(360deg); }
+	}
+	.fi-e-half { transform-box: view-box; transform-origin: 50% 50%; }
+	.eff-card:hover .fi-e-half { animation: eff-half-spin 0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
+
 </style>

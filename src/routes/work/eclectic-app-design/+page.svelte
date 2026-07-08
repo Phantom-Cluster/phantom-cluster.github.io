@@ -5,6 +5,8 @@
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { navTheme } from '$lib/stores/navTheme';
 	import CsImageCard from '$lib/components/CsImageCard.svelte';
+	import LightboxModal from '$lib/components/LightboxModal.svelte';
+	import ExploreProjectComponent from '$lib/components/ExploreProjectComponent.svelte';
 
 	let { data }: { data: PageData } = $props();
 	let project = $derived(data.project);
@@ -14,7 +16,6 @@
 	let editorialTriggerEl: HTMLElement;
 	let ctx: gsap.Context;
 
-	// Lightbox modal — same pattern as Ideajam
 	let modalImg = $state<{ src: string; alt: string } | null>(null);
 	function openModal(src: string, alt: string) { modalImg = { src, alt }; }
 
@@ -22,9 +23,6 @@
 		navTheme.set('light');
 		document.body.style.backgroundColor = '#ffffff';
 		gsap.registerPlugin(ScrollTrigger);
-
-		const handleKeydown = (e: KeyboardEvent) => { if (e.key === 'Escape') modalImg = null; };
-		window.addEventListener('keydown', handleKeydown);
 
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
@@ -88,10 +86,7 @@
 			ScrollTrigger.refresh();
 		}, 400);
 
-		return () => {
-			clearTimeout(t);
-			window.removeEventListener('keydown', handleKeydown);
-		};
+		return () => clearTimeout(t);
 	});
 
 	onDestroy(() => {
@@ -199,65 +194,13 @@
 	.ij-wrap:hover .ij-spin-green { opacity: 0.85; animation-play-state: running; }
 	.ij-inner { position: relative; flex: 1; overflow: hidden; }
 
-	/* ── Lightbox modal ──────────────────────────────────────────────────── */
-	.img-modal-backdrop {
-		position: fixed;
-		inset: 0;
-		z-index: 9999;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: rgba(0, 0, 0, 0.92);
-		backdrop-filter: blur(10px);
-		animation: modal-fade-in 0.18s ease;
-	}
-	@keyframes modal-fade-in {
-		from { opacity: 0; }
-		to   { opacity: 1; }
-	}
-	.img-modal-inner {
-		position: relative;
-		max-width: 92vw;
-		max-height: 92vh;
-		animation: modal-scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-	}
-	@keyframes modal-scale-in {
-		from { transform: scale(0.94); opacity: 0; }
-		to   { transform: scale(1);    opacity: 1; }
-	}
 </style>
 
 <svelte:head>
 	<title>Eclectic App Redesign | Hitanshu Sahu</title>
 </svelte:head>
 
-<!-- Lightbox modal -->
-{#if modalImg}
-	<div
-		class="img-modal-backdrop"
-		role="dialog"
-		aria-modal="true"
-		aria-label="Image preview"
-		onclick={() => modalImg = null}
-	>
-		<div class="img-modal-inner" onclick={(e) => e.stopPropagation()}>
-			<img
-				src={modalImg.src}
-				alt={modalImg.alt}
-				style="max-width: 92vw; max-height: 92vh; width: auto; height: auto; display: block; border-radius: 12px;"
-			/>
-			<button
-				onclick={() => modalImg = null}
-				class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-				aria-label="Close preview"
-			>
-				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-				</svg>
-			</button>
-		</div>
-	</div>
-{/if}
+<LightboxModal bind:modalImg />
 
 <div bind:this={pageWrapperEl} class="min-h-screen bg-white text-neutral-900" style="background-color: #ffffff;">
 
@@ -269,7 +212,7 @@
 
 			<div class="flex items-center justify-between border-b border-neutral-200 pb-5 mb-12 cs-hero-element">
 				<div class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
-					<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#2244CC_360deg)]"></div>
+					<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(0,0,0,0.75)_360deg)]"></div>
 					<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
 						<span class="text-[11px] font-mono tracking-widest text-neutral-500 uppercase">Case Study — Consumer App Redesign</span>
 					</div>
@@ -804,3 +747,6 @@
 	</section>
 
 </div>
+
+<ExploreProjectComponent currentSlug="eclectic-app-design" />
+

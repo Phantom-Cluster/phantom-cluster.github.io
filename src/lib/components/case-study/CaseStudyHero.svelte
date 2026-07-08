@@ -29,7 +29,7 @@
 		<!-- Top meta strip -->
 		<div class="flex items-center justify-between border-b border-neutral-200 pb-5 mb-12 cs-hero-element">
 			<div class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
-				<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"></div>
+				<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(0,0,0,0.75)_360deg)]"></div>
 				<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
 					<span class="text-[11px] font-mono tracking-widest text-neutral-500 uppercase">Case Study — Dashboard &amp; Plugin Suite</span>
 				</div>
@@ -87,10 +87,10 @@
 		</div>
 
 		<!-- 3-col key impact ledger -->
-		<div class="grid grid-cols-3 border-t border-b border-neutral-200 mt-12 cs-hero-element">
+		<div class="grid grid-cols-1 sm:grid-cols-3 border-t border-neutral-200 mt-12 cs-hero-element">
 
 			<!-- Smush growth -->
-			<div class="py-7 pr-4 md:pr-8 border-r border-neutral-200">
+			<div class="py-6 sm:py-7 sm:pr-4 md:pr-8 border-b sm:border-b-0 sm:border-r border-neutral-200">
 				<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Smush Installs</span>
 				<div class="flex items-baseline gap-1.5 leading-none flex-wrap">
 					<span class="text-lg md:text-xl font-black text-neutral-300 tracking-tight line-through decoration-portfolio-error">1M</span>
@@ -100,7 +100,7 @@
 			</div>
 
 			<!-- Hummingbird perf -->
-			<div class="py-7 px-3 md:px-8 border-r border-neutral-200">
+			<div class="py-6 sm:py-7 sm:px-3 md:px-8 border-b sm:border-b-0 sm:border-r border-neutral-200">
 				<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Page Load Speed</span>
 				<div class="flex items-baseline gap-1 leading-none flex-wrap">
 					<span class="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">75%</span>
@@ -109,7 +109,7 @@
 			</div>
 
 			<!-- Design system scope -->
-			<div class="py-7 pl-3 md:pl-8">
+			<div class="py-6 sm:py-7 sm:pl-3 md:pl-8 border-b border-neutral-200">
 				<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Plugins Unified</span>
 				<div class="flex items-baseline gap-1 leading-none flex-wrap">
 					<span class="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">6+</span>

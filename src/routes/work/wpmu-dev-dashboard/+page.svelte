@@ -23,6 +23,7 @@
 	import smushIconSvg from '$lib/assets/smush-icon.svg?raw';
 	import hummingbirdIconSvg from '$lib/assets/hummingbird-icon.svg?raw';
 	import snapshotIconSvg from '$lib/assets/snapshot-icon.svg?raw';
+	import ExploreProjectComponent from '$lib/components/ExploreProjectComponent.svelte';
 
 	let { data }: { data: PageData } = $props();
 	let project = $derived(data.project);
@@ -196,3 +197,6 @@
 
 
 </div>
+
+<ExploreProjectComponent currentSlug="wpmu-dev-dashboard" />
+

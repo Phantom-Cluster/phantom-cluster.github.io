@@ -115,8 +115,11 @@
 	let perf80El: HTMLElement;
 	let bounce37El: HTMLElement;
 	let conv47El: HTMLElement;
+	let isTouchDevice = $state(false);
 
 	onMount(() => {
+		isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
 		// GSAP stagger entrance — clearProps:'all' removes every inline style after
 		// animation so no residual compositing layers block CSS :hover hit-testing
 		if (bentoGridEl) {
@@ -265,6 +268,11 @@
 		background-clip: text;
 		animation: shimmer-sweep 5s linear infinite;
 	}
+	/* Touch devices: video already visible at rest, no hover needed */
+	@media (hover: none) and (pointer: coarse) {
+		.touch-opacity { opacity: 0.85 !important; }
+	}
+
 	/* Ghost "before" state — barely there, thin crossed-out */
 	.stat-from {
 		color: rgba(255,255,255,0.20);
@@ -312,7 +320,8 @@
 					<video src={anchor.videoSrc} autoplay loop muted playsinline
 					       class="absolute inset-0 w-full h-full object-cover object-left-top z-0
 					              transform-gpu will-change-transform transition-all duration-1000
-					              scale-100 opacity-40 group-hover:scale-[1.03] group-hover:opacity-100">
+					              scale-100 opacity-60 group-hover:scale-[1.03] group-hover:opacity-100
+					              {isTouchDevice ? 'touch-opacity' : ''}">
 					</video>
 					<!-- Dark veil: dissolves on hover -->
 					<div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/90 to-[#050505]/40 z-10 transition-opacity duration-700 group-hover:opacity-0"></div>
@@ -326,7 +335,7 @@
 						<span class="text-[10px] font-mono tracking-[0.2em] text-gray-400 uppercase mb-8">{anchor.brandSub}</span>
 						<div class="flex items-center gap-3 text-white/80 text-[10px] font-mono uppercase tracking-widest bg-white/[0.08] px-5 py-2.5 rounded-full backdrop-blur-md border border-white/[0.1]">
 							<span class="w-2 h-2 rounded-full bg-portfolio-accent-vivid animate-pulse shrink-0"></span>
-							Hover to view UI
+							{isTouchDevice ? 'Tap to view UI' : 'Hover to view UI'}
 						</div>
 					</div>
 					<!-- Edge vignette -->

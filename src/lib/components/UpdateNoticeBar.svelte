@@ -6,8 +6,8 @@
 
 	import { onMount } from 'svelte';
 
-	const STORAGE_KEY   = 'ag-notice-dismissed';
-	const DISMISS_MS    = 48 * 60 * 60 * 1000; // 48 hours
+	const STORAGE_KEY = 'ag-notice-dismissed';
+	const DISMISS_MS  = 365 * 24 * 60 * 60 * 1000; // 1 year
 
 	let visible   = $state(false);
 	let animating = $state(false);
@@ -16,7 +16,6 @@
 		if (!ENABLED) return;
 		const raw = localStorage.getItem(STORAGE_KEY);
 		if (!raw || Date.now() - parseInt(raw) > DISMISS_MS) {
-			// Small delay so first paint isn't blocked
 			setTimeout(() => { visible = true; }, 600);
 		}
 	});
@@ -36,30 +35,28 @@
 	class="notice-cookie {animating ? 'hiding' : 'showing'}"
 	role="status"
 	aria-live="polite"
-	aria-label="Site update notice"
+	aria-label="Site notice"
 >
-	<!-- Glass card -->
 	<div class="notice-inner">
 
 		<!-- Left: icon + copy -->
 		<div class="notice-body">
-			<!-- Pulsing amber dot -->
 			<span class="dot-wrap" aria-hidden="true">
 				<span class="dot-ping"></span>
 				<span class="dot-core"></span>
 			</span>
 
 			<div class="notice-text">
-				<p class="notice-headline">Exploration & Craft — Update in Progress</p>
+				<p class="notice-headline">Everything's right here</p>
 				<p class="notice-sub">
-					Case studies are actively being refined. Everything is already live on
+					All case studies, concepts, and live projects are collected in this portfolio — nothing's missing from
 					<a
 						href="https://www.behance.net/phantom-cluster"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="behance-inline"
-					>Behance ↗</a>
-					while the portfolio updates roll out.
+						class="inline-link"
+					>Behance ↗</a>.
+					Connect or explore below.
 				</p>
 			</div>
 		</div>
@@ -70,9 +67,22 @@
 				href="https://www.behance.net/phantom-cluster"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="btn-behance"
+				class="btn-secondary"
+				aria-label="View on Behance"
 			>
-				View on Behance
+				Behance
+				<svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+					<path d="M2 8L8 2M8 2H3.5M8 2V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+				</svg>
+			</a>
+			<a
+				href="https://www.linkedin.com/in/phantom-cluster/"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="btn-linkedin"
+				aria-label="Connect on LinkedIn"
+			>
+				LinkedIn
 				<svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
 					<path d="M2 8L8 2M8 2H3.5M8 2V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 				</svg>
@@ -86,7 +96,6 @@
 {/if}
 
 <style>
-	/* ── Outer wrapper: fixed bottom, full-width ── */
 	.notice-cookie {
 		position: fixed;
 		bottom: 24px;
@@ -94,7 +103,7 @@
 		transform: translateX(-50%);
 		z-index: 9999;
 		width: calc(100% - 48px);
-		max-width: 860px;
+		max-width: 900px;
 		pointer-events: none;
 		will-change: transform, opacity;
 	}
@@ -109,7 +118,6 @@
 		pointer-events: none;
 	}
 
-	/* ── Glass card ── */
 	.notice-inner {
 		display: flex;
 		align-items: center;
@@ -124,7 +132,6 @@
 		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 	}
 
-	/* ── Left body ── */
 	.notice-body {
 		display: flex;
 		align-items: flex-start;
@@ -133,7 +140,6 @@
 		min-width: 0;
 	}
 
-	/* ── Pulsing dot ── */
 	.dot-wrap {
 		position: relative;
 		display: inline-flex;
@@ -148,7 +154,7 @@
 		position: absolute;
 		inset: 0;
 		border-radius: 9999px;
-		background: rgb(251, 146, 60);
+		background: rgb(34, 197, 94);
 		opacity: 0.7;
 		animation: ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
 		will-change: transform, opacity;
@@ -158,10 +164,9 @@
 		width: 6px;
 		height: 6px;
 		border-radius: 9999px;
-		background: rgb(251, 146, 60);
+		background: rgb(34, 197, 94);
 	}
 
-	/* ── Copy ── */
 	.notice-text {
 		display: flex;
 		flex-direction: column;
@@ -180,18 +185,17 @@
 		color: rgba(255, 255, 255, 0.45);
 		line-height: 1.5;
 	}
-	.behance-inline {
-		color: rgba(255, 255, 255, 0.85);
+	.inline-link {
+		color: rgba(255, 255, 255, 0.75);
 		text-decoration: none;
 		border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 		transition: color 0.15s, border-color 0.15s;
 	}
-	.behance-inline:hover {
+	.inline-link:hover {
 		color: #ffffff;
 		border-color: rgba(255, 255, 255, 0.6);
 	}
 
-	/* ── Actions ── */
 	.notice-actions {
 		display: flex;
 		align-items: center;
@@ -199,26 +203,49 @@
 		flex-shrink: 0;
 	}
 
-	.btn-behance {
+	.btn-secondary {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+		padding: 6px 12px;
+		border-radius: 8px;
+		font-size: 11px;
+		font-weight: 500;
+		letter-spacing: 0.02em;
+		color: rgba(255, 255, 255, 0.65);
+		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		text-decoration: none;
+		transition: background 0.15s, border-color 0.15s, color 0.15s;
+		white-space: nowrap;
+	}
+	.btn-secondary:hover {
+		color: #ffffff;
+		background: rgba(255, 255, 255, 0.1);
+		border-color: rgba(255, 255, 255, 0.25);
+	}
+
+	.btn-linkedin {
 		display: inline-flex;
 		align-items: center;
 		gap: 5px;
 		padding: 6px 14px;
 		border-radius: 8px;
 		font-size: 11px;
-		font-weight: 500;
+		font-weight: 600;
 		letter-spacing: 0.02em;
-		color: rgba(255, 255, 255, 0.75);
-		background: rgba(255, 255, 255, 0.06);
-		border: 1px solid rgba(255, 255, 255, 0.14);
+		color: #fff;
+		background: #0A66C2;
+		border: none;
 		text-decoration: none;
-		transition: background 0.15s, border-color 0.15s, color 0.15s;
+		transition: background 0.15s, transform 0.1s;
 		white-space: nowrap;
 	}
-	.btn-behance:hover {
-		color: #ffffff;
-		background: rgba(255, 255, 255, 0.11);
-		border-color: rgba(255, 255, 255, 0.28);
+	.btn-linkedin:hover {
+		background: #0958a8;
+	}
+	.btn-linkedin:active {
+		transform: scale(0.97);
 	}
 
 	.btn-ok {
@@ -236,14 +263,9 @@
 		transition: background 0.15s, transform 0.1s;
 		white-space: nowrap;
 	}
-	.btn-ok:hover {
-		background: #ffffff;
-	}
-	.btn-ok:active {
-		transform: scale(0.97);
-	}
+	.btn-ok:hover { background: #ffffff; }
+	.btn-ok:active { transform: scale(0.97); }
 
-	/* ── Animations ── */
 	@keyframes slideUp {
 		from { opacity: 0; transform: translate(-50%, 20px); }
 		to   { opacity: 1; transform: translate(-50%, 0);    }
@@ -256,7 +278,6 @@
 		75%, 100% { transform: scale(2); opacity: 0; }
 	}
 
-	/* ── Mobile: wrap text ── */
 	@media (max-width: 640px) {
 		.notice-cookie {
 			bottom: 16px;
@@ -267,12 +288,6 @@
 			align-items: flex-start;
 			gap: 12px;
 			padding: 14px 16px;
-		}
-		.notice-sub {
-			white-space: normal;
-		}
-		.notice-headline {
-			white-space: normal;
 		}
 		.notice-actions {
 			width: 100%;

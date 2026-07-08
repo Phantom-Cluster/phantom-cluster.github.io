@@ -2,17 +2,19 @@
 	import FeaturedProject from "$lib/components/FeaturedProject.svelte";
 	import StackedProjectsV2 from "$lib/components/StackedProjectsV2.svelte";
 	import PartnerMarquee from "$lib/components/PartnerMarquee.svelte";
+	import PartnerRosterC from "$lib/components/PartnerRosterC.svelte";
+	import Chip from "$lib/components/Chip.svelte";
 	import { onMount } from "svelte";
+	import { afterNavigate } from "$app/navigation";
 	import { gsap } from "gsap";
 	import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 	import { ArrowRight } from "lucide-svelte";
-	import VanillaTilt from "vanilla-tilt";
+	import { openNavDropdown } from "$lib/stores/navDropdown";
 	import portrait from "$lib/assets/portrait.webp";
 	import cubeImg from "$lib/assets/4 Cube Abstract Glass Spectrum.png";
 	import gemImg from "$lib/assets/Gem Shape.png";
 
 	// Hero element refs for GSAP entrance
-	let heroHeadline: HTMLElement;
 	let heroBio: HTMLElement;
 	let heroImage: HTMLElement;
 	let heroBar: HTMLElement;
@@ -25,12 +27,33 @@
 	let targetX = 800;
 	let targetY = 400;
 
+	// RAF spotlight loop — module-scope so handleMouseMove can restart it
+	let rafId: number;
+	let rafRunning = false;
+	const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+	function startSpotlight() {
+		if (rafRunning) return;
+		rafRunning = true;
+		const tick = () => {
+			spX = lerp(spX, targetX, 0.1);
+			spY = lerp(spY, targetY, 0.1);
+			if (spotlightEl) spotlightEl.style.background = `radial-gradient(circle 600px at ${spX}px ${spY}px, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 40%, #000000 70%)`;
+			if (Math.abs(spX - targetX) < 0.5 && Math.abs(spY - targetY) < 0.5) {
+				rafRunning = false;
+				return;
+			}
+			rafId = requestAnimationFrame(tick);
+		};
+		rafId = requestAnimationFrame(tick);
+	}
+
 	const handleMouseMove = (event: MouseEvent) => {
 		const rect = (
 			event.currentTarget as HTMLElement
 		).getBoundingClientRect();
 		targetX = event.clientX - rect.left;
 		targetY = event.clientY - rect.top;
+		startSpotlight();
 	};
 
 	const capabilities = [
@@ -75,118 +98,175 @@
 	let leftGlassWrapper: HTMLElement;
 	let rightGlassWrapper: HTMLElement;
 
+	// Metric count-up element refs
+	let metric1El: HTMLElement;
+	let metric2El: HTMLElement;
+	let metric3El: HTMLElement;
+
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
+		const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-		// 1. Ambient Bobbing
-		if (!reducedMotion) gsap.to(".glass-asset", {
-			y: 12,
-			rotation: 4,
-			duration: 4.5,
-			yoyo: true,
-			repeat: -1,
-			ease: "sine.inOut",
-			stagger: 0.5,
+		// ── Glass asset ambient bobbing ──────────────────────────────────────────
+		if (!rm) gsap.to('.glass-asset', {
+			y: 12, rotation: 4, duration: 4.5, yoyo: true, repeat: -1,
+			ease: 'sine.inOut', stagger: 0.5,
+			scrollTrigger: {
+				trigger: '#projects', start: 'top bottom', end: 'bottom top',
+				toggleActions: 'play pause resume pause',
+			},
 		});
 
-		// 2. Mouse Parallax Tracking
-		const handleMouseMove = (e: MouseEvent) => {
+		// ── Mouse parallax on glass wrappers (GPU: transform only) ──────────────
+		const onParallax = (e: MouseEvent) => {
 			if (!workSectionRef) return;
 			const rect = workSectionRef.getBoundingClientRect();
 			const xPos = (e.clientX - rect.left - rect.width / 2) / rect.width;
 			const yPos = (e.clientY - rect.top - rect.height / 2) / rect.height;
-
-			gsap.to(leftGlassWrapper, {
-				x: -xPos * 40,
-				y: -yPos * 40,
-				duration: 1,
-				ease: "power2.out",
-			});
-			gsap.to(rightGlassWrapper, {
-				x: xPos * 50,
-				y: yPos * 50,
-				duration: 1,
-				ease: "power2.out",
-			});
+			gsap.to(leftGlassWrapper, { x: -xPos * 40, y: -yPos * 40, duration: 1, ease: 'power2.out' });
+			gsap.to(rightGlassWrapper, { x: xPos * 50, y: yPos * 50, duration: 1, ease: 'power2.out' });
 		};
+		workSectionRef?.addEventListener('mousemove', onParallax);
 
-		if (workSectionRef) {
-			workSectionRef.addEventListener("mousemove", handleMouseMove);
+		if (!rm) {
+			// ── Hero entrance — Awwwards curtain wipe per line ──────────────────
+			// Use gsap.set() to establish known initial states explicitly, then
+			// gsap.to() to animate to known targets. This avoids the gsap.from()
+			// immediateRender race where ScrollTrigger.refresh() can fire between
+			// the "record to-value" and "apply from-state" steps, causing GSAP to
+			// record opacity:0 as the to-value and animate from 0→0 (invisible forever).
+			gsap.set('.hero-line-inner', { yPercent: 110 });
+			gsap.set('.hero-sub-inner',  { yPercent: 110 });
+			gsap.set('.hero-available',  { opacity: 0, y: 10 });
+			if (heroBio)   gsap.set(heroBio,   { opacity: 0, y: 18 });
+			if (heroImage) gsap.set(heroImage,  { opacity: 0, scale: 0.96 });
+			if (heroBar)   gsap.set(heroBar,    { opacity: 0, y: 12 });
+			gsap.set('.hero-cta', { opacity: 0, y: 14 });
+
+			gsap.timeline({ delay: 0.1 })
+				.to('.hero-line-inner', { yPercent: 0,  duration: 1.0, stagger: 0.09, ease: 'power4.out' })
+				.to('.hero-sub-inner',  { yPercent: 0,  duration: 0.75, ease: 'power3.out' }, '-=0.55')
+				.to('.hero-available',  { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.4')
+				.to(heroBio,            { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' }, '-=0.35')
+				.to('.hero-cta',        { opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power3.out' }, '-=0.4')
+				.to(heroImage,          { opacity: 1, scale: 1, duration: 1.0, ease: 'power3.out' }, 0.25)
+				.to(heroBar,            { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, '-=0.3');
+
+			// Helpers — set() establishes known initial state; to() targets explicit values.
+			// gsap.from() with immediateRender records the "to" value at creation time.
+			// A ScrollTrigger.refresh() or reflow can cause GSAP to re-read the from-state
+			// (e.g. opacity:0) as the to-value, making the animation play 0→0 (invisible forever).
+			const curtain = (sel: string, trigger: string | Element, start = 'top 82%') => {
+				gsap.set(sel, { yPercent: 110 });
+				return gsap.to(sel, { yPercent: 0, duration: 0.85, stagger: 0.07, ease: 'power4.out',
+					scrollTrigger: { trigger, start, once: true } });
+			};
+
+			const fadeUp = (sel: string | Element, trigger: string | Element) => {
+				gsap.set(sel, { opacity: 0, y: 22 });
+				return gsap.to(sel, { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
+					scrollTrigger: { trigger, start: 'top 80%', once: true } });
+			};
+
+			// ── Studio / System Architecture ──────────────────────────────────
+			gsap.set('.studio-chip', { opacity: 0, y: 16 });
+			gsap.to('.studio-chip', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+				scrollTrigger: { trigger: '#studio', start: 'top 85%', once: true } });
+			curtain('.studio-line-inner', '#studio h2');
+			fadeUp('#studio p.text-lg', '#studio h2');
+			gsap.set('#studio li', { opacity: 0, y: 18 });
+			gsap.to('#studio li', { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: 'power3.out',
+				scrollTrigger: { trigger: '#studio ul', start: 'top 80%', once: true } });
+			fadeUp('.metrics-card', '#studio');
+
+			// ── Metrics count-up — expo.out with decimal precision for premium feel ──
+			const countUps = [
+				{ el: metric1El, target: 98, decimals: 1, suffix: '%',  finalText: '98%'  },
+				{ el: metric2El, target: 2,  decimals: 1, suffix: 'M+', finalText: '2M+'  },
+				{ el: metric3El, target: 50, decimals: 0, suffix: '+',  finalText: '50+'  },
+			];
+			countUps.forEach(({ el, target, decimals, suffix, finalText }, i) => {
+				if (!el) return;
+				const proxy = { val: 0 };
+				el.textContent = (0).toFixed(decimals) + suffix;
+				gsap.to(proxy, {
+					val: target,
+					duration: 2.4,
+					delay: i * 0.2,
+					ease: 'expo.out',
+					onUpdate() { el.textContent = proxy.val.toFixed(decimals) + suffix; },
+					onComplete() { el.textContent = finalText; },
+					scrollTrigger: { trigger: '.metrics-card', start: 'top 80%', once: true },
+				});
+			});
+
+			// ── Bridging The Gap ──────────────────────────────────────────────
+			curtain('.bridging-line-inner', '.bridging-section', 'top 78%');
+			gsap.set('.bridging-sub', { opacity: 0, y: 18 });
+			gsap.to('.bridging-sub', { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
+				scrollTrigger: { trigger: '.bridging-section', start: 'top 72%', once: true } });
+
+			// ── Concepts & Explorations ───────────────────────────────────────
+			gsap.set('.concepts-chip', { opacity: 0, y: 16 });
+			gsap.to('.concepts-chip', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+				scrollTrigger: { trigger: '.concepts-section', start: 'top 85%', once: true } });
+			curtain('.concepts-line-inner', '.concepts-section', 'top 80%');
+			gsap.set('.concepts-sub', { opacity: 0, y: 16 });
+			gsap.to('.concepts-sub', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+				scrollTrigger: { trigger: '.concepts-section', start: 'top 74%', once: true } });
+			gsap.set('.concept-card', { opacity: 0, y: 28 });
+			gsap.to('.concept-card', { opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power3.out',
+				scrollTrigger: { trigger: '.concepts-section', start: 'top 78%', once: true } });
+
+			// ── Capabilities ──────────────────────────────────────────────────
+			gsap.set('.caps-chip', { opacity: 0, y: 16 });
+			gsap.to('.caps-chip', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+				scrollTrigger: { trigger: '#capabilities', start: 'top 85%', once: true } });
+			curtain('.caps-heading-inner', '#capabilities', 'top 80%');
+			gsap.set('.caps-desc', { opacity: 0, y: 20 });
+			gsap.to('.caps-desc', { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
+				scrollTrigger: { trigger: '#capabilities', start: 'top 75%', once: true } });
+			gsap.set('.cap-row', { opacity: 0, y: 18 });
+			gsap.to('.cap-row', { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power3.out',
+				scrollTrigger: { trigger: '#capabilities .border-t', start: 'top 80%', once: true } });
+
+			// ── Contact section ───────────────────────────────────────────────
+			gsap.set('.contact-chip', { opacity: 0, y: 16 });
+			gsap.to('.contact-chip', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+				scrollTrigger: { trigger: '#contact', start: 'top 85%', once: true } });
+			curtain('.contact-line-inner', '#contact', 'top 80%');
+			gsap.set('.contact-desc', { opacity: 0, y: 20 });
+			gsap.to('.contact-desc', { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out',
+				scrollTrigger: { trigger: '#contact', start: 'top 75%', once: true } });
+			gsap.set('.contact-card', { opacity: 0, y: 24 });
+			gsap.to('.contact-card', { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out',
+				scrollTrigger: { trigger: '#contact .grid', start: 'top 85%', once: true } });
 		}
 
-		// Page reveals
-		if (!reducedMotion) gsap.from(".reveal-section", {
-			opacity: 0,
-			y: 50,
-			duration: 1,
-			stagger: 0.15,
-			ease: "power3.out",
-			scrollTrigger: {
-				trigger: ".reveal-trigger",
-				start: "top 80%",
-			},
-		});
+		// Refresh after fonts load — handles reflow from custom font metrics.
+		document.fonts.ready.then(() => ScrollTrigger.refresh());
 
-		// Spotlight horizontal marquee scroll
-		gsap.to(".marquee-inner", {
-			xPercent: -50,
-			ease: "none",
-			scrollTrigger: {
-				trigger: ".marquee-container",
-				start: "top bottom",
-				end: "bottom top",
-				scrub: 1,
-			},
-		});
-
-		// --- Metrics Card 3D Tilt ---
-		if (!reducedMotion) {
-			const metricsCard = document.querySelector(".metrics-tilt-card");
-			if (metricsCard) {
-				const isTouchDevice = window.matchMedia(
-					"(hover: none) and (pointer: coarse)",
-				).matches;
-				if (!isTouchDevice) {
-					VanillaTilt.init(metricsCard as HTMLElement, {
-						max: 3.5,
-						speed: 400,
-						glare: true,
-						"max-glare": 0.06,
-						easing: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-					});
-				}
-			}
-		}
-
-		// ---- Hero entrance stagger ----
-		if (!reducedMotion) gsap.from([heroHeadline, heroBio, heroImage, heroBar], {
-			y: 30,
-			opacity: 0,
-			duration: 1,
-			stagger: 0.1,
-			ease: "power3.out",
-			delay: 0.15,
-		});
-
-		// ---- Spotlight lerp loop — direct DOM mutation, no Svelte reactivity per frame ----
-		let rafId: number;
-		const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-		const tick = () => {
-			spX = lerp(spX, targetX, 0.1);
-			spY = lerp(spY, targetY, 0.1);
-			if (spotlightEl) spotlightEl.style.background = `radial-gradient(circle 600px at ${spX}px ${spY}px, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 40%, #000000 70%)`;
-			rafId = requestAnimationFrame(tick);
-		};
-		rafId = requestAnimationFrame(tick);
-
-		// Pre-warm all ScrollTrigger positions so first scroll doesn't stutter
-		setTimeout(() => ScrollTrigger.refresh(), 150);
-
+		mounted = true;
 		return () => {
+			mounted = false;
 			cancelAnimationFrame(rafId);
+			clearTimeout(refreshTimer);
+			workSectionRef?.removeEventListener('mousemove', onParallax);
+			ScrollTrigger.getAll().forEach(t => t.kill());
 		};
+	});
+
+	// afterNavigate fires after every SPA transition including initial load.
+	// Delay past the hero animation (~2.1s) so the refresh doesn't cause a
+	// visible flash while the hero curtain wipe is mid-play.
+	// The mounted guard ensures we don't refresh after navigating away.
+	let mounted = false;
+	let refreshTimer: ReturnType<typeof setTimeout>;
+	afterNavigate(() => {
+		clearTimeout(refreshTimer);
+		refreshTimer = setTimeout(() => {
+			if (mounted) ScrollTrigger.refresh();
+		}, 2400);
 	});
 </script>
 
@@ -227,31 +307,31 @@
 
 	<!-- ─── Content wrapper (constrained) ───────────────────────────────── -->
 	<div
-		class="relative z-10 flex-1 flex flex-col justify-center max-w-[1320px] mx-auto w-full px-6 md:px-8 mt-24 md:mt-0 md:pt-24"
+		class="relative z-10 flex-1 flex flex-col justify-center max-w-[1320px] mx-auto w-full px-6 md:px-8 mt-20 md:mt-0 md:pt-16"
 	>
 		<!-- 12-col primary grid -->
 		<div
 			class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 items-center w-full"
 		>
-			<!-- Left col · span 8 · three-tier nameplate -->
-			<div class="col-span-1 md:col-span-8 flex flex-col justify-center">
+			<!-- Left col · span 9 · three-tier nameplate -->
+			<div class="col-span-1 md:col-span-9 flex flex-col justify-center">
 				<div class="relative z-20 flex flex-col justify-center">
 					<h1
-						bind:this={heroHeadline}
 						class="leading-[0.85] tracking-tighter font-medium text-white select-none"
 						style="font-size: clamp(3rem, 8vw + 1rem, 10rem);"
 					>
-						Hitanshu <br /> Sahu.
+						<span class="hero-line block overflow-hidden"><span class="hero-line-inner block">Hitanshu</span></span>
+						<span class="hero-line block overflow-hidden"><span class="hero-line-inner block">Sahu.</span></span>
 					</h1>
 
 					<h2
-						class="text-gray-300 font-normal tracking-tight mt-6"
+						class="text-gray-300 font-normal tracking-tight mt-6 overflow-hidden"
 						style="font-size: clamp(1.2rem, 2vw + 0.75rem, 2.25rem);"
 					>
-						Product Designer.
+						<span class="hero-sub-inner block">Product Designer.</span>
 					</h2>
 
-					<div class="flex items-center gap-2 mt-5">
+					<div class="hero-available flex items-center gap-2 mt-5">
 						<span class="relative flex h-2 w-2" aria-hidden="true">
 							<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
 							<span class="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
@@ -261,7 +341,7 @@
 
 					<p
 						bind:this={heroBio}
-						class="max-w-md text-gray-400 mt-5 text-lg font-normal leading-relaxed"
+						class="w-full text-gray-400 mt-5 text-lg font-normal leading-relaxed"
 					>
 						I design SaaS products that reduce operational friction
 						and scale — at the intersection of product strategy,
@@ -270,18 +350,19 @@
 					</p>
 
 					<div class="flex flex-col sm:flex-row gap-3 mt-8">
-						<a
-							href="/#projects"
-							class="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-black rounded-full text-sm font-bold tracking-wide hover:bg-gray-100 transition-all duration-200 active:scale-95 shadow-lg shadow-black/30"
+						<button
+							type="button"
+							onclick={() => openNavDropdown.set('projects')}
+							class="hero-cta inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-black rounded-full text-sm font-bold tracking-wide hover:bg-gray-100 transition-all duration-200 active:scale-95 shadow-lg shadow-black/30"
 						>
 							View Work
 							<ArrowRight class="size-3.5" />
-						</a>
+						</button>
 						<a
 							href="/Hitanshu_Sahu___Resume_JUN_Updated.pdf"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/20 text-white rounded-full text-sm font-bold tracking-wide hover:border-white/50 hover:bg-white/5 transition-all duration-200"
+							class="hero-cta inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/20 text-white rounded-full text-sm font-bold tracking-wide hover:border-white/50 hover:bg-white/5 transition-all duration-200"
 						>
 							Download Resume
 							<svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -292,13 +373,13 @@
 				</div>
 			</div>
 
-			<!-- Right col · span 4 · greyscale portrait — hidden on mobile -->
+			<!-- Right col · span 3 · greyscale portrait — hidden on mobile -->
 			<div
-				class="hidden md:flex col-span-1 md:col-span-4 justify-start md:justify-end"
+				class="hidden md:flex col-span-1 md:col-span-3 justify-start md:justify-end"
 			>
 				<div
 					bind:this={heroImage}
-					class="w-full max-w-[320px] aspect-[3/4] relative"
+					class="w-full max-w-[260px] aspect-[3/4] relative"
 				>
 					<img
 						src={portrait}
@@ -320,27 +401,19 @@
 			<!-- Utility chips · content-hugging flex row -->
 			<div
 				bind:this={heroBar}
-				class="w-full flex flex-col md:flex-row flex-wrap justify-center items-center gap-4 text-[10px] md:text-xs font-mono uppercase tracking-widest"
+				class="w-full flex flex-col md:flex-row flex-wrap justify-center items-center gap-4"
 			>
-				<div
-					class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/[0.03] border border-white/10 text-gray-400 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:text-white hover:border-white/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] cursor-default"
-				>
-					<span>Core: Figma, Svelte, WordPress</span>
-				</div>
+				<Chip theme="dark" spin="glow" class="w-full md:w-auto" innerClass="px-6 py-3.5">
+					<span class="text-[10px] md:text-xs font-mono uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors duration-200">Core: Figma, Svelte, WordPress</span>
+				</Chip>
 
-				<div
-					class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/[0.03] border border-white/10 text-gray-400 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:text-white hover:border-primary/50 hover:shadow-[0_0_20px_rgba(34,68,255,0.15)] cursor-default"
-				>
-					<span
-						>Specialization: SaaS, Dashboards &amp; Atomic Systems</span
-					>
-				</div>
+				<Chip theme="dark" spin="glow" class="w-full md:w-auto" innerClass="px-6 py-3.5">
+					<span class="text-[10px] md:text-xs font-mono uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors duration-200">Specialization: SaaS, Dashboards &amp; Atomic Systems</span>
+				</Chip>
 
-				<div
-					class="w-full md:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-full bg-white/[0.03] border border-white/10 text-gray-400 backdrop-blur-md transition-all duration-300 hover:bg-white/[0.08] hover:text-white hover:border-white/30 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] cursor-default"
-				>
-					<span>7+ Years Deep Ecosystem Experience</span>
-				</div>
+				<Chip theme="dark" spin="glow" class="w-full md:w-auto" innerClass="px-6 py-3.5">
+					<span class="text-[10px] md:text-xs font-mono uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors duration-200">7+ Years Deep Ecosystem Experience</span>
+				</Chip>
 			</div>
 		</div>
 	</div>
@@ -355,15 +428,15 @@
 	class="bg-[#f4f4f6] border-t border-neutral-200/50"
 >
 	<div
-		class="w-full max-w-[1320px] mx-auto px-6 py-14 sm:py-20 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center"
+		class="w-full max-w-[1320px] mx-auto px-6 py-14 sm:py-20 lg:py-24 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-center"
 	>
-		<div class="lg:col-span-7 flex flex-col space-y-8">
-			<div class="max-w-2xl">
+		<div class="md:col-span-8 flex flex-col space-y-8">
+			<div>
 				<div
-					class="mb-8 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
+					class="studio-chip mb-8 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
 				>
 					<div
-						class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"
+						class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(0,0,0,0.75)_360deg)]"
 					></div>
 					<div
 						class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
@@ -375,11 +448,11 @@
 					</div>
 				</div>
 				<h2
-					class="font-bold tracking-tight text-black mb-6 leading-tight"
-					style="font-size: clamp(1.75rem, 2.5vw + 1rem, 3.25rem);"
+					class="font-black tracking-tight text-black mb-6 leading-[1.05]"
+					style="font-size: clamp(1.6rem, 2vw + 0.75rem, 2.5rem);"
 				>
-					Architecting scalable UI systems and production-ready
-					frontends for high-growth SaaS.
+					<span class="studio-line block overflow-hidden"><span class="studio-line-inner block">Architecting scalable UI systems</span></span>
+					<span class="studio-line block overflow-hidden"><span class="studio-line-inner block"><span class="shimmer-light">and production-ready frontends for high-growth SaaS.</span></span></span>
 				</h2>
 				<p class="text-lg text-gray-600 leading-relaxed">
 					I operate at the intersection of high-fidelity design and
@@ -389,7 +462,7 @@
 				</p>
 			</div>
 
-			<ul class="space-y-6 max-w-2xl">
+			<ul class="space-y-6">
 				<li class="flex items-start gap-4">
 					<div class="relative flex h-3 w-3 mt-1.5 flex-shrink-0">
 						<span
@@ -446,9 +519,9 @@
 			</ul>
 		</div>
 
-		<div class="lg:col-span-5 flex items-center">
+		<div class="md:col-span-4 flex items-center">
 			<div
-				class="bg-[#0a0a0a] rounded-[2rem] p-8 lg:p-10 w-full flex flex-col justify-center space-y-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
+				class="metrics-card bg-[#0a0a0a] rounded-[2rem] p-8 lg:p-10 w-full flex flex-col justify-center space-y-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
 			>
 				<p
 					class="text-xs font-mono tracking-widest text-portfolio-success uppercase"
@@ -458,9 +531,10 @@
 
 				<div>
 					<h3
-						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1"
+						bind:this={metric1El}
+						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1 tabular-nums"
 					>
-						98%
+						0%
 					</h3>
 					<p
 						class="text-sm lg:text-base font-medium tracking-widest text-gray-400 uppercase"
@@ -471,9 +545,10 @@
 
 				<div>
 					<h3
-						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1"
+						bind:this={metric2El}
+						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1 tabular-nums"
 					>
-						2M+
+						0M+
 					</h3>
 					<p
 						class="text-sm lg:text-base font-medium tracking-widest text-gray-400 uppercase"
@@ -484,9 +559,10 @@
 
 				<div>
 					<h3
-						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1"
+						bind:this={metric3El}
+						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1 tabular-nums"
 					>
-						50+
+						0+
 					</h3>
 					<p
 						class="text-sm lg:text-base font-medium tracking-widest text-gray-400 uppercase"
@@ -507,11 +583,11 @@
 	class="relative w-full overflow-hidden py-32 flex flex-col items-center gap-y-20 bg-[#f8f9fa] border-t border-gray-200"
 >
 	<div
-		class="relative w-full max-w-[1320px] mx-auto px-6 text-center z-10 mt-12"
+		class="bridging-section relative w-full max-w-[1320px] mx-auto px-6 text-center z-10 mt-12"
 	>
 		<div
 			bind:this={leftGlassWrapper}
-			class="hidden md:block absolute md:left-4 lg:left-12 top-1/2 -translate-y-1/2 w-20 md:w-28 opacity-70 pointer-events-none"
+			class="hidden md:block absolute md:left-4 lg:left-12 top-1/2 -translate-y-1/2 w-20 md:w-28 pointer-events-none"
 			style="will-change: transform;"
 		>
 			<img
@@ -523,7 +599,7 @@
 
 		<div
 			bind:this={rightGlassWrapper}
-			class="hidden md:block absolute md:right-4 lg:right-12 top-1/4 w-16 md:w-24 opacity-70 pointer-events-none"
+			class="hidden md:block absolute md:right-4 lg:right-12 top-1/4 w-16 md:w-24 pointer-events-none"
 			style="will-change: transform;"
 		>
 			<img
@@ -537,15 +613,11 @@
 			class="font-black tracking-tighter leading-[0.9] text-[#111] mb-6 relative z-10"
 			style="font-size: clamp(3.5rem, 8vw, 8rem);"
 		>
-			BRIDGING <br />
-			THE
-			<span
-				class="text-neutral-300"
-				>GAP.</span
-			>
+			<span class="bridging-line block overflow-hidden"><span class="bridging-line-inner block">BRIDGING</span></span>
+			<span class="bridging-line block overflow-hidden"><span class="bridging-line-inner block">THE <span class="shimmer-light">GAP.</span></span></span>
 		</h2>
 		<p
-			class="text-xl md:text-2xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed relative z-10 mt-6"
+			class="bridging-sub text-xl md:text-2xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed relative z-10 mt-6"
 		>
 			Architecting high-fidelity designs into scalable, production-ready
 			frontends.
@@ -586,6 +658,11 @@
 						>Eclectic</span
 					>
 					<span class="w-2 h-2 rounded-full bg-primary"></span>
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>Spotify</span
+					>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 				</div>
 
 				<div class="flex items-center gap-16 md:gap-32 px-8 md:px-16">
@@ -614,6 +691,11 @@
 						>Eclectic</span
 					>
 					<span class="w-2 h-2 rounded-full bg-primary"></span>
+					<span
+						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
+						>Spotify</span
+					>
+					<span class="w-2 h-2 rounded-full bg-primary"></span>
 				</div>
 			</div>
 		</div>
@@ -625,7 +707,7 @@
 				class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
 			>
 				<div
-					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"
+					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(0,0,0,0.75)_360deg)]"
 				></div>
 				<div
 					class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10"
@@ -646,18 +728,19 @@
 <StackedProjectsV2 />
 
 <!-- (03) CONCEPTS & EXPLORATIONS -->
-<section class="bg-[#0a0a0b] py-16 sm:py-20 lg:py-28 px-6 border-t border-white/5">
+<section class="concepts-section bg-[#0a0a0b] py-16 sm:py-20 lg:py-28 px-6 border-t border-white/5">
 	<div class="max-w-[1320px] mx-auto">
 
 		<!-- Header -->
-		<div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-16">
-			<div>
-				<p class="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase mb-3">(03) Personal Research</p>
-				<h2 class="font-black tracking-tight text-white leading-[0.95]" style="font-size: clamp(2.25rem, 4vw + 1rem, 4rem);">
-					Concepts &<br/><span class="text-neutral-600">Explorations.</span>
-				</h2>
-			</div>
-			<p class="text-sm text-neutral-500 max-w-[32ch] leading-relaxed sm:text-right">
+		<div class="mb-16">
+			<Chip theme="dark" spin="always" class="concepts-chip mb-6" innerClass="px-6 py-2">
+				<span class="text-[11px] font-mono tracking-widest text-neutral-400 uppercase">Personal Research</span>
+			</Chip>
+			<h2 class="font-black tracking-tight text-white leading-[0.95] mt-6" style="font-size: clamp(2.25rem, 4vw + 1rem, 4rem);">
+				<span class="concepts-line block overflow-hidden"><span class="concepts-line-inner block">Concepts &amp;</span></span>
+				<span class="concepts-line block overflow-hidden"><span class="concepts-line-inner block"><span class="shimmer-dark">Explorations.</span></span></span>
+			</h2>
+			<p class="concepts-sub text-sm text-neutral-500 max-w-[48ch] leading-relaxed mt-5">
 				Self-initiated design research — ideas built to explore new problems, not client briefs.
 			</p>
 		</div>
@@ -715,31 +798,6 @@
 				</div>
 			</div>
 
-			<!-- Card 3 — Resort -->
-			<div role="link" tabindex="0" onclick={() => window.location.href='/work/resort-island-design'} onkeydown={(e) => e.key === 'Enter' && (window.location.href='/work/resort-island-design')} class="concept-card group relative flex flex-col p-8 bg-[#0a0a0b] hover:bg-[#091a1a] transition-colors duration-300 min-h-[300px] cursor-pointer overflow-hidden">
-				<div class="absolute top-0 left-0 w-[3px] h-full bg-[#0d9488] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-				<div class="absolute -top-8 -right-8 w-44 h-44 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" style="background: radial-gradient(circle, rgba(13,148,136,0.35) 0%, transparent 70%); filter: blur(28px);" aria-hidden="true"></div>
-				<div class="flex flex-col gap-3 flex-1 relative z-10">
-					<div class="flex items-center gap-2">
-						<span class="px-2 py-0.5 rounded-full bg-[#0d9488]/15 border border-[#0d9488]/25 text-[9px] font-mono tracking-widest text-[#2dd4bf] uppercase">Concept</span>
-						<span class="text-[9px] font-mono text-neutral-600">2021</span>
-					</div>
-					<h3 class="text-2xl md:text-3xl font-black tracking-tight text-white leading-tight group-hover:text-[#2dd4bf] transition-colors duration-200">Island Resort<br/>Experience</h3>
-					<p class="text-xs text-neutral-500 leading-relaxed mt-1">Booking interface + in-resort companion app with a warm sand + deep teal brand identity system.</p>
-				</div>
-				<div class="mt-6 flex flex-col gap-3 relative z-10">
-					<div class="flex flex-wrap gap-1.5">
-						{#each ['Hospitality', 'Brand Identity', 'Web Design'] as tag}
-							<span class="px-2 py-0.5 rounded-full bg-white/5 text-[9px] font-mono text-neutral-500 border border-white/5">{tag}</span>
-						{/each}
-					</div>
-					<div class="flex items-center gap-4">
-						<span class="flex items-center gap-1 text-[10px] font-mono text-neutral-500 group-hover:text-white transition-colors">View case <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></span>
-						<a href="https://www.behance.net/gallery/112078247/Resort-Design-(Based-on-island)" target="_blank" rel="noopener noreferrer" onclick={(e) => e.stopPropagation()} class="flex items-center gap-1 text-[10px] font-mono text-[#0d9488]/60 hover:text-[#2dd4bf] transition-colors">Behance ↗</a>
-					</div>
-				</div>
-			</div>
-
 			<!-- Card 4 — Alt News -->
 			<div role="link" tabindex="0" onclick={() => window.location.href='/work/alt-news-concept'} onkeydown={(e) => e.key === 'Enter' && (window.location.href='/work/alt-news-concept')} class="concept-card group relative flex flex-col p-8 bg-[#0a0a0b] hover:bg-[#1a1208] transition-colors duration-300 min-h-[300px] cursor-pointer overflow-hidden">
 				<div class="absolute top-0 left-0 w-[3px] h-full bg-[#f59e0b] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -790,19 +848,19 @@
 				</div>
 			</div>
 
-			<!-- Card 6 — Discord -->
-			<div role="link" tabindex="0" onclick={() => window.location.href='/work/discord-redesign'} onkeydown={(e) => e.key === 'Enter' && (window.location.href='/work/discord-redesign')} class="concept-card group relative flex flex-col p-8 bg-[#0a0a0b] hover:bg-[#0e0d1f] transition-colors duration-300 min-h-[300px] cursor-pointer overflow-hidden">
+			<!-- Card 6 — Discord (odd last card → full width) -->
+			<div role="link" tabindex="0" onclick={() => window.location.href='/work/discord-redesign'} onkeydown={(e) => e.key === 'Enter' && (window.location.href='/work/discord-redesign')} class="concept-card group relative flex flex-col md:flex-row md:items-center md:gap-16 p-8 bg-[#0a0a0b] hover:bg-[#0e0d1f] transition-colors duration-300 min-h-[300px] cursor-pointer overflow-hidden md:col-span-2">
 				<div class="absolute top-0 left-0 w-[3px] h-full bg-[#5865f2] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-				<div class="absolute -top-8 -right-8 w-44 h-44 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" style="background: radial-gradient(circle, rgba(88,101,242,0.35) 0%, transparent 70%); filter: blur(28px);" aria-hidden="true"></div>
+				<div class="absolute -top-8 -right-8 w-64 h-64 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" style="background: radial-gradient(circle, rgba(88,101,242,0.35) 0%, transparent 70%); filter: blur(40px);" aria-hidden="true"></div>
 				<div class="flex flex-col gap-3 flex-1 relative z-10">
 					<div class="flex items-center gap-2">
 						<span class="px-2 py-0.5 rounded-full bg-[#5865f2]/15 border border-[#5865f2]/25 text-[9px] font-mono tracking-widest text-[#818cf8] uppercase">Concept</span>
 						<span class="text-[9px] font-mono text-neutral-600">2021</span>
 					</div>
-					<h3 class="text-2xl md:text-3xl font-black tracking-tight text-white leading-tight group-hover:text-[#818cf8] transition-colors duration-200">Discord Redesign<br/>&amp; New Features</h3>
-					<p class="text-xs text-neutral-500 leading-relaxed mt-1">Cross-server activity feed, interest-based Stage discovery, and notification triage for power users in 10+ servers.</p>
+					<h3 class="text-2xl md:text-4xl font-black tracking-tight text-white leading-tight group-hover:text-[#818cf8] transition-colors duration-200">Discord Redesign<br/>&amp; New Features</h3>
+					<p class="text-xs md:text-sm text-neutral-500 leading-relaxed mt-1 max-w-[52ch]">Cross-server activity feed, interest-based Stage discovery, and notification triage for power users in 10+ servers.</p>
 				</div>
-				<div class="mt-6 flex flex-col gap-3 relative z-10">
+				<div class="mt-6 md:mt-0 flex flex-col gap-3 relative z-10 md:shrink-0">
 					<div class="flex flex-wrap gap-1.5">
 						{#each ['Social Platform', 'Cross-server UX', 'Product Design'] as tag}
 							<span class="px-2 py-0.5 rounded-full bg-white/5 text-[9px] font-mono text-neutral-500 border border-white/5">{tag}</span>
@@ -829,40 +887,21 @@
 		<!-- ======================================= -->
 		<!-- HEADER ROW -->
 		<!-- ======================================= -->
-		<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 mb-24">
-			<!-- Left Column: The Restored Chip -->
-			<div class="lg:col-span-3">
-				<div
-					class="mb-4 relative inline-flex overflow-hidden rounded-full p-[1px]"
-				>
-					<div
-						class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"
-					></div>
-					<div
-						class="inline-flex h-full w-full items-center justify-center rounded-full bg-neutral-950 px-6 py-2 relative z-10"
-					>
-						<span
-							class="text-[11px] font-mono tracking-widest text-gray-400 uppercase"
-							>CAPABILITIES</span
-						>
-					</div>
-				</div>
-			</div>
-
-			<!-- Right Column: Header Content -->
-			<div class="lg:col-span-9 max-w-2xl">
-				<h2
-					class="font-bold tracking-tighter text-white mb-6 leading-[1.1]"
-					style="font-size: clamp(2.5rem, 4vw + 1rem, 4.5rem);"
-				>
-					What I Do
-				</h2>
-				<p class="text-lg text-gray-400 leading-relaxed">
-					Combining UX strategy, pixel-perfect visual engineering, and
-					systematic responsive layouts to launch high-performance
-					digital solutions.
-				</p>
-			</div>
+		<div class="mb-24">
+			<Chip theme="dark" spin="always" class="caps-chip mb-6" innerClass="px-6 py-2">
+				<span class="text-[11px] font-mono tracking-widest text-gray-400 uppercase">Capabilities</span>
+			</Chip>
+			<h2
+				class="font-black tracking-tighter text-white mb-6 leading-[1.1] mt-6 overflow-hidden"
+				style="font-size: clamp(2.5rem, 4vw + 1rem, 4.5rem);"
+			>
+				<span class="caps-heading-inner block">What I <span class="shimmer-dark">Do</span></span>
+			</h2>
+			<p class="caps-desc text-lg text-gray-400 leading-relaxed max-w-2xl">
+				Combining UX strategy, pixel-perfect visual engineering, and
+				systematic responsive layouts to launch high-performance
+				digital solutions.
+			</p>
 		</div>
 
 		<!-- ======================================= -->
@@ -871,22 +910,22 @@
 		<div class="border-t border-gray-800">
 			{#each capabilities as cap}
 				<div
-					class="grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-16 py-8 lg:py-12 border-b border-gray-800 group hover:bg-white/2 transition-colors duration-300"
+					class="cap-row grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-16 py-8 md:py-12 border-b border-gray-800 group hover:bg-white/2 transition-colors duration-300"
 				>
-					<div class="lg:col-span-3 flex items-start lg:items-center">
+					<div class="md:col-span-3 flex items-start md:items-center">
 						<span
 							class="text-sm font-mono text-gray-600 group-hover:text-primary transition-colors duration-300"
 							>{cap.id}</span
 						>
 					</div>
-					<div class="lg:col-span-4 flex items-start lg:items-center">
+					<div class="md:col-span-4 flex items-start md:items-center">
 						<h3
 							class="text-3xl font-medium tracking-tight text-gray-300 group-hover:text-white transition-colors duration-300"
 						>
 							{cap.title}
 						</h3>
 					</div>
-					<div class="lg:col-span-5 flex items-start lg:items-center">
+					<div class="md:col-span-5 flex items-start md:items-center">
 						<p
 							class="text-gray-500 leading-relaxed group-hover:text-gray-400 transition-colors duration-300"
 						>
@@ -899,57 +938,8 @@
 	</div>
 </section>
 
-<!-- (06) PARTNER MARQUEE SECTION (Light Section) -->
-<section
-	data-theme="light"
-	class="py-16 sm:py-24 lg:py-32 bg-[#f4f4f6] border-t border-neutral-200/50"
->
-	<div
-		class="container mx-auto px-6 max-w-[1320px] grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12"
-	>
-		<div class="lg:col-span-1 flex flex-col justify-start">
-			<p class="text-[10px] font-mono tracking-[0.3em] text-neutral-400 uppercase mb-4">(06) Client Work</p>
-			<h2 class="text-3xl sm:text-4xl font-black tracking-tight text-black leading-[1.05] mb-4">
-				Built with<br/>Real Teams.
-			</h2>
-			<p class="text-sm text-gray-500 leading-relaxed max-w-[22ch]">Companies I've shipped production-grade product with — not mockups.</p>
-		</div>
-		<div class="lg:col-span-3">
-			<div class="bg-neutral-950 border border-white/5 rounded-3xl sm:rounded-[2.5rem] relative overflow-hidden shadow-2xl">
-				<div class="px-6 sm:px-10 pt-8 sm:pt-10 pb-5 sm:pb-6">
-					<p class="text-[10px] font-mono tracking-[0.2em] text-neutral-500 uppercase text-center">Trusted by teams at</p>
-				</div>
-				<!-- gap-px on a bg-white/5 grid creates thin hairline dividers between tiles -->
-				<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-px bg-white/5">
-					<div class="group flex flex-col gap-1.5 px-6 sm:px-8 py-5 bg-neutral-950 hover:bg-white/[0.04] transition-colors duration-300">
-						<span class="text-sm font-black tracking-[0.1em] text-white/70 uppercase group-hover:text-white transition-colors duration-300 cursor-default">WPMU DEV</span>
-						<span class="text-[9px] font-mono text-neutral-600 tracking-widest uppercase">Plugin Ecosystem · 7yr</span>
-					</div>
-					<div class="group flex flex-col gap-1.5 px-6 sm:px-8 py-5 bg-neutral-950 hover:bg-white/[0.04] transition-colors duration-300">
-						<span class="text-sm font-black tracking-[0.1em] text-white/70 uppercase group-hover:text-white transition-colors duration-300 cursor-default">Themeisle</span>
-						<span class="text-[9px] font-mono text-neutral-600 tracking-widest uppercase">Starter Templates · 2yr</span>
-					</div>
-					<div class="group flex flex-col gap-1.5 px-6 sm:px-8 py-5 bg-neutral-950 hover:bg-white/[0.04] transition-colors duration-300">
-						<span class="text-sm font-black tracking-[0.1em] text-white/70 uppercase group-hover:text-white transition-colors duration-300 cursor-default">Ideajam</span>
-						<span class="text-[9px] font-mono text-neutral-600 tracking-widest uppercase">Kanban SaaS · UX Lead</span>
-					</div>
-					<div class="group flex flex-col gap-1.5 px-6 sm:px-8 py-5 bg-neutral-950 hover:bg-white/[0.04] transition-colors duration-300">
-						<span class="text-sm font-black tracking-[0.1em] text-white/70 uppercase group-hover:text-white transition-colors duration-300 cursor-default">Eclectic</span>
-						<span class="text-[9px] font-mono text-neutral-600 tracking-widest uppercase">Media Platform · Product</span>
-					</div>
-					<div class="group flex flex-col gap-1.5 px-6 sm:px-8 py-5 bg-neutral-950 hover:bg-white/[0.04] transition-colors duration-300">
-						<span class="text-sm font-black tracking-[0.1em] text-white/70 uppercase group-hover:text-white transition-colors duration-300 cursor-default">Searchmetrics</span>
-						<span class="text-[9px] font-mono text-neutral-600 tracking-widest uppercase">SEO Analytics · Contract</span>
-					</div>
-					<div class="group flex flex-col gap-1.5 px-6 sm:px-8 py-5 bg-neutral-950 hover:bg-white/[0.04] transition-colors duration-300">
-						<span class="text-sm font-black tracking-[0.1em] text-white/70 uppercase group-hover:text-white transition-colors duration-300 cursor-default">SomeTechWork</span>
-						<span class="text-[9px] font-mono text-neutral-600 tracking-widest uppercase">Tech Design · Contract</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
+<!-- (06) CLIENT WORK / PARTNER SECTION -->
+<PartnerRosterC />
 
 <!-- (08) GET IN TOUCH (CONTACT FORM SECTION - Dark Section) -->
 <section
@@ -963,10 +953,10 @@
 		<!-- ======================================= -->
 		<div class="flex flex-col max-w-5xl">
 			<div
-				class="-ml-[25px] mb-8 self-start relative inline-flex overflow-hidden rounded-full p-[1px]"
+				class="contact-chip mb-8 self-start relative inline-flex overflow-hidden rounded-full p-[1px]"
 			>
 				<div
-					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)]"
+					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(255,255,255,0.65)_360deg)]"
 				></div>
 				<div
 					class="inline-flex h-full w-full items-center justify-center rounded-full bg-[#050505] px-6 py-2.5 relative z-10"
@@ -978,16 +968,17 @@
 				</div>
 			</div>
 			<h2
-				class="font-bold tracking-tighter text-white mb-8 leading-[1.1]"
+				class="font-black tracking-tighter text-white mb-8 leading-[1.1]"
 				style="font-size: clamp(2.5rem, 4vw + 1rem, 4.5rem);"
 			>
-				Let’s Start Something Meaningful
+				<span class="contact-line block overflow-hidden"><span class="contact-line-inner block">Let’s Start Something</span></span>
+				<span class="contact-line block overflow-hidden"><span class="contact-line-inner block"><span class="shimmer-dark">Meaningful</span></span></span>
 			</h2>
 			<p
-				class="text-xl md:text-2xl text-gray-300 leading-relaxed max-w-4xl"
+				class="contact-desc text-xl md:text-2xl text-gray-300 leading-relaxed max-w-4xl"
 			>
 				Have a project in mind or just an idea taking shape? Tell me
-				where you are. I'll take it from there.
+				where you are. I’ll take it from there.
 			</p>
 
 			<!-- Mathematical Horizontal Divider -->
@@ -1043,7 +1034,7 @@
 				href="https://form.typeform.com/to/qKlWDcaw"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="group/card relative block overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)]"
+				class="contact-card group/card relative block overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)]"
 			>
 				<!-- Default subtle border -->
 				<div
@@ -1052,7 +1043,7 @@
 
 				<!-- Animated spinning border -->
 				<div
-					class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
+					class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(255,255,255,0.65)_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
 				></div>
 
 				<!-- Inner Card Surface -->
@@ -1065,7 +1056,7 @@
 					></div>
 
 					<div
-						class="relative z-10 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-6 text-primary shrink-0"
+						class="relative z-10 w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-6 text-white shrink-0"
 					>
 						<svg
 							class="w-5 h-5"
@@ -1092,7 +1083,7 @@
 						requirements for a precise technical quote.
 					</p>
 					<div
-						class="relative z-10 flex items-center text-primary text-sm font-bold tracking-widest uppercase mt-auto"
+						class="relative z-10 flex items-center text-white text-sm font-bold tracking-widest uppercase mt-auto"
 					>
 						Start Brief
 						<svg
@@ -1116,7 +1107,7 @@
 				href="https://calendly.com/phantomcluster/30min"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="group/card relative block overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)]"
+				class="contact-card group/card relative block overflow-hidden rounded-3xl p-[1px] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)]"
 			>
 				<!-- Default subtle border -->
 				<div
@@ -1125,7 +1116,7 @@
 
 				<!-- Animated spinning border -->
 				<div
-					class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#D1D5DB_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
+					class="absolute inset-[-1000%] motion-safe:animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(255,255,255,0.65)_360deg)] opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"
 				></div>
 
 				<!-- Inner Card Surface -->
@@ -1204,5 +1195,45 @@
 		100% {
 			transform: translateX(-50%);
 		}
+	}
+
+	/* ── Shimmer wipe — mirrors CaseStudyBento stat-hero approach ── */
+	@keyframes shimmer-sweep {
+		0%   { background-position: 200% center; }
+		100% { background-position: -200% center; }
+	}
+
+	/* Grey shimmer for dark backgrounds: dim grey → silver → dim grey */
+	.shimmer-dark {
+		background: linear-gradient(
+			105deg,
+			rgba(80,80,80,1)   0%,
+			rgba(165,165,165,1) 28%,
+			rgba(100,100,100,1) 50%,
+			rgba(165,165,165,1) 72%,
+			rgba(80,80,80,1)   100%
+		);
+		background-size: 220% auto;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		animation: shimmer-sweep 5s linear infinite;
+	}
+
+	/* Grey shimmer for light backgrounds: mid-grey → light-grey gleam → mid-grey */
+	.shimmer-light {
+		background: linear-gradient(
+			105deg,
+			rgba(130,130,130,1)  0%,
+			rgba(175,175,175,1)  28%,
+			rgba(140,140,140,1)  50%,
+			rgba(175,175,175,1)  72%,
+			rgba(130,130,130,1)  100%
+		);
+		background-size: 220% auto;
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		animation: shimmer-sweep 5s linear infinite;
 	}
 </style>

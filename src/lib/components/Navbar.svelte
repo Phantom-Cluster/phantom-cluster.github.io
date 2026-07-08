@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { afterNavigate } from '$app/navigation';
 	import { navTheme } from '$lib/stores/navTheme';
+	import { openNavDropdown } from '$lib/stores/navDropdown';
 
 	// observedTheme: driven by IntersectionObserver (fallback for all pages)
 	// $navTheme: driven by GSAP onUpdate when a page sets it explicitly (frame-accurate)
@@ -10,6 +11,7 @@
 	const currentTheme = $derived($navTheme ?? observedTheme);
 
 	let isOpen = $state(false);
+	let mobileExpanded = $state<'projects' | 'lab' | null>(null);
 	let capsuleEl = $state<HTMLElement | null>(null);
 	let observer: IntersectionObserver | null = null;
 
@@ -48,6 +50,15 @@
 		return () => { if (observer) observer.disconnect(); };
 	});
 
+	// When another component sets openNavDropdown, open the requested dropdown.
+	$effect(() => {
+		const k = $openNavDropdown;
+		if (k) {
+			ddClick(k);
+			openNavDropdown.set(null);
+		}
+	});
+
 	function handleMouseMove(e: MouseEvent) {
 		if (!capsuleEl) return;
 		const rect = capsuleEl.getBoundingClientRect();
@@ -78,17 +89,12 @@
 			: 'text-gray-700 bg-black/5 hover:bg-black/10 hover:text-black'
 	);
 
-	const navLinks = [
-		{ name: 'About', href: '/about' },
-		{ name: 'Contact', href: '/#contact' }
-	];
-
 	// ── Dropdown data ────────────────────────────────────────────────────────
 	const mainProjects = [
-		{ title: 'WPMU DEV Dashboard', sub: 'Design System · 2024', slug: 'wpmu-dev-dashboard', dot: '#2244CC' },
-		{ title: 'Ideajam Kanban', sub: 'SaaS Redesign · 2024', slug: 'ideajam-kanban-saas', dot: '#e0533c' },
-		{ title: 'Eclectic App', sub: 'Travel Tours · 2024', slug: 'eclectic-app-design', dot: '#14b8a6' },
-		{ title: 'Neve Templates', sub: 'WordPress · 2023', slug: 'themeisle-starter-templates', dot: '#3b82f6' },
+		{ title: 'WPMU DEV Dashboard', sub: 'Design System', slug: 'wpmu-dev-dashboard', dot: '#2244CC' },
+		{ title: 'Ideajam Kanban', sub: 'SaaS Redesign', slug: 'ideajam-kanban-saas', dot: '#e0533c' },
+		{ title: 'Eclectic App', sub: 'Travel & Tours', slug: 'eclectic-app-design', dot: '#14b8a6' },
+		{ title: 'Neve Templates', sub: 'WordPress', slug: 'themeisle-starter-templates', dot: '#3b82f6' },
 	];
 
 	const conceptProjects = [
@@ -97,7 +103,6 @@
 		{ title: 'WordPress Admin', year: '2020', slug: 'wordpress-redesign' },
 		{ title: 'Discord Redesign', year: '2020', slug: 'discord-redesign' },
 		{ title: 'Alt News Concept', year: '2020', slug: 'alt-news-concept' },
-		{ title: 'Island Resort', year: '2020', slug: 'resort-island-design' },
 	];
 
 	// ── Dropdown state ───────────────────────────────────────────────────────
@@ -336,17 +341,90 @@
 		</div>
 
 		<!-- Center Links Stack -->
-		<nav class="flex flex-col gap-6 my-auto">
-			{#each navLinks as link, index}
-				<a
-					href={link.href}
-					class="text-4xl md:text-6xl font-bold tracking-tighter text-white hover:text-primary transition-colors flex items-center gap-4"
-					onclick={() => (isOpen = false)}
-				>
-					<span class="text-xs font-mono text-neutral-600">0{index + 1}</span>
-					{link.name}
-				</a>
-			{/each}
+		<nav class="flex flex-col gap-1 my-auto">
+
+			<!-- Projects accordion -->
+			<button
+				type="button"
+				onclick={() => mobileExpanded = mobileExpanded === 'projects' ? null : 'projects'}
+				class="flex items-center justify-between w-full text-4xl font-bold tracking-tighter text-white py-3 hover:text-primary transition-colors"
+			>
+				<span class="flex items-center gap-4">
+					<span class="text-xs font-mono text-neutral-600">01</span>
+					Projects
+				</span>
+				<svg class="w-5 h-5 opacity-40 transition-transform duration-300 {mobileExpanded === 'projects' ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+				</svg>
+			</button>
+			{#if mobileExpanded === 'projects'}
+				<div class="flex flex-col gap-0 pl-10 mb-2">
+					{#each mainProjects as p}
+						<a
+							href="/work/{p.slug}"
+							onclick={() => { isOpen = false; mobileExpanded = null; }}
+							class="flex items-center gap-3 py-3 border-b border-white/5 last:border-0 group"
+						>
+							<span class="w-2 h-2 rounded-full shrink-0" style="background:{p.dot}"></span>
+							<div class="flex-1 min-w-0">
+								<span class="block text-base font-bold text-white/90 group-hover:text-white transition-colors">{p.title}</span>
+								<span class="block text-[10px] font-mono text-neutral-500 uppercase tracking-widest mt-0.5">{p.sub}</span>
+							</div>
+							<svg class="w-4 h-4 text-white/20 group-hover:text-white/50 transition-colors shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 18l6-6-6-6"/>
+							</svg>
+						</a>
+					{/each}
+				</div>
+			{/if}
+
+			<!-- Lab accordion -->
+			<button
+				type="button"
+				onclick={() => mobileExpanded = mobileExpanded === 'lab' ? null : 'lab'}
+				class="flex items-center justify-between w-full text-4xl font-bold tracking-tighter text-white py-3 hover:text-primary transition-colors"
+			>
+				<span class="flex items-center gap-4">
+					<span class="text-xs font-mono text-neutral-600">02</span>
+					Lab
+				</span>
+				<svg class="w-5 h-5 opacity-40 transition-transform duration-300 {mobileExpanded === 'lab' ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+				</svg>
+			</button>
+			{#if mobileExpanded === 'lab'}
+				<div class="flex flex-col gap-0 pl-10 mb-2">
+					{#each conceptProjects as p}
+						<a
+							href="/work/{p.slug}"
+							onclick={() => { isOpen = false; mobileExpanded = null; }}
+							class="flex items-center justify-between py-3 border-b border-white/5 last:border-0 group"
+						>
+							<span class="text-base font-bold text-white/90 group-hover:text-white transition-colors">{p.title}</span>
+							<span class="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">{p.year}</span>
+						</a>
+					{/each}
+				</div>
+			{/if}
+
+			<!-- About & Contact -->
+			<a
+				href="/about"
+				class="text-4xl font-bold tracking-tighter text-white py-3 hover:text-primary transition-colors flex items-center gap-4"
+				onclick={() => (isOpen = false)}
+			>
+				<span class="text-xs font-mono text-neutral-600">03</span>
+				About
+			</a>
+			<a
+				href="/#contact"
+				class="text-4xl font-bold tracking-tighter text-white py-3 hover:text-primary transition-colors flex items-center gap-4"
+				onclick={() => (isOpen = false)}
+			>
+				<span class="text-xs font-mono text-neutral-600">04</span>
+				Contact
+			</a>
+
 		</nav>
 
 		<!-- Bottom Details: Social Icons -->

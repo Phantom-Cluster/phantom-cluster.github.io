@@ -5,6 +5,8 @@
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 	import { navTheme } from '$lib/stores/navTheme';
 	import CsImageCard from '$lib/components/CsImageCard.svelte';
+	import LightboxModal from '$lib/components/LightboxModal.svelte';
+	import ExploreProjectComponent from '$lib/components/ExploreProjectComponent.svelte';
 
 	let { data }: { data: PageData } = $props();
 	let project = $derived(data.project);
@@ -35,9 +37,6 @@
 		gsap.registerPlugin(ScrollTrigger);
 
 		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-		const handleKeydown = (e: KeyboardEvent) => { if (e.key === 'Escape') modalImg = null; };
-		window.addEventListener('keydown', handleKeydown);
 
 		const metricsObs = new IntersectionObserver(
 			([entry]) => { if (entry.isIntersecting) { metricsVisible = true; metricsObs.disconnect(); } },
@@ -136,11 +135,7 @@
 			ScrollTrigger.refresh();
 		}, 400);
 
-		return () => {
-			clearTimeout(t);
-			window.removeEventListener('keydown', handleKeydown);
-			metricsObs.disconnect();
-		};
+		return () => { clearTimeout(t); metricsObs.disconnect(); };
 	});
 
 	onDestroy(() => {
@@ -384,32 +379,6 @@
 		animation: token-build 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 	}
 
-	/* ── Lightbox modal ──────────────────────────────────────────────── */
-	.img-modal-backdrop {
-		position: fixed;
-		inset: 0;
-		z-index: 9999;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: rgba(0, 0, 0, 0.92);
-		backdrop-filter: blur(10px);
-		animation: modal-fade-in 0.18s ease;
-	}
-	@keyframes modal-fade-in {
-		from { opacity: 0; }
-		to   { opacity: 1; }
-	}
-	.img-modal-inner {
-		position: relative;
-		max-width: 92vw;
-		max-height: 92vh;
-		animation: modal-scale-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-	}
-	@keyframes modal-scale-in {
-		from { transform: scale(0.94); opacity: 0; }
-		to   { transform: scale(1);    opacity: 1; }
-	}
 </style>
 
 <svelte:head>
@@ -427,7 +396,7 @@
 			<!-- Top meta strip -->
 			<div class="flex items-center justify-between border-b border-neutral-200 pb-5 mb-12 cs-hero-element">
 				<div class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
-					<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,#2244CC_360deg)]"></div>
+					<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(0,0,0,0.75)_360deg)]"></div>
 					<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
 						<span class="text-[11px] font-mono tracking-widest text-neutral-500 uppercase">Case Study — Kanban SaaS Redesign</span>
 					</div>
@@ -1318,7 +1287,7 @@
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-white/5 pt-10">
 
 							<!-- Lesson 1: Scoring overload -->
-							<div class="bg-white/[0.03] rounded-2xl p-7 border border-white/5 flex flex-col">
+							<div class="bg-white/3 rounded-2xl p-7 border border-white/5 flex flex-col">
 								<div class="flex items-center gap-2 mb-5">
 									<div class="w-1.5 h-1.5 rounded-full bg-portfolio-error shrink-0"></div>
 									<span class="text-[8px] font-mono tracking-[0.3em] text-portfolio-error/70 uppercase">What shipped</span>
@@ -1335,7 +1304,7 @@
 							</div>
 
 							<!-- Lesson 2: Late-stage design sequence -->
-							<div class="bg-white/[0.03] rounded-2xl p-7 border border-white/5 flex flex-col">
+							<div class="bg-white/3 rounded-2xl p-7 border border-white/5 flex flex-col">
 								<div class="flex items-center gap-2 mb-5">
 									<div class="w-1.5 h-1.5 rounded-full bg-portfolio-error shrink-0"></div>
 									<span class="text-[8px] font-mono tracking-[0.3em] text-portfolio-error/70 uppercase">Design sequence regret</span>
@@ -1361,39 +1330,6 @@
 
 </div>
 
-<!-- ── Image lightbox modal ─────────────────────────────────────────────── -->
-{#if modalImg}
-	<div
-		class="img-modal-backdrop"
-		role="dialog"
-		aria-modal="true"
-		aria-label="Image preview"
-		onclick={() => modalImg = null}
-		onkeydown={(e) => e.key === 'Escape' && (modalImg = null)}
-		tabindex="-1"
-	>
-		<div
-			class="img-modal-inner"
-			onclick={(e) => e.stopPropagation()}
-			role="presentation"
-		>
-			<img
-				src={modalImg.src}
-				alt={modalImg.alt}
-				class="max-w-full max-h-[85vh] w-auto object-contain rounded-2xl"
-				style="box-shadow: 0 32px 100px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.06);"
-			/>
-			<button
-				type="button"
-				onclick={() => modalImg = null}
-				class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors backdrop-blur-sm"
-				aria-label="Close preview"
-			>
-				<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
-				</svg>
-			</button>
-			<p class="text-center text-[10px] text-white/30 font-mono tracking-wider mt-3">Click outside or press Esc to close</p>
-		</div>
-	</div>
-{/if}
+<LightboxModal bind:modalImg />
+
+<ExploreProjectComponent currentSlug="ideajam-kanban-saas" />
