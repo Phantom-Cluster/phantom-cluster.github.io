@@ -1,4 +1,42 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { gsap } from 'gsap';
+	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+	let sectionEl: HTMLElement;
+	let ctx: gsap.Context;
+
+	onMount(() => {
+		gsap.registerPlugin(ScrollTrigger);
+		const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (rm) return;
+
+		ctx = gsap.context(() => {
+			gsap.set('.sc-line-inner', { yPercent: 110 });
+			gsap.set('.sc-eyebrow', { opacity: 0, y: 14 });
+			gsap.set('.sc-chips', { opacity: 0, y: 12 });
+			gsap.set('.sc-ledger-col', { opacity: 0, y: 24 });
+
+			gsap.timeline({ scrollTrigger: { trigger: sectionEl, start: 'top 78%', once: true } })
+				.to('.sc-eyebrow', { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' })
+				.to('.sc-line-inner', { yPercent: 0, duration: 0.9, stagger: 0.09, ease: 'power4.out' }, '-=0.25')
+				.to('.sc-chips', { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.5')
+				.to('.sc-ledger-col', { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: 'power3.out' }, '-=0.35');
+
+			const videoWraps = Array.from(sectionEl.querySelectorAll<HTMLElement>('.sc-video-wrap'));
+			gsap.set(videoWraps, { opacity: 0, y: 28, scale: 0.97 });
+			videoWraps.forEach((wrap, i) => {
+				gsap.to(wrap, {
+					opacity: 1, y: 0, scale: 1, duration: 0.65, ease: 'power3.out',
+					delay: i * 0.08,
+					scrollTrigger: { trigger: wrap, start: 'top 88%', once: true },
+				});
+			});
+		}, sectionEl);
+
+		return () => ctx?.revert();
+	});
+
 	// ── 3 × fully independent video state ────────────────────────────────────
 	let video1El: HTMLVideoElement;
 	let video2El: HTMLVideoElement;
@@ -74,18 +112,18 @@
 	.text-glow { animation: text-glow 4s cubic-bezier(0.45,0,0.55,1) infinite; }
 </style>
 
-<section class="w-full bg-white pt-24 pb-20 overflow-x-hidden">
+<section bind:this={sectionEl} class="w-full bg-white pt-24 pb-20 overflow-x-hidden">
 	<div class="max-w-7xl mx-auto px-4 md:px-6">
 
 		<!-- ── Row 1: Title LEFT / Chips RIGHT ───────────────────────────── -->
-		<p class="text-[10px] font-mono tracking-[0.35em] text-neutral-400 uppercase mb-4">Performance Optimization</p>
+		<p class="sc-eyebrow text-[10px] font-mono tracking-[0.35em] text-neutral-400 uppercase mb-4">Performance Optimization</p>
 		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12">
-			<h2 class="text-[clamp(2.4rem,6vw,4.5rem)] font-black tracking-tight text-gray-900 leading-none">
-				Critical.<br/>
-				<span class="text-neutral-300">Fast.</span><br/>
-				Clean.
+			<h2 class="text-[clamp(2.4rem,6vw,4.5rem)] font-black tracking-tight text-gray-900 leading-[1.10]">
+				<span class="block overflow-hidden pb-[0.08em] mb-[-0.2em]"><span class="sc-line-inner block">Critical.</span></span>
+				<span class="block overflow-hidden pb-[0.08em] mb-[-0.2em]"><span class="sc-line-inner block text-neutral-300">Fast.</span></span>
+				<span class="block overflow-hidden pb-[0.08em]"><span class="sc-line-inner block">Clean.</span></span>
 			</h2>
-			<div class="flex flex-row sm:flex-col items-center sm:items-end gap-2 shrink-0 flex-wrap">
+			<div class="sc-chips flex flex-row sm:flex-col items-center sm:items-end gap-2 shrink-0 flex-wrap">
 				<div class="relative">
 					<span class="px-3 py-1.5 bg-gray-100 text-gray-500 text-[10px] font-mono uppercase tracking-widest rounded-full block">Critical CSS</span>
 					<span class="absolute -top-2 -right-1 bg-neutral-900 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none">NEW</span>
@@ -102,7 +140,7 @@
 		<div class="grid grid-cols-1 md:grid-cols-[1fr_1fr_1.6fr] border-t border-b border-gray-200 mb-0">
 
 			<!-- Col 1 — Page Load Speed -->
-			<div class="py-10 md:pr-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
+			<div class="sc-ledger-col py-10 md:pr-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
 				<span class="text-[10px] font-mono tracking-[0.18em] text-gray-500 uppercase block mb-4">Page Load Speed</span>
 				<div>
 					<div class="flex items-baseline leading-none mb-3">
@@ -117,7 +155,7 @@
 			</div>
 
 			<!-- Col 2 — Performance Gain -->
-			<div class="py-10 md:px-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
+			<div class="sc-ledger-col py-10 md:px-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
 				<span class="text-[10px] font-mono tracking-[0.18em] text-gray-500 uppercase block mb-4">Performance Gain</span>
 				<div>
 					<div class="flex items-baseline leading-none mb-3">
@@ -131,7 +169,7 @@
 			</div>
 
 			<!-- Col 3 — Body copy -->
-			<div class="py-10 md:pl-10 flex flex-col justify-center">
+			<div class="sc-ledger-col py-10 md:pl-10 flex flex-col justify-center">
 				<p class="text-lg md:text-xl text-gray-600 leading-relaxed mb-5">
 					Users were confused about which optimizations were active. We redesigned Hummingbird to show live status inline with every feature — Critical CSS, Delay JS, Asset Optimization — so the interface answers the question before anyone thinks to ask it.
 				</p>
@@ -146,7 +184,7 @@
 
 	<!-- ── VIDEO 1: Hummingbird SUI 3 ───────────────────────────── -->
 	<div class="max-w-7xl mx-auto px-4 md:px-6 mt-12">
-		<div class="bg-transparent rounded-3xl border border-neutral-300/70
+		<div class="sc-video-wrap bg-transparent rounded-3xl border border-neutral-300/70
 		            shadow-[0_12px_48px_rgba(0,0,0,0.11),0_2px_8px_rgba(0,0,0,0.05)]
 		            p-2">
 			<div class="relative overflow-hidden rounded-2xl bg-black group"
@@ -170,7 +208,6 @@
 					class="w-full h-auto object-cover aspect-video cursor-pointer transform-gpu will-change-transform"
 					playsinline
 					preload="metadata"
-					decoding="async"
 					muted
 					onclick={toggle1}
 				></video>
@@ -356,7 +393,7 @@
 			<!-- Left — Video 2: Figma Prototype -->
 			<div>
 				<p class="text-xs font-mono tracking-widest text-gray-500 mb-4">01 // Figma Design · CSS Info &amp; Tags</p>
-				<div class="bg-transparent rounded-3xl border border-neutral-300/70
+				<div class="sc-video-wrap bg-transparent rounded-3xl border border-neutral-300/70
 				            shadow-[0_12px_48px_rgba(0,0,0,0.11),0_2px_8px_rgba(0,0,0,0.05)]
 				            p-2">
 					<div class="relative overflow-hidden rounded-2xl bg-black group"
@@ -380,7 +417,6 @@
 							class="w-full h-auto object-cover aspect-video cursor-pointer transform-gpu will-change-transform"
 							playsinline
 							preload="metadata"
-							decoding="async"
 							muted
 							onclick={toggle2}
 						></video>
@@ -426,7 +462,7 @@
 			<!-- Right — Video 3: Live SUI 2 Beta -->
 			<div>
 				<p class="text-xs font-mono tracking-widest text-gray-500 mb-4">02 // Live Beta · Critical CSS SUI&nbsp;2</p>
-				<div class="bg-transparent rounded-3xl border border-neutral-300/70
+				<div class="sc-video-wrap bg-transparent rounded-3xl border border-neutral-300/70
 				            shadow-[0_12px_48px_rgba(0,0,0,0.11),0_2px_8px_rgba(0,0,0,0.05)]
 				            p-2">
 					<div class="relative overflow-hidden rounded-2xl bg-black group"
@@ -450,7 +486,6 @@
 							class="w-full h-auto object-cover aspect-video cursor-pointer transform-gpu will-change-transform"
 							playsinline
 							preload="metadata"
-							decoding="async"
 							muted
 							onclick={toggle3}
 						></video>

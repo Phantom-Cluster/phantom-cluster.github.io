@@ -39,13 +39,13 @@
   --radius-bento: 2.5rem;
 
   /* ── Portfolio Design System Tokens ─────────────────────────────── */
-  --color-portfolio-base:    #050505;
-  --color-portfolio-surface: #0A0A0A;
-  --color-portfolio-border:  #222222;
-  --color-portfolio-accent:       #6B7280;  /* neutral-500 — UI chrome, arrows on light bg */
-  --color-portfolio-accent-vivid: #9CA3AF;  /* neutral-400 — hypothesis labels, pulse dots */
-  --color-portfolio-accent-deep:  #3D4E63;
-  --color-portfolio-success: #00E676;   /* 12.4:1 on dark — electric mint, never use on white */
+  --color-portfolio-base:    #0E0D0C;
+  --color-portfolio-surface: #1B1916;
+  --color-portfolio-border:  #2C2824;
+  --color-portfolio-accent:       #C8502A;  /* burnt sienna — arrows, UI marks on light bg */
+  --color-portfolio-accent-vivid: #E05E32;  /* lighter sienna — hover / pulse dots */
+  --color-portfolio-accent-deep:  #9E3D1E;
+  --color-portfolio-success: #00E676;   /* electric mint — 12.4:1 on dark, never use on white */
   --color-portfolio-error:   #FF3B30;
 
   --font-sans: 'Geist', 'Satoshi', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -55,9 +55,9 @@
 @layer base {
   :root {
     /* Premium High-Contrast Light mode by default */
-    --background: #f4f4f6; /* Off-white gray */
-    --foreground: #09090b; /* Zinc 950 */
-    --card: #ffffff;
+    --background: #F4F0E8; /* Warm parchment */
+    --foreground: #1B1916; /* Warm near-black */
+    --card: #FDFAF5;
     --card-foreground: #09090b;
     --popover: #ffffff;
     --popover-foreground: #09090b;

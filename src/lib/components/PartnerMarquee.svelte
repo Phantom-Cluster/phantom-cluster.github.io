@@ -1,6 +1,6 @@
 <section
 	data-theme="light"
-	class="py-20 overflow-hidden border-y border-neutral-200/50 bg-[#f4f4f6] flex flex-col items-center"
+	class="py-20 overflow-hidden border-y border-neutral-200/50 bg-[#F4F0E8] flex flex-col items-center"
 >
 	<!-- Animated Stroke Pill -->
 	<div

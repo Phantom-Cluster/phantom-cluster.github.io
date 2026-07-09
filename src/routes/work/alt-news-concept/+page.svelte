@@ -50,19 +50,20 @@
 		gsap.registerPlugin(ScrollTrigger);
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#000000', color: '#ffffff', ease: 'none',
-					scrollTrigger: { trigger: bentoTriggerEl, start: 'top 90%', end: 'top 60%', scrub: true,
-						onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light') }
+				ScrollTrigger.create({
+					trigger: bentoTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
 				});
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#ffffff', color: '#171717', ease: 'none', immediateRender: false,
-					scrollTrigger: { trigger: editorialTriggerEl, start: 'top 90%', end: 'top 60%', scrub: true,
-						onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark') }
+				ScrollTrigger.create({
+					trigger: editorialTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
 				});
 				gsap.from('.cs-hero-element', { y: 40, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out' });
-				gsap.utils.toArray('.cs-fade-up').forEach((el: any) => {
-					gsap.from(el, { y: 40, opacity: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
+				gsap.set('.cs-fade-up', { y: 40, opacity: 0 });
+				ScrollTrigger.batch('.cs-fade-up', {
+					start: 'top 85%',
+					onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.8, stagger: 0.08, ease: 'power3.out' }),
+					once: true
 				});
 			});
 		}, 400);
@@ -268,7 +269,7 @@
 						bind:duration
 						src="/images/projects/alt-news/Alt%20News%20-%20Figma.mp4"
 						class="w-full aspect-video object-cover block cursor-pointer"
-						playsinline preload="metadata"
+						autoplay loop muted playsinline preload="metadata"
 						onclick={togglePlay}
 					></video>
 
@@ -341,8 +342,8 @@
 			</div>
 			<div class="bg-neutral-100 rounded-3xl p-4 lg:p-5">
 				<p class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase mb-3 pl-1">Homepage — Hero Section</p>
-				<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/alt-news/Hero%20.png', 'Homepage Hero')} aria-label="View homepage hero">
-					<img src="/images/projects/alt-news/Hero%20.png" alt="Homepage Hero" class="w-full block" loading="lazy" />
+				<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/alt-news/Hero%20.webp', 'Homepage Hero')} aria-label="View homepage hero">
+					<img src="/images/projects/alt-news/thumbs/Hero%20.webp" alt="Homepage Hero" class="w-full block" loading="lazy" decoding="async" />
 					<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 					<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 				</button>
@@ -374,8 +375,8 @@
 			</div>
 			<div class="bg-neutral-900 rounded-3xl p-4 lg:p-5 border border-white/5">
 				<p class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase mb-3 pl-1">Trending News Section</p>
-				<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/alt-news/Trending%20news%20section.png', 'Trending News Section')} aria-label="View trending news section">
-					<img src="/images/projects/alt-news/Trending%20news%20section.png" alt="Trending News Section" class="w-full block" loading="lazy" />
+				<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/alt-news/Trending%20news%20section.webp', 'Trending News Section')} aria-label="View trending news section">
+					<img src="/images/projects/alt-news/thumbs/Trending%20news%20section.webp" alt="Trending News Section" class="w-full block" loading="lazy" decoding="async" />
 					<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 					<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 				</button>
@@ -407,8 +408,8 @@
 			</div>
 			<div class="bg-neutral-100 rounded-3xl p-4 lg:p-5">
 				<p class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase mb-3 pl-1">Latest News + Newsletter Sidebar</p>
-				<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/alt-news/Auto-sorted%20latest%20news.png', 'Latest News Section')} aria-label="View latest news section">
-					<img src="/images/projects/alt-news/Auto-sorted%20latest%20news.png" alt="Latest News Section" class="w-full block" loading="lazy" />
+				<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/alt-news/Auto-sorted%20latest%20news.webp', 'Latest News Section')} aria-label="View latest news section">
+					<img src="/images/projects/alt-news/thumbs/Auto-sorted%20latest%20news.webp" alt="Latest News Section" class="w-full block" loading="lazy" decoding="async" />
 					<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 					<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 				</button>
@@ -442,8 +443,8 @@
 				</div>
 				<div class="bg-neutral-900 rounded-3xl p-4 lg:p-5 border border-white/5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase mb-3 pl-1">Videos Section</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/alt-news/Videos%20section.png', 'Videos Section')} aria-label="View videos section">
-						<img src="/images/projects/alt-news/Videos%20section.png" alt="Videos Section" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/alt-news/Videos%20section.webp', 'Videos Section')} aria-label="View videos section">
+						<img src="/images/projects/alt-news/thumbs/Videos%20section.webp" alt="Videos Section" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
@@ -472,8 +473,8 @@
 				</div>
 				<div class="bg-neutral-900 rounded-3xl p-4 lg:p-5 border border-white/5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase mb-3 pl-1">Footer — Category Discovery</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/alt-news/Footer.png', 'Footer — Category Discovery')} aria-label="View footer">
-						<img src="/images/projects/alt-news/Footer.png" alt="Footer — Category Discovery" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/alt-news/Footer.webp', 'Footer — Category Discovery')} aria-label="View footer">
+						<img src="/images/projects/alt-news/thumbs/Footer.webp" alt="Footer — Category Discovery" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
@@ -688,4 +689,10 @@
 		opacity: 0; transform: scale(0.85); transition: opacity 0.2s ease, transform 0.2s ease;
 	}
 	.img-trigger:hover .img-expand-icon { opacity: 1; transform: scale(1); }
+
+	/* Touch screens: show video controls always, hide hover-only hint */
+	@media (pointer: coarse) {
+		.an-video-card .absolute.bottom-4 { opacity: 1 !important; transform: translateY(0) !important; }
+		.an-video-card .pointer-events-none { display: none; }
+	}
 </style>

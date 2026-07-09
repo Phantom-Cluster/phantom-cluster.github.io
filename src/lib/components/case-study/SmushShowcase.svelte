@@ -1,4 +1,42 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { gsap } from 'gsap';
+	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+	let sectionEl: HTMLElement;
+	let ctx: gsap.Context;
+
+	onMount(() => {
+		gsap.registerPlugin(ScrollTrigger);
+		const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (rm) return;
+
+		ctx = gsap.context(() => {
+			gsap.set('.sc-line-inner', { yPercent: 110 });
+			gsap.set('.sc-eyebrow', { opacity: 0, y: 14 });
+			gsap.set('.sc-chips', { opacity: 0, y: 12 });
+			gsap.set('.sc-ledger-col', { opacity: 0, y: 24 });
+
+			gsap.timeline({ scrollTrigger: { trigger: sectionEl, start: 'top 78%', once: true } })
+				.to('.sc-eyebrow', { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' })
+				.to('.sc-line-inner', { yPercent: 0, duration: 0.9, stagger: 0.09, ease: 'power4.out' }, '-=0.25')
+				.to('.sc-chips', { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.5')
+				.to('.sc-ledger-col', { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: 'power3.out' }, '-=0.35');
+
+			const videoWraps = Array.from(sectionEl.querySelectorAll<HTMLElement>('.sc-video-wrap'));
+			gsap.set(videoWraps, { opacity: 0, y: 28, scale: 0.97 });
+			videoWraps.forEach((wrap, i) => {
+				gsap.to(wrap, {
+					opacity: 1, y: 0, scale: 1, duration: 0.65, ease: 'power3.out',
+					delay: i * 0.08,
+					scrollTrigger: { trigger: wrap, start: 'top 88%', once: true },
+				});
+			});
+		}, sectionEl);
+
+		return () => ctx?.revert();
+	});
+
 	let videoEl: HTMLVideoElement;
 	let wrapperEl: HTMLElement;
 	let isPaused = $state(true);
@@ -79,17 +117,17 @@
 	.icon-spin { animation: icon-spin 8s cubic-bezier(0.4,0,0.6,1) infinite; }
 </style>
 
-<section class="w-full bg-white pt-24 pb-20 overflow-x-hidden">
+<section bind:this={sectionEl} class="w-full bg-white pt-24 pb-20 overflow-x-hidden">
 	<div class="max-w-7xl mx-auto px-4 md:px-6">
 
 		<!-- ── Row 1: Title LEFT / Feature Chips RIGHT ─────────────── -->
-		<p class="text-[10px] font-mono tracking-[0.35em] text-neutral-400 uppercase mb-4">Image Optimization</p>
+		<p class="sc-eyebrow text-[10px] font-mono tracking-[0.35em] text-neutral-400 uppercase mb-4">Image Optimization</p>
 		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12">
-			<h2 class="text-[clamp(2.4rem,6vw,4.5rem)] font-black tracking-tight text-gray-900 leading-none">
-				Smarter.<br/>
-				<span class="text-neutral-300">Every time.</span>
+			<h2 class="text-[clamp(2.4rem,6vw,4.5rem)] font-black tracking-tight text-gray-900 leading-[1.10]">
+				<span class="block overflow-hidden pb-[0.08em] mb-[-0.2em]"><span class="sc-line-inner block">Smarter.</span></span>
+				<span class="block overflow-hidden pb-[0.08em]"><span class="sc-line-inner block text-neutral-300">Every time.</span></span>
 			</h2>
-			<div class="flex flex-row sm:flex-col items-center sm:items-end gap-2 shrink-0 flex-wrap">
+			<div class="sc-chips flex flex-row sm:flex-col items-center sm:items-end gap-2 shrink-0 flex-wrap">
 				<div class="relative">
 					<span class="px-3 py-1.5 bg-gray-100 text-gray-500 text-[10px] font-mono uppercase tracking-widest rounded-full block">Ultra · 5×</span>
 					<span class="absolute -top-2 -right-1 bg-neutral-900 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full leading-none">NEW</span>
@@ -103,7 +141,7 @@
 		<div class="grid grid-cols-1 md:grid-cols-[1fr_1fr_1.6fr] border-t border-b border-gray-200 mb-0">
 
 			<!-- Col 1 — Ultra vs Lossy with text-glow -->
-			<div class="py-10 pr-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
+			<div class="sc-ledger-col py-10 pr-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
 				<span class="text-[10px] font-mono tracking-[0.18em] text-gray-500 uppercase block mb-4">Ultra vs Lossy</span>
 				<div>
 					<div class="flex items-baseline gap-1 leading-none mb-2">
@@ -117,7 +155,7 @@
 			</div>
 
 			<!-- Col 2 — Auto-rescan with counter-clockwise spin icon -->
-			<div class="py-10 md:px-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
+			<div class="sc-ledger-col py-10 md:px-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
 				<span class="text-[10px] font-mono tracking-[0.18em] text-gray-500 uppercase block mb-4">Re-Scan Logic</span>
 				<div class="flex flex-col gap-4">
 					<svg
@@ -139,7 +177,7 @@
 			</div>
 
 			<!-- Col 3 — Ultra story -->
-			<div class="py-10 md:pl-10 flex flex-col justify-center">
+			<div class="sc-ledger-col py-10 md:pl-10 flex flex-col justify-center">
 				<p class="text-lg md:text-xl text-gray-600 leading-relaxed mb-5">
 					Ultra delivers 5× the file reduction of Lossy — for sites where every kilobyte matters. Lossy and Lossless remain free because not every site needs the maximum.
 				</p>
@@ -166,7 +204,7 @@
 			<!-- Left — Original Smush flow -->
 			<div>
 				<p class="text-xs font-mono tracking-widest text-gray-500 mb-4">01 // Smush · Original Userflow</p>
-				<div class="bg-transparent rounded-3xl border border-neutral-300/70
+				<div class="sc-video-wrap bg-transparent rounded-3xl border border-neutral-300/70
 				            shadow-[0_12px_48px_rgba(0,0,0,0.11),0_2px_8px_rgba(0,0,0,0.05)]
 				            p-2">
 					<div class="relative overflow-hidden rounded-2xl bg-black group"
@@ -188,7 +226,7 @@
 							bind:duration
 							src="/videos/Smush%20with%20Userflow.mp4"
 							class="w-full h-auto object-cover aspect-video cursor-pointer transform-gpu will-change-transform"
-							playsinline preload="metadata" decoding="async"
+							playsinline preload="metadata"
 							muted
 							onclick={toggle}
 						></video>
@@ -234,7 +272,7 @@
 			<!-- Right — Smush SUI 3 redesign -->
 			<div>
 				<p class="text-xs font-mono tracking-widest text-gray-500 mb-4">02 // Smush · SUI&nbsp;3 Redesign</p>
-				<div class="bg-transparent rounded-3xl border border-neutral-300/70
+				<div class="sc-video-wrap bg-transparent rounded-3xl border border-neutral-300/70
 				            shadow-[0_12px_48px_rgba(0,0,0,0.11),0_2px_8px_rgba(0,0,0,0.05)]
 				            p-2">
 					<div class="relative overflow-hidden rounded-2xl bg-black group"
@@ -256,7 +294,7 @@
 							bind:duration={duration2}
 							src="/videos/Background%20rules%20in%20Smush.mp4"
 							class="w-full h-auto object-cover aspect-video cursor-pointer transform-gpu will-change-transform"
-							playsinline preload="metadata" decoding="async"
+							playsinline preload="metadata"
 							muted
 							onclick={toggle2}
 						></video>
@@ -332,7 +370,7 @@
 					bind:duration={duration3}
 					src="/videos/SmushTest_Prototype.mp4"
 					class="w-full h-auto object-cover aspect-video cursor-pointer transform-gpu will-change-transform"
-					playsinline preload="metadata" decoding="async"
+					playsinline preload="metadata"
 					muted
 					onclick={toggle3}
 				></video>

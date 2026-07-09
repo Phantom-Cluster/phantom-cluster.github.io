@@ -18,14 +18,14 @@
 			pills: ['White-label ready', '4→2 click flow', 'Zero onboarding'],
 			year: '2024', role: 'UI/UX Designer',
 			// Actual project screenshot — replaces generic Unsplash placeholder
-			image: '/videos/ideajam/ideation  card and idea page.png',
+			image: '/videos/ideajam/ideation  card and idea page.webp',
 		},
 		{
 			hookStat: '3×', hookLabel: 'Regional Markets',
 			fallbackHex: '#14b8a6', fallbackRgb: '20,184,166',
 			pills: ['AI asset pipeline', 'Mobile-first DLS', 'Rapid publish'],
 			year: '2024', role: 'Product Designer',
-			image: '/videos/Eclectic/New UI .png',
+			image: '/videos/Eclectic/New UI .webp',
 		},
 		{
 			hookStat: '50+', hookLabel: 'Sites Shipped',
@@ -295,11 +295,10 @@
 								<div class="v2-cta-wrap">
 									<a
 										href="/work/{project.slug}"
-										class="v2-cta group/cta inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-sm font-bold text-white border border-white/30 w-fit"
-										style="--accent: {a.hex};"
+										class="v2-cta inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-sm font-bold text-white border border-white/30 w-fit"
 									>
 										Explore Case
-										<ArrowRight class="size-4 transition-transform duration-300 group-hover/cta:translate-x-1.5" />
+										<ArrowRight class="size-4 transition-transform duration-300" />
 									</a>
 									<span class="v2-cta-ring" aria-hidden="true"></span>
 								</div>
@@ -394,21 +393,22 @@
 		position: relative;
 		overflow: hidden;
 		isolation: isolate;
-		transition: transform 0.12s ease, border-color 0.2s ease;
+		transition: transform 0.12s ease, border-color 0.2s ease, color 0.18s ease;
 	}
 	.v2-cta::before {
 		content: '';
 		position: absolute;
 		inset: 0;
 		border-radius: inherit;
-		background: var(--accent);
+		background: #0a0a0a;
 		opacity: 0;
-		transition: opacity 0.22s ease; /* GPU: opacity only */
+		transition: opacity 0.22s ease;
 		pointer-events: none;
 		z-index: 0;
 	}
 	.v2-cta:hover {
-		border-color: rgba(255, 255, 255, 0.55);
+		border-color: rgba(255, 255, 255, 0.15);
+		color: #ffffff;
 	}
 	.v2-cta:hover::before {
 		opacity: 1;

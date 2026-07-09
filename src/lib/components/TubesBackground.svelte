@@ -14,17 +14,17 @@
 	let tubesApp: any = null;
 	let isDark = $state(true); // default dark until DOM confirms
 
-	// Dark mode: vivid electric indigo and blue-violet neons read well against near-black canvas
+	// Dark mode: warm sienna-amber filament — reads as confident, editorial against near-black
 	const darkPalettes = [
-		{ tubes: ['#2244FF', '#7B8CFF', '#A5B4FC'], lights: ['#2244FF', '#3D52FF', '#818CF8', '#6366F1'] },
-		{ tubes: ['#4F5EFF', '#7C3AED', '#6366F1'], lights: ['#4F5EFF', '#7C3AED', '#A78BFA', '#818CF8'] },
-		{ tubes: ['#3730A3', '#2244FF', '#6366F1'], lights: ['#312E81', '#2244FF', '#818CF8', '#2244FF'] },
+		{ tubes: ['#C8502A', '#E07840', '#F4A055'], lights: ['#C8502A', '#D4622C', '#E07840', '#E88040'] },
+		{ tubes: ['#A84020', '#C8502A', '#E05E32'], lights: ['#9E3D1E', '#C8502A', '#D4622C', '#E07840'] },
+		{ tubes: ['#9E3D1E', '#B84828', '#C8502A'], lights: ['#8B3318', '#A84020', '#C8502A', '#D4622C'] },
 	];
 
-	// Light mode: deeper, richer indigo shades
+	// Light mode: deeper sienna for contrast on warm parchment
 	const lightPalettes = [
-		{ tubes: ['#3730A3', '#4338CA', '#2244FF'], lights: ['#3730A3', '#2244FF', '#4338CA', '#6366F1'] },
-		{ tubes: ['#312E81', '#4F46E5', '#3730A3'], lights: ['#1E1B4B', '#2244FF', '#312E81', '#2244FF'] },
+		{ tubes: ['#8B3318', '#A84020', '#C8502A'], lights: ['#7A2C12', '#9E3D1E', '#A84020', '#C8502A'] },
+		{ tubes: ['#7A2C12', '#9E3D1E', '#A84020'], lights: ['#6B2510', '#8B3318', '#9E3D1E', '#A84020'] },
 	];
 
 	let paletteIdx = 0;

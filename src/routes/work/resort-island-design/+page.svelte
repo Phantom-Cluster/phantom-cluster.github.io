@@ -32,19 +32,20 @@
 		gsap.registerPlugin(ScrollTrigger);
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#000000', color: '#ffffff', ease: 'none',
-					scrollTrigger: { trigger: bentoTriggerEl, start: 'top 90%', end: 'top 60%', scrub: true,
-						onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light') }
+				ScrollTrigger.create({
+					trigger: bentoTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
 				});
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#ffffff', color: '#171717', ease: 'none', immediateRender: false,
-					scrollTrigger: { trigger: editorialTriggerEl, start: 'top 90%', end: 'top 60%', scrub: true,
-						onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark') }
+				ScrollTrigger.create({
+					trigger: editorialTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
 				});
 				gsap.from('.cs-hero-element', { y: 40, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out' });
-				gsap.utils.toArray('.cs-fade-up').forEach((el: any) => {
-					gsap.from(el, { y: 40, opacity: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
+				gsap.set('.cs-fade-up', { y: 40, opacity: 0 });
+				ScrollTrigger.batch('.cs-fade-up', {
+					start: 'top 85%',
+					onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.8, stagger: 0.08, ease: 'power3.out' }),
+					once: true
 				});
 			});
 		}, 400);

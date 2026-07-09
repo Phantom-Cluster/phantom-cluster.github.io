@@ -50,19 +50,20 @@
 		gsap.registerPlugin(ScrollTrigger);
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#000000', color: '#ffffff', ease: 'none',
-					scrollTrigger: { trigger: bentoTriggerEl, start: 'top 90%', end: 'top 60%', scrub: true,
-						onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light') }
+				ScrollTrigger.create({
+					trigger: bentoTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
 				});
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#ffffff', color: '#171717', ease: 'none', immediateRender: false,
-					scrollTrigger: { trigger: editorialTriggerEl, start: 'top 90%', end: 'top 60%', scrub: true,
-						onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark') }
+				ScrollTrigger.create({
+					trigger: editorialTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
 				});
 				gsap.from('.cs-hero-element', { y: 40, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out' });
-				gsap.utils.toArray('.cs-fade-up').forEach((el: any) => {
-					gsap.from(el, { y: 40, opacity: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
+				gsap.set('.cs-fade-up', { y: 40, opacity: 0 });
+				ScrollTrigger.batch('.cs-fade-up', {
+					start: 'top 85%',
+					onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.8, stagger: 0.08, ease: 'power3.out' }),
+					once: true
 				});
 			});
 		}, 400);
@@ -269,7 +270,7 @@
 						bind:duration
 						src="/images/projects/wordpress/WordPress%20Redesign.mp4"
 						class="w-full aspect-video object-cover block cursor-pointer"
-						playsinline preload="metadata"
+						autoplay loop muted playsinline preload="metadata"
 						onclick={togglePlay}
 					></video>
 
@@ -332,9 +333,9 @@
 						<span class="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0"></span>
 						<span class="text-[10px] font-mono tracking-widest text-[#EF4444] uppercase">Before — Original WordPress</span>
 					</div>
-					<button type="button" class="img-trigger" onclick={() => openModal('/images/projects/wordpress/Real%20WordPress.png', 'Original WordPress Admin')} aria-label="View original WordPress admin">
+					<button type="button" class="img-trigger" onclick={() => openModal('/images/projects/wordpress/Real%20WordPress.webp', 'Original WordPress Admin')} aria-label="View original WordPress admin">
 						<div class="h-[260px] overflow-hidden">
-							<img src="/images/projects/wordpress/Real%20WordPress.png" alt="Original WordPress Admin" class="w-full h-full object-cover object-top" loading="lazy" />
+							<img src="/images/projects/wordpress/thumbs/Real%20WordPress.webp" alt="Original WordPress Admin" class="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
 						</div>
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 					</button>
@@ -359,9 +360,9 @@
 						<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse"></span>
 						<span class="text-[10px] font-mono tracking-widest text-emerald-400 uppercase">After — Redesigned</span>
 					</div>
-					<button type="button" class="img-trigger" onclick={() => openModal('/images/projects/wordpress/Dashboard.png', 'Redesigned WordPress Dashboard')} aria-label="View redesigned WordPress dashboard">
+					<button type="button" class="img-trigger" onclick={() => openModal('/images/projects/wordpress/Dashboard.webp', 'Redesigned WordPress Dashboard')} aria-label="View redesigned WordPress dashboard">
 						<div class="h-[260px] overflow-hidden">
-							<img src="/images/projects/wordpress/Dashboard.png" alt="Redesigned WordPress Dashboard" class="w-full h-full object-cover object-top" loading="lazy" />
+							<img src="/images/projects/wordpress/thumbs/Dashboard.webp" alt="Redesigned WordPress Dashboard" class="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
 						</div>
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 					</button>
@@ -450,16 +451,16 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<div class="bg-neutral-100 rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase mb-3 pl-1">Dashboard Redesign</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/wordpress/Dashboard.png', 'Redesigned WordPress Dashboard')} aria-label="View Dashboard redesign">
-						<img src="/images/projects/wordpress/Dashboard.png" alt="Redesigned WordPress Dashboard" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/wordpress/Dashboard.webp', 'Redesigned WordPress Dashboard')} aria-label="View Dashboard redesign">
+						<img src="/images/projects/wordpress/thumbs/Dashboard.webp" alt="Redesigned WordPress Dashboard" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
 				</div>
 				<div class="bg-neutral-900 rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase mb-3 pl-1">Screen Elements Toggle</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/wordpress/Dashboard%20toggle%20elements.png', 'Dashboard Screen Elements Toggle')} aria-label="View Dashboard elements toggle">
-						<img src="/images/projects/wordpress/Dashboard%20toggle%20elements.png" alt="Dashboard Screen Elements Toggle" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/wordpress/Dashboard%20toggle%20elements.webp', 'Dashboard Screen Elements Toggle')} aria-label="View Dashboard elements toggle">
+						<img src="/images/projects/wordpress/thumbs/Dashboard%20toggle%20elements.webp" alt="Dashboard Screen Elements Toggle" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
@@ -494,16 +495,16 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<div class="bg-neutral-900 rounded-3xl p-4 lg:p-5 border border-white/5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase mb-3 pl-1">Blank State</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/wordpress/Search_blank.png', 'Search — Blank State')} aria-label="View search blank state">
-						<img src="/images/projects/wordpress/Search_blank.png" alt="Search — Blank State" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/wordpress/Search_blank.webp', 'Search — Blank State')} aria-label="View search blank state">
+						<img src="/images/projects/wordpress/thumbs/Search_blank.webp" alt="Search — Blank State" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
 				</div>
 				<div class="bg-neutral-900 rounded-3xl p-4 lg:p-5 border border-white/5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase mb-3 pl-1">Search Results</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/wordpress/Search.png', 'Search — Results View')} aria-label="View search results">
-						<img src="/images/projects/wordpress/Search.png" alt="Search — Results View" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/wordpress/Search.webp', 'Search — Results View')} aria-label="View search results">
+						<img src="/images/projects/wordpress/thumbs/Search.webp" alt="Search — Results View" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
@@ -537,16 +538,16 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<div class="bg-neutral-100 rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase mb-3 pl-1">Pages List</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/wordpress/Pages%20or%20post.png', 'Pages — Redesigned List View')} aria-label="View pages redesign">
-						<img src="/images/projects/wordpress/Pages%20or%20post.png" alt="Pages — Redesigned List View" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/wordpress/Pages%20or%20post.webp', 'Pages — Redesigned List View')} aria-label="View pages redesign">
+						<img src="/images/projects/wordpress/thumbs/Pages%20or%20post.webp" alt="Pages — Redesigned List View" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
 				</div>
 				<div class="bg-neutral-100 rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase mb-3 pl-1">Page Settings Modal</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/wordpress/Page%20and%20Post%20settings.png', 'Page Settings Modal')} aria-label="View page settings modal">
-						<img src="/images/projects/wordpress/Page%20and%20Post%20settings.png" alt="Page Settings Modal" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/wordpress/Page%20and%20Post%20settings.webp', 'Page Settings Modal')} aria-label="View page settings modal">
+						<img src="/images/projects/wordpress/thumbs/Page%20and%20Post%20settings.webp" alt="Page Settings Modal" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
@@ -811,4 +812,9 @@
 		opacity: 0; transform: scale(0.85); transition: opacity 0.2s ease, transform 0.2s ease;
 	}
 	.img-trigger:hover .img-expand-icon { opacity: 1; transform: scale(1); }
+
+	@media (pointer: coarse) {
+		.wp-video-card .absolute.bottom-4 { opacity: 1 !important; transform: translateY(0) !important; }
+		.wp-video-card .pointer-events-none { display: none; }
+	}
 </style>

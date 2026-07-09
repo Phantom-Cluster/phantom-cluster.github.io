@@ -34,33 +34,34 @@
 	const T = '/videos/Themeisle/';
 
 	const museumViews = [
-		{ src: T + 'Neve%20Museum%20-%20figma.png', label: 'Figma Source' },
-		{ src: T + 'Neve%20Museum%20.png',           label: 'View 1' },
-		{ src: T + 'Neve%20Museum%202.png',          label: 'View 2' },
-		{ src: T + 'Neve%20Museum%203.png',          label: 'View 3' },
+		{ src: T + 'Neve%20Museum%20-%20figma.webp', label: 'Figma Source' },
+		{ src: T + 'Neve%20Museum%20.webp',           label: 'View 1' },
+		{ src: T + 'Neve%20Museum%202.webp',          label: 'View 2' },
+		{ src: T + 'Neve%20Museum%203.webp',          label: 'View 3' },
 	];
 
+	const TH = T + 'thumbs/';
 	const industryGrid = [
-		{ src: T + 'Law%20firm.png', label: 'Law Firm' },
-		{ src: T + 'IT%20firm.png', label: 'IT Firm' },
-		{ src: T + 'Tech%20firm.png', label: 'Tech Firm' },
-		{ src: T + 'Industrial%20heavy%20duty%20.png', label: 'Industrial' },
-		{ src: T + 'Coffee.png', label: 'Coffee Shop' },
-		{ src: T + 'Neve%20Wine.png', label: 'Wine Bar' },
-		{ src: T + 'Resort.png', label: 'Resort' },
-		{ src: T + 'Barber%20shop.png', label: 'Barber Shop' },
-		{ src: T + 'Neve%20Church.png', label: 'Church' },
-		{ src: T + 'Wedding%20.png', label: 'Wedding' },
-		{ src: T + 'Tatto.png', label: 'Tattoo Studio' },
-		{ src: T + 'Interior%20design%20.png', label: 'Interior Design' },
-		{ src: T + 'Conference.png', label: 'Conference' },
-		{ src: T + 'Coupon%20site.png', label: 'Coupon Site' },
-		{ src: T + 'Furniture.png', label: 'Furniture' },
-		{ src: T + 'Neve%20Insurance.png', label: 'Insurance' },
-		{ src: T + 'Car%20rental.png', label: 'Car Rental' },
-		{ src: T + 'Transport.png', label: 'Transport' },
-		{ src: T + 'Farm.png', label: 'Farm & Agriculture' },
-		{ src: T + 'Neve%20Cycle%20racing.png', label: 'Cycle Racing' },
+		{ src: TH + 'Law%20firm.webp',              full: T + 'Law%20firm.webp',              label: 'Law Firm' },
+		{ src: TH + 'IT%20firm.webp',               full: T + 'IT%20firm.webp',               label: 'IT Firm' },
+		{ src: TH + 'Tech%20firm.webp',             full: T + 'Tech%20firm.webp',             label: 'Tech Firm' },
+		{ src: TH + 'Industrial%20heavy%20duty%20.webp', full: T + 'Industrial%20heavy%20duty%20.webp', label: 'Industrial' },
+		{ src: TH + 'Coffee.webp',                  full: T + 'Coffee.webp',                  label: 'Coffee Shop' },
+		{ src: TH + 'Neve%20Wine.webp',             full: T + 'Neve%20Wine.webp',             label: 'Wine Bar' },
+		{ src: TH + 'Resort.webp',                  full: T + 'Resort.webp',                  label: 'Resort' },
+		{ src: TH + 'Barber%20shop.webp',           full: T + 'Barber%20shop.webp',           label: 'Barber Shop' },
+		{ src: TH + 'Neve%20Church.webp',           full: T + 'Neve%20Church.webp',           label: 'Church' },
+		{ src: TH + 'Wedding%20.webp',              full: T + 'Wedding%20.webp',              label: 'Wedding' },
+		{ src: TH + 'Tatto.webp',                   full: T + 'Tatto.webp',                   label: 'Tattoo Studio' },
+		{ src: TH + 'Interior%20design%20.webp',    full: T + 'Interior%20design%20.webp',    label: 'Interior Design' },
+		{ src: TH + 'Conference.webp',              full: T + 'Conference.webp',              label: 'Conference' },
+		{ src: TH + 'Coupon%20site.webp',           full: T + 'Coupon%20site.webp',           label: 'Coupon Site' },
+		{ src: TH + 'Furniture.webp',               full: T + 'Furniture.webp',               label: 'Furniture' },
+		{ src: TH + 'Neve%20Insurance.webp',        full: T + 'Neve%20Insurance.webp',        label: 'Insurance' },
+		{ src: TH + 'Car%20rental.webp',            full: T + 'Car%20rental.webp',            label: 'Car Rental' },
+		{ src: TH + 'Transport.webp',               full: T + 'Transport.webp',               label: 'Transport' },
+		{ src: TH + 'Farm.webp',                    full: T + 'Farm.webp',                    label: 'Farm & Agriculture' },
+		{ src: TH + 'Neve%20Cycle%20racing.webp',   full: T + 'Neve%20Cycle%20racing.webp',   label: 'Cycle Racing' },
 	];
 
 	onMount(() => {
@@ -71,21 +72,15 @@
 
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#000000', color: '#ffffff', ease: 'none',
-					scrollTrigger: {
-						trigger: bentoTriggerEl, start: 'top 85%', end: 'top 40%', scrub: 1.2,
-						onEnter: () => navTheme.set('dark'),
-						onLeaveBack: () => navTheme.set('light'),
-					}
+				ScrollTrigger.create({
+					trigger: bentoTriggerEl, start: 'top 85%',
+					onEnter: () => navTheme.set('dark'),
+					onLeaveBack: () => navTheme.set('light'),
 				});
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#ffffff', color: '#171717', ease: 'none', immediateRender: false,
-					scrollTrigger: {
-						trigger: editorialTriggerEl, start: 'top 85%', end: 'top 40%', scrub: 1.2,
-						onEnter: () => navTheme.set('light'),
-						onLeaveBack: () => navTheme.set('dark'),
-					}
+				ScrollTrigger.create({
+					trigger: editorialTriggerEl, start: 'top 85%',
+					onEnter: () => navTheme.set('light'),
+					onLeaveBack: () => navTheme.set('dark'),
 				});
 				ScrollTrigger.create({
 					trigger: museumTriggerEl, start: 'top 70%',
@@ -103,11 +98,40 @@
 					onLeaveBack: () => navTheme.set('dark'),
 				});
 
-				gsap.from('.cs-hero-element', { y: 40, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out' });
-				gsap.utils.toArray('.cs-fade-up').forEach((el: any) => {
-					gsap.from(el, { y: 40, opacity: 0, duration: 0.8, ease: 'power3.out',
-						scrollTrigger: { trigger: el, start: 'top 85%' }
-					});
+				// ── Hero entrance ─────────────────────────────────────────
+				gsap.set('.ts-hero-badge',     { opacity: 0, y: 14 });
+				gsap.set('.ts-hero-eyebrow',   { opacity: 0, y: 12 });
+				gsap.set('.ts-hero-line',      { yPercent: 110 });
+				gsap.set('.ts-hero-chips span',{ opacity: 0, y: 10 });
+				gsap.set('.ts-hero-meta-item', { opacity: 0, y: 16 });
+				gsap.set('.ts-hero-ledger',    { opacity: 0, y: 20 });
+				gsap.set('.ts-hero-desc',      { opacity: 0, y: 16 });
+				gsap.set('.ts-hero-note',      { opacity: 0, y: 16 });
+
+				gsap.timeline({ delay: 0.05 })
+					.to('.ts-hero-badge',     { opacity: 1, y: 0, duration: 0.5,  ease: 'power2.out' })
+					.to('.ts-hero-line',      { yPercent: 0,       duration: 1.0,  stagger: 0.09, ease: 'power4.out' }, '-=0.2')
+					.to('.ts-hero-eyebrow',   { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 0.1)
+					.to('.ts-hero-chips span',{ opacity: 1, y: 0, duration: 0.45, stagger: 0.055, ease: 'power3.out' }, '-=0.5')
+					.to('.ts-hero-meta-item', { opacity: 1, y: 0, duration: 0.5,  stagger: 0.07, ease: 'power3.out' }, '-=0.6')
+					.to('.ts-hero-ledger',    { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.4')
+					.to('.ts-hero-desc',      { opacity: 1, y: 0, duration: 0.5,  ease: 'power3.out' }, '-=0.35')
+					.to('.ts-hero-note',      { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, '-=0.4');
+
+				// ── Scroll animations — batched (one observer, not N) ──
+				gsap.set('.cs-fade-up', { y: 40, opacity: 0 });
+				ScrollTrigger.batch('.cs-fade-up', {
+					start: 'top 85%',
+					onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.75, stagger: 0.08, ease: 'power3.out' }),
+					once: true,
+				});
+
+				// ── Industry grid — staggered card reveal ──
+				gsap.set('.ts-grid-card', { opacity: 0, y: 14 });
+				ScrollTrigger.batch('.ts-grid-card', {
+					start: 'top 92%',
+					onEnter: (batch) => gsap.to(batch, { opacity: 1, y: 0, duration: 0.4, stagger: 0.03, ease: 'power2.out' }),
+					once: true,
 				});
 			});
 		}, 400);
@@ -133,13 +157,13 @@
 
 <LightboxModal bind:modalImg />
 
-<div bind:this={pageWrapperEl} class="min-h-screen bg-white text-neutral-900" style="background-color: #ffffff; will-change: background-color; transform: translateZ(0);">
+<div bind:this={pageWrapperEl} class="min-h-screen bg-white text-neutral-900">
 
 	<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
 	<section data-theme="light" class="w-full bg-white px-6 pt-[160px] md:pt-[180px] pb-28 min-h-screen flex flex-col justify-center">
 		<div class="max-w-7xl mx-auto w-full">
 
-			<div class="flex items-center justify-between border-b border-neutral-200 pb-5 mb-12 cs-hero-element">
+			<div class="ts-hero-badge flex items-center justify-between border-b border-neutral-200 pb-5 mb-12">
 				<div class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
 					<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(0,0,0,0.75)_360deg)]"></div>
 					<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
@@ -149,38 +173,38 @@
 				<span class="text-[11px] font-mono tracking-widest text-neutral-400 uppercase hidden sm:block">Jul 2018 — May 2021</span>
 			</div>
 
-			<div class="flex items-start gap-10 cs-hero-element">
+			<div class="flex items-start gap-10">
 				<div class="flex-1 min-w-0">
-					<p class="text-[11px] font-mono tracking-[0.35em] uppercase text-neutral-400 mb-5">Themeisle · Neve Theme</p>
-					<h1 class="text-[clamp(3rem,8vw,7.5rem)] font-black tracking-tight leading-[0.9] text-neutral-900">
-						Neve&nbsp;Theme<br/>
-						<span class="text-neutral-300">Starter</span><br/>
-						Templates.
+					<p class="ts-hero-eyebrow text-[11px] font-mono tracking-[0.35em] uppercase text-neutral-400 mb-5">Themeisle · Neve Theme</p>
+					<h1 class="text-[clamp(2.8rem,7vw,6rem)] font-black tracking-tight leading-[1.10] text-neutral-900">
+						<span class="block overflow-hidden pb-[0.08em] mb-[-0.2em]"><span class="ts-hero-line block">Neve&nbsp;Theme</span></span>
+						<span class="block overflow-hidden pb-[0.08em] mb-[-0.2em]"><span class="ts-hero-line block text-neutral-300">Starter</span></span>
+						<span class="block overflow-hidden pb-[0.08em]"><span class="ts-hero-line block">Templates.</span></span>
 					</h1>
-					<div class="flex flex-wrap gap-2 mt-8">
+					<div class="ts-hero-chips flex flex-wrap gap-2 mt-8">
 						{#each project.tags as tag}
 							<span class="px-3 py-1 rounded-full bg-neutral-50 border border-neutral-200 text-[10px] font-mono tracking-widest text-neutral-500 uppercase">{tag}</span>
 						{/each}
 					</div>
 				</div>
 				<div class="shrink-0 w-56 hidden md:flex flex-col gap-6 pt-14">
-					<div>
+					<div class="ts-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Role</span>
 						<span class="text-sm font-semibold text-neutral-800">{project.role}</span>
 					</div>
-					<div>
+					<div class="ts-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Platform</span>
 						<span class="text-sm font-semibold text-neutral-800">WordPress / Neve Theme</span>
 					</div>
-					<div>
+					<div class="ts-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Templates</span>
 						<span class="text-sm font-semibold text-neutral-800">50+ Across 20+ Niches</span>
 					</div>
-					<div>
+					<div class="ts-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Performance</span>
 						<span class="text-sm font-semibold text-neutral-800">PageSpeed 100% · 0.6s · 28KB</span>
 					</div>
-					<div class="pt-5 border-t border-neutral-100">
+					<div class="ts-hero-meta-item pt-5 border-t border-neutral-100">
 						<div class="flex items-center gap-2" style="color: #4EA361;">
 							<span class="text-[9px] font-mono tracking-widest uppercase">Scroll to explore</span>
 							<svg class="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -191,7 +215,7 @@
 				</div>
 			</div>
 
-			<div class="grid grid-cols-3 border-t border-b border-neutral-200 mt-12 cs-hero-element">
+			<div class="ts-hero-ledger grid grid-cols-3 border-t border-b border-neutral-200 mt-12">
 				<div class="py-7 pr-4 md:pr-8 border-r border-neutral-200">
 					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Templates Delivered</span>
 					<div class="flex items-baseline gap-1.5 leading-none flex-wrap">
@@ -215,11 +239,11 @@
 				</div>
 			</div>
 
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-10 pt-10 cs-hero-element">
-				<div class="md:col-span-2">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-10 pt-10">
+				<div class="ts-hero-desc md:col-span-2">
 					<p class="text-xl md:text-2xl text-neutral-500 leading-relaxed">{project.description}</p>
 				</div>
-				<div class="flex flex-col gap-4 pt-1">
+				<div class="ts-hero-note flex flex-col gap-4 pt-1">
 					<p class="text-sm text-neutral-400 leading-relaxed">Each template was built to a specific niche brief — not resized or recolored from a master layout, but designed from scratch for that industry's visual language and conversion goals.</p>
 				</div>
 			</div>
@@ -228,7 +252,7 @@
 	</section>
 
 	<!-- ── DARK: FIGMA CANVAS + BENTO ───────────────────────────────────────── -->
-	<div bind:this={bentoTriggerEl} data-theme="dark">
+	<div bind:this={bentoTriggerEl} data-theme="dark" class="cv-section">
 
 		<section class="bg-black px-6 pt-24 pb-12">
 			<div class="max-w-7xl mx-auto cs-fade-up">
@@ -237,8 +261,8 @@
 					<h2 class="text-3xl font-black tracking-tight text-white mt-3 leading-[1.05]">Every template<br/>starts here.</h2>
 				</div>
 				<div class="rounded-3xl overflow-hidden border border-white/5">
-					<button type="button" class="img-trigger w-full" onclick={() => openModal(T + 'Figma%20preview%20-%20drafts.png', 'Figma — All Template Drafts')} aria-label="View Figma drafts overview">
-						<img src={T + 'Figma%20preview%20-%20drafts.png'} alt="Figma workspace showing all starter template drafts" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger w-full" onclick={() => openModal(T + 'Figma%20preview%20-%20drafts.webp', 'Figma — All Template Drafts')} aria-label="View Figma drafts overview">
+						<img src={T + 'Figma%20preview%20-%20drafts.webp'} alt="Figma workspace showing all starter template drafts" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
@@ -321,7 +345,7 @@
 	</div>
 
 	<!-- ── MUSEUM: ONE TEMPLATE, THREE VIEWS ────────────────────────────────── -->
-	<div bind:this={museumTriggerEl}>
+	<div bind:this={museumTriggerEl} class="cv-section">
 		<section class="bg-white px-6 py-24 border-t border-neutral-200">
 			<div class="max-w-7xl mx-auto">
 
@@ -354,18 +378,16 @@
 							<span class="text-[8px] font-mono text-neutral-300 tracking-widest uppercase ml-1">auto</span>
 						{/if}
 					</div>
-					<!-- Carousel - only active slide in DOM, fade-in animation -->
-					<div class="rounded-3xl overflow-hidden bg-neutral-100">
+					<!-- Carousel — all slides always in DOM, cross-fade on active -->
+					<div class="rounded-3xl overflow-hidden bg-neutral-100 relative aspect-16/10">
 						{#each museumViews as view, i}
-							{#if museumView === i}
-								<div class="museum-slide-active">
-									<button type="button" class="img-trigger w-full" onclick={() => openModal(view.src, 'Museum — ' + view.label)} aria-label={'Museum ' + view.label}>
-										<img src={view.src} alt={'Museum template — ' + view.label} class="w-full block" loading="lazy" />
-										<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
-										<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
-									</button>
-								</div>
-							{/if}
+							<div class="museum-slide absolute inset-0 transition-opacity duration-500 ease-in-out {museumView === i ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'}">
+								<button type="button" class="img-trigger w-full h-full" onclick={() => openModal(view.src, 'Museum — ' + view.label)} aria-label={'Museum ' + view.label}>
+									<img src={view.src} alt={'Museum template — ' + view.label} class="w-full h-full object-cover object-top block" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+									<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
+									<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
+								</button>
+							</div>
 						{/each}
 					</div>
 				</div>
@@ -375,7 +397,7 @@
 	</div>
 
 	<!-- ── INDUSTRY GRID ─────────────────────────────────────────────────────── -->
-	<div bind:this={gridTriggerEl}>
+	<div bind:this={gridTriggerEl} class="cv-section">
 		<section class="px-6 py-24" style="background-color: #0a0a0a;">
 			<div class="max-w-7xl mx-auto">
 
@@ -391,10 +413,10 @@
 					</div>
 				</div>
 
-				<div class="grid grid-cols-2 md:grid-cols-4 gap-3 cs-fade-up">
+				<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
 					{#each industryGrid as img}
-						<button type="button" class="ts-grid-card" onclick={() => openModal(img.src, img.label)} aria-label={'View ' + img.label + ' template'}>
-							<img src={img.src} alt={img.label + ' starter template'} loading="lazy" class="w-full h-full object-cover object-top" />
+						<button type="button" class="ts-grid-card" onclick={() => openModal(img.full, img.label)} aria-label={'View ' + img.label + ' template'}>
+							<img src={img.src} alt={img.label + ' starter template'} loading="lazy" decoding="async" class="w-full h-full object-cover object-top" />
 							<div class="ts-grid-overlay">
 								<span class="ts-grid-label">{img.label}</span>
 							</div>
@@ -407,7 +429,7 @@
 	</div>
 
 	<!-- ── VARIANT PAIRS ─────────────────────────────────────────────────────── -->
-	<div bind:this={variantsTriggerEl}>
+	<div bind:this={variantsTriggerEl} class="cv-section">
 		<section class="bg-white px-6 py-24 border-t border-neutral-200">
 			<div class="max-w-7xl mx-auto">
 
@@ -428,12 +450,12 @@
 					<p class="text-[9px] font-mono tracking-widest text-neutral-400 uppercase mb-4">Wine & Hospitality — Design + Figma Process</p>
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						{#each [
-							{ src: T + 'Wine.png', alt: 'Wine template — final design' },
-							{ src: T + 'Neve%20Wine%20-%20figma.png', alt: 'Wine template — Figma process file' },
+							{ src: T + 'Wine.webp', alt: 'Wine template — final design' },
+							{ src: T + 'Neve%20Wine%20-%20figma.webp', alt: 'Wine template — Figma process file' },
 						] as img}
 							<div class="rounded-2xl overflow-hidden bg-neutral-100">
 								<button type="button" class="img-trigger w-full" onclick={() => openModal(img.src, img.alt)} aria-label={img.alt}>
-									<img src={img.src} alt={img.alt} loading="lazy" class="w-full block object-cover object-top" style="max-height: 520px;" />
+									<img src={img.src} alt={img.alt} loading="lazy" decoding="async" class="w-full block object-cover object-top" style="max-height: 520px;" />
 									<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 									<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 								</button>
@@ -447,13 +469,13 @@
 					<p class="text-[9px] font-mono tracking-widest text-neutral-400 uppercase mb-4">Conference — Three Layout Views</p>
 					<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 						{#each [
-							{ src: T + 'Conference.png', alt: 'Conference template' },
-							{ src: T + 'confernce%202%20.png', alt: 'Conference template — variant 2' },
-							{ src: T + 'Conference%20-%20full.png', alt: 'Conference template — full page' },
+							{ src: T + 'Conference.webp', alt: 'Conference template' },
+							{ src: T + 'confernce%202%20.webp', alt: 'Conference template — variant 2' },
+							{ src: T + 'Conference%20-%20full.webp', alt: 'Conference template — full page' },
 						] as img}
 							<div class="rounded-2xl overflow-hidden bg-neutral-100">
 								<button type="button" class="img-trigger w-full" onclick={() => openModal(img.src, img.alt)} aria-label={img.alt}>
-									<img src={img.src} alt={img.alt} loading="lazy" class="w-full block object-cover object-top" style="max-height: 400px;" />
+									<img src={img.src} alt={img.alt} loading="lazy" decoding="async" class="w-full block object-cover object-top" style="max-height: 400px;" />
 									<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 									<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 								</button>
@@ -469,12 +491,12 @@
 							<p class="text-[9px] font-mono tracking-widest text-neutral-400 uppercase mb-4">IT Firm — Two Views</p>
 							<div class="grid grid-cols-2 gap-3">
 								{#each [
-									{ src: T + 'IT%20firm.png', alt: 'IT Firm template' },
-									{ src: T + 'IT%20Firm%202%20.png', alt: 'IT Firm template — view 2' },
+									{ src: T + 'IT%20firm.webp', alt: 'IT Firm template' },
+									{ src: T + 'IT%20Firm%202%20.webp', alt: 'IT Firm template — view 2' },
 								] as img}
 									<div class="rounded-xl overflow-hidden bg-neutral-100">
 										<button type="button" class="img-trigger w-full" onclick={() => openModal(img.src, img.alt)} aria-label={img.alt}>
-											<img src={img.src} alt={img.alt} loading="lazy" class="w-full block object-cover object-top" style="max-height: 320px;" />
+											<img src={img.src} alt={img.alt} loading="lazy" decoding="async" class="w-full block object-cover object-top" style="max-height: 320px;" />
 											<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 											<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View</span></div>
 										</button>
@@ -486,12 +508,12 @@
 							<p class="text-[9px] font-mono tracking-widest text-neutral-400 uppercase mb-4">Insurance — Main + Closeup</p>
 							<div class="grid grid-cols-2 gap-3">
 								{#each [
-									{ src: T + 'Neve%20Insurance.png', alt: 'Insurance template' },
-									{ src: T + 'Insurance%20-%20closeup%20shot.png', alt: 'Insurance template — closeup' },
+									{ src: T + 'Neve%20Insurance.webp', alt: 'Insurance template' },
+									{ src: T + 'Insurance%20-%20closeup%20shot.webp', alt: 'Insurance template — closeup' },
 								] as img}
 									<div class="rounded-xl overflow-hidden bg-neutral-100">
 										<button type="button" class="img-trigger w-full" onclick={() => openModal(img.src, img.alt)} aria-label={img.alt}>
-											<img src={img.src} alt={img.alt} loading="lazy" class="w-full block object-cover object-top" style="max-height: 320px;" />
+											<img src={img.src} alt={img.alt} loading="lazy" decoding="async" class="w-full block object-cover object-top" style="max-height: 320px;" />
 											<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 											<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View</span></div>
 										</button>
@@ -509,12 +531,12 @@
 							<p class="text-[9px] font-mono tracking-widest text-neutral-400 uppercase mb-4">Resume — Two Pages</p>
 							<div class="grid grid-cols-2 gap-3">
 								{#each [
-									{ src: T + 'Resume%20.png', alt: 'Resume template — page 1' },
-									{ src: T + 'Resume%202.png', alt: 'Resume template — page 2' },
+									{ src: T + 'Resume%20.webp', alt: 'Resume template — page 1' },
+									{ src: T + 'Resume%202.webp', alt: 'Resume template — page 2' },
 								] as img}
 									<div class="rounded-xl overflow-hidden bg-neutral-100">
 										<button type="button" class="img-trigger w-full" onclick={() => openModal(img.src, img.alt)} aria-label={img.alt}>
-											<img src={img.src} alt={img.alt} loading="lazy" class="w-full block object-cover object-top" style="max-height: 320px;" />
+											<img src={img.src} alt={img.alt} loading="lazy" decoding="async" class="w-full block object-cover object-top" style="max-height: 320px;" />
 											<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 											<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View</span></div>
 										</button>
@@ -526,12 +548,12 @@
 							<p class="text-[9px] font-mono tracking-widest text-neutral-400 uppercase mb-4">Cycle Racing — Overview + Pricing</p>
 							<div class="grid grid-cols-2 gap-3">
 								{#each [
-									{ src: T + 'Neve%20Cycle%20racing.png', alt: 'Cycle Racing template' },
-									{ src: T + 'Cycle%20racing%20-%20price.png', alt: 'Cycle Racing template — pricing section' },
+									{ src: T + 'Neve%20Cycle%20racing.webp', alt: 'Cycle Racing template' },
+									{ src: T + 'Cycle%20racing%20-%20price.webp', alt: 'Cycle Racing template — pricing section' },
 								] as img}
 									<div class="rounded-xl overflow-hidden bg-neutral-100">
 										<button type="button" class="img-trigger w-full" onclick={() => openModal(img.src, img.alt)} aria-label={img.alt}>
-											<img src={img.src} alt={img.alt} loading="lazy" class="w-full block object-cover object-top" style="max-height: 320px;" />
+											<img src={img.src} alt={img.alt} loading="lazy" decoding="async" class="w-full block object-cover object-top" style="max-height: 320px;" />
 											<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 											<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View</span></div>
 										</button>
@@ -546,8 +568,8 @@
 				<div class="cs-fade-up">
 					<p class="text-[9px] font-mono tracking-widest text-neutral-400 uppercase mb-4">The Theme Behind the Templates</p>
 					<div class="rounded-3xl overflow-hidden bg-neutral-100">
-						<button type="button" class="img-trigger w-full" onclick={() => openModal(T + 'Neve%20Main%20Product%20site.png', 'Neve — Main Product Site')} aria-label="View Neve main product site">
-							<img src={T + 'Neve%20Main%20Product%20site.png'} alt="Neve theme — main product site" loading="lazy" class="w-full block" />
+						<button type="button" class="img-trigger w-full" onclick={() => openModal(T + 'Neve%20Main%20Product%20site.webp', 'Neve — Main Product Site')} aria-label="View Neve main product site">
+							<img src={T + 'Neve%20Main%20Product%20site.webp'} alt="Neve theme — main product site" loading="lazy" decoding="async" class="w-full block" />
 							<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 							<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 						</button>
@@ -560,7 +582,7 @@
 	</div>
 
 	<!-- ── EDITORIAL ──────────────────────────────────────────────────────────── -->
-	<div bind:this={editorialTriggerEl} data-theme="light">
+	<div bind:this={editorialTriggerEl} data-theme="light" class="cv-section">
 		<section class="bg-white px-6 py-32">
 			<div class="max-w-7xl mx-auto space-y-28">
 
@@ -667,7 +689,7 @@
 						<div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/5">
 							<div class="p-8 md:p-10 flex flex-col">
 								<div class="flex items-center gap-3 mb-5">
-									<img src="/images/themeisle-icon.png" alt="Themeisle" class="w-5 h-5 rounded object-contain shrink-0" />
+									<img src="/images/themeisle-icon.webp" alt="Themeisle" class="w-5 h-5 rounded object-contain shrink-0" loading="lazy" decoding="async" />
 									<span class="text-[8px] font-mono tracking-[0.3em] text-[#4EA361]/70 uppercase">The Impact</span>
 								</div>
 								<p class="text-2xl font-black text-white leading-snug mb-3">200,000 installations. Templates were the reason people chose Neve.</p>
@@ -903,27 +925,8 @@
 	.feat-card:hover .fi-frame3 { animation: frame-pulse 0.45s cubic-bezier(0.34,1.56,0.64,1) 0s    both; }
 	.feat-card:hover .fi-frame2 { animation: frame-pulse 0.45s cubic-bezier(0.34,1.56,0.64,1) 0.07s both; }
 
-	/* Museum carousel */
-	.museum-slide-active {
-		animation: museum-fade 0.35s ease forwards;
-	}
-	@keyframes museum-fade {
-		from { opacity: 0; }
-		to   { opacity: 1; }
-	}
+	/* Museum carousel — slides stacked, cross-fade via Tailwind transition-opacity */
 
-	/* GPU composition for scrolling images */
-	.ts-grid-card,
-	.img-trigger {
-		transform: translateZ(0);
-		will-change: transform;
-		backface-visibility: hidden;
-	}
-	.ts-grid-card img,
-	.img-trigger img {
-		transform: translateZ(0);
-		backface-visibility: hidden;
-	}
 
 	.ts-grid-card {
 		position: relative; overflow: hidden; border-radius: 0.75rem;
@@ -945,4 +948,10 @@
 		white-space: nowrap;
 	}
 	.ts-grid-card:hover .ts-grid-label { opacity: 1; transform: translateY(0); }
+
+	/* Skip layout + paint for off-screen sections until they near the viewport */
+	.cv-section {
+		content-visibility: auto;
+		contain-intrinsic-size: 0 800px;
+	}
 </style>

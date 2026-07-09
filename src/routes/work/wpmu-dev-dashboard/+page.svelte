@@ -28,7 +28,6 @@
 	let { data }: { data: PageData } = $props();
 	let project = $derived(data.project);
 
-	let pageWrapperEl: HTMLElement;
 	let bentoTriggerEl: HTMLElement;
 	let editorialTriggerEl: HTMLElement;
 	let ctx: gsap.Context;
@@ -38,41 +37,15 @@
 		document.body.style.backgroundColor = '#ffffff';
 		gsap.registerPlugin(ScrollTrigger);
 
-		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
-				// Stage 1 → Stage 2: white → black
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#000000',
-					color: '#ffffff',
-					ease: 'none',
-					duration: reducedMotion ? 0 : undefined,
-					scrollTrigger: {
-						trigger: bentoTriggerEl,
-						start: 'top 90%',
-						end: reducedMotion ? 'top 90%' : 'top 60%',
-						scrub: true,
-						onEnter: () => navTheme.set('dark'),
-						onLeaveBack: () => navTheme.set('light')
-					}
+				ScrollTrigger.create({
+					trigger: bentoTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
 				});
-
-				// Stage 2 → Stage 3: black → white
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#ffffff',
-					color: '#171717',
-					ease: 'none',
-					immediateRender: false,
-					duration: reducedMotion ? 0 : undefined,
-					scrollTrigger: {
-						trigger: editorialTriggerEl,
-						start: 'top 90%',
-						end: reducedMotion ? 'top 90%' : 'top 60%',
-						scrub: true,
-						onEnter: () => navTheme.set('light'),
-						onLeaveBack: () => navTheme.set('dark')
-					}
+				ScrollTrigger.create({
+					trigger: editorialTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
 				});
 			});
 		}, 400);
@@ -91,7 +64,7 @@
 	<title>{project.title} | Hitanshu Sahu</title>
 </svelte:head>
 
-<div bind:this={pageWrapperEl} class="min-h-screen bg-white text-neutral-900" style="background-color: #ffffff;">
+<div class="min-h-screen bg-white text-neutral-900">
 
 	<!-- STAGE 1: LIGHT HERO -->
 	<div data-theme="light">
@@ -192,6 +165,58 @@
 
 		<!-- Chapter 04 — Snapshot -->
 		<SnapshotShowcase />
+
+		<!-- ── Closing: Contribution + Retrospect ────────────────────────── -->
+		<section class="bg-[#0a0a0c] px-6 py-24 md:py-32 border-t border-white/5">
+			<div class="max-w-7xl mx-auto">
+
+				<div class="flex items-center gap-4 mb-16">
+					<span class="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Closing</span>
+					<div class="h-px bg-white/5 w-24"></div>
+				</div>
+
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+
+					<!-- What I Owned -->
+					<div>
+						<h2 class="text-3xl md:text-4xl font-black text-white tracking-tight mb-10 leading-tight">What I Owned.</h2>
+						<div class="space-y-5">
+							{#each [
+								{ scope: 'End-to-End',       label: 'SUI 3 Atomic Design System',  detail: 'Token architecture, component library, monochrome mode for white-label use. Every plugin in the suite was built on this foundation.' },
+								{ scope: 'End-to-End',       label: 'Smush Compression Flow',       detail: 'Reduced the core flow from 7 steps to 4. Led every Maze test and synthesised findings into the shipped design.' },
+								{ scope: 'End-to-End',       label: 'Snapshot Restore UX',          detail: 'Scoped selection redesign (DB · Files · Both) — eliminated the top support ticket category within the first quarter post-launch.' },
+								{ scope: 'Visual Direction', label: 'Hummingbird Onboarding',       detail: 'Led Figma system and interaction design. Product defined the performance metric triggers and threshold logic.' },
+								{ scope: 'Audited',          label: 'SmartCrawl & Beehive',         detail: 'Mapped to SUI 3 tokens and audited for inconsistencies. Full redesign scoped for a subsequent phase beyond my tenure.' },
+							] as item}
+								<div class="flex gap-5 border-b border-white/5 pb-5 last:border-0">
+									<span class="text-[9px] font-mono tracking-[0.18em] text-neutral-600 uppercase shrink-0 w-26 pt-0.5">{item.scope}</span>
+									<div>
+										<p class="text-[15px] font-bold text-white leading-snug mb-1">{item.label}</p>
+										<p class="text-sm text-neutral-500 leading-relaxed">{item.detail}</p>
+									</div>
+								</div>
+							{/each}
+						</div>
+					</div>
+
+					<!-- What I'd Do Differently -->
+					<div>
+						<h2 class="text-3xl md:text-4xl font-black text-white tracking-tight mb-10 leading-tight">What I'd Do Differently.</h2>
+						<div class="space-y-8">
+							<div class="pl-6" style="border-left: 2px solid rgba(255,255,255,0.08);">
+								<p class="text-[10px] font-mono tracking-[0.25em] text-neutral-500 uppercase mb-3">Snapshot Restore Modal</p>
+								<p class="text-neutral-400 text-[15px] leading-relaxed">I'd have run a second Maze test before shipping. The first round showed clear improvement — but users were still over-reading the "Selective Restore" options before committing. A follow-up test would have told me whether the bottleneck was copy or information architecture. I shipped the first iteration and moved on to Hummingbird. That's the call I'd revisit.</p>
+							</div>
+							<div class="pl-6" style="border-left: 2px solid rgba(255,255,255,0.08);">
+								<p class="text-[10px] font-mono tracking-[0.25em] text-neutral-500 uppercase mb-3">Token Governance</p>
+								<p class="text-neutral-400 text-[15px] leading-relaxed">SUI 3 scaled across six plugins with no formal deprecation protocol. Old alias tokens persisted in legacy components longer than they should — visible in the visual gap between fully updated and partially updated plugin screens. A token governance doc from day one would have prevented that drift.</p>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</section>
 
 	</div>
 

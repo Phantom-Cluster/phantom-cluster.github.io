@@ -40,7 +40,7 @@ export const projects: Project[] = [
 		process: 'Mapped user-reported friction points against session recordings to identify where cards stalled in the workflow. Designed a structured 4-stage visual flow and built a white-label design system from scratch, separating brand tokens from structural components so enterprise clients could apply their own identity without engineering rework.',
 		solution: 'Delivered a restructured Kanban interface with explicit stage progression, visual status indicators, and a white-label component system built on separated brand tokens. Enterprise clients received a single Figma handoff they could deploy without modification.',
 		outcome: 'Reduced the steps required to progress an idea from submission to review by 40%. The white-label design system was adopted by enterprise clients without any custom implementation requests to the engineering team post-launch.',
-		metrics: ['Idea Progression −40% Steps', 'Enterprise White-label: 0 Custom Requests', 'Design System Built from Scratch'],
+		metrics: ['Idea Progression −40% Steps', 'Enterprise White-label: 0 Custom Requests', '0 Engineering Rework Post-Handoff'],
 		tags: ['SaaS', 'Kanban', 'UI Design', 'B2B'],
 		thumbnail: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=1000',
 		images: [
@@ -59,12 +59,12 @@ export const projects: Project[] = [
 		outcome: 'Every surface in the app was rebuilt around the core conversion goal — get users to buy, then give them a reason to stay. The transcript and interactive 3D map launched as net-new features. Profile redesign made engagement history visible for the first time. Onboarding was rebuilt from scratch. Seek controls were added to the player. Language support was integrated for multi-region launch.',
 		metrics: ['Transcript — Net-new Feature', 'Interactive 3D Map Added', 'Onboarding Rebuilt from Scratch'],
 		tags: ['Mobile App', 'Consumer Product', 'UI/UX Design', 'Multi-region'],
-		thumbnail: '/videos/Eclectic/New UI .png',
+		thumbnail: '/videos/Eclectic/New UI .webp',
 		images: [
-			'/videos/Eclectic/New UI .png',
-			'/videos/Eclectic/New UI second screenshot.png',
-			'/videos/Eclectic/New Walkthrough.png',
-			'/videos/Eclectic/old UI.png',
+			'/videos/Eclectic/New UI .webp',
+			'/videos/Eclectic/New UI second screenshot.webp',
+			'/videos/Eclectic/New Walkthrough.webp',
+			'/videos/Eclectic/old UI.webp',
 		]
 	},
 	{
@@ -97,19 +97,19 @@ export const projects: Project[] = [
 		outcome: 'This concept, alongside the WordPress admin redesign, were the two pieces that led directly to the WPMU DEV product design role. Effido demonstrated product thinking under real constraints — identifying a genuine friction point and designing a cohesive multi-screen, multi-device solution from scratch.',
 		metrics: ['Desktop · iPad · SmartWatch — one synced data layer', 'Labels as the core org system — categories + accessibility', 'Led directly to WPMU DEV product design role'],
 		tags: ['Multi-platform', 'Productivity', 'UI Design', 'Concept'],
-		thumbnail: '/images/projects/effido/Main Dashboard.png',
+		thumbnail: '/images/projects/effido/Main Dashboard.webp',
 		images: [
-			'/images/projects/effido/Hero cover of presentation. .png',
-			'/images/projects/effido/Main Dashboard.png',
-			'/images/projects/effido/Dashboard - Dark mode.png',
-			'/images/projects/effido/Today task.png',
-			'/images/projects/effido/Today task - Dark mode.png',
-			'/images/projects/effido/Upcoming task.png',
-			'/images/projects/effido/Upcoming task dark mode.png',
-			'/images/projects/effido/Pomodoro timer.png',
-			'/images/projects/effido/Pomodoro timer dark mode.png',
-			'/images/projects/effido/Task list - currently working, in progress not working in present time , already done .png',
-			'/images/projects/effido/Task list dark mode .png',
+			'/images/projects/effido/Hero cover of presentation. .webp',
+			'/images/projects/effido/Main Dashboard.webp',
+			'/images/projects/effido/Dashboard - Dark mode.webp',
+			'/images/projects/effido/Today task.webp',
+			'/images/projects/effido/Today task - Dark mode.webp',
+			'/images/projects/effido/Upcoming task.webp',
+			'/images/projects/effido/Upcoming task dark mode.webp',
+			'/images/projects/effido/Pomodoro timer.webp',
+			'/images/projects/effido/Pomodoro timer dark mode.webp',
+			'/images/projects/effido/Task list - currently working, in progress not working in present time , already done .webp',
+			'/images/projects/effido/Task list dark mode .webp',
 		]
 	},
 	{
@@ -123,12 +123,12 @@ export const projects: Project[] = [
 		outcome: 'Concept exploration demonstrating how a section-by-section structure solves news-site information overload without reducing content volume. Published on Behance in 2020.',
 		metrics: ['5 Focused Page Sections', '6 Content Categories', 'Dual Navigation Layers'],
 		tags: ['Web Design', 'News Platform', 'UI Design', 'Concept'],
-		thumbnail: '/images/projects/alt-news/Trending%20news%20section.png',
+		thumbnail: '/images/projects/alt-news/Trending%20news%20section.webp',
 		images: [
-			'/images/projects/alt-news/Hero%20.png',
-			'/images/projects/alt-news/Trending%20news%20section.png',
-			'/images/projects/alt-news/Auto-sorted%20latest%20news.png',
-			'/images/projects/alt-news/Videos%20section.png',
+			'/images/projects/alt-news/Hero%20.webp',
+			'/images/projects/alt-news/Trending%20news%20section.webp',
+			'/images/projects/alt-news/Auto-sorted%20latest%20news.webp',
+			'/images/projects/alt-news/Videos%20section.webp',
 		]
 	},
 	{
@@ -161,11 +161,11 @@ export const projects: Project[] = [
 		outcome: 'Concept exploration demonstrating accessibility and UX improvements Discord could make. Several proposed features — including colored usernames and channel category grouping — were later added natively to the platform.',
 		metrics: ['Colored Usernames — Later Added by Discord', 'Channel Categories — Now Native to Discord', 'Concept Published on Behance 2020'],
 		tags: ['Product Design', 'Social Platform', 'UI Design', 'Concept'],
-		thumbnail: '/images/projects/discord/Server%20Preview%20.png',
+		thumbnail: '/images/projects/discord/Server%20Preview%20.webp',
 		images: [
-			'/images/projects/discord/DM.png',
-			'/images/projects/discord/Server%20Preview%20.png',
-			'/images/projects/discord/Screen%20share%20.png',
+			'/images/projects/discord/DM.webp',
+			'/images/projects/discord/Server%20Preview%20.webp',
+			'/images/projects/discord/Screen%20share%20.webp',
 		]
 	},
 	{
@@ -179,12 +179,12 @@ export const projects: Project[] = [
 		outcome: 'Themeisle found the Spotify redesign concept on Behance — that piece opened the initial conversation, and this role followed. The starter template library became a primary activation tool for non-developer users. Neve crossed 200,000 active installations during the period, with templates cited as a key driver of user retention past the initial activation threshold.',
 		metrics: ['50+ Templates Across 20+ Niches', 'PageSpeed 100% · 0.6s · 28KB Base', 'Contributed to 200K+ Installs'],
 		tags: ['WordPress', 'Web Design', 'UI', 'Templates'],
-		thumbnail: '/videos/Themeisle/Neve%20Wine.png',
+		thumbnail: '/videos/Themeisle/Neve%20Wine.webp',
 		images: [
-			'/videos/Themeisle/Neve%20Wine.png',
-			'/videos/Themeisle/Conference.png',
-			'/videos/Themeisle/Neve%20Museum%20.png',
-			'/videos/Themeisle/Law%20firm.png',
+			'/videos/Themeisle/Neve%20Wine.webp',
+			'/videos/Themeisle/Conference.webp',
+			'/videos/Themeisle/Neve%20Museum%20.webp',
+			'/videos/Themeisle/Law%20firm.webp',
 		]
 	}
 ];

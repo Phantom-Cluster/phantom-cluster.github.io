@@ -27,27 +27,20 @@
 
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#000000', color: '#ffffff', ease: 'none',
-					scrollTrigger: {
-						trigger: bentoTriggerEl, start: 'top 90%', end: 'top 60%', scrub: true,
-						onEnter: () => navTheme.set('dark'),
-						onLeaveBack: () => navTheme.set('light')
-					}
+				ScrollTrigger.create({
+					trigger: bentoTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
 				});
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#ffffff', color: '#171717', ease: 'none', immediateRender: false,
-					scrollTrigger: {
-						trigger: editorialTriggerEl, start: 'top 90%', end: 'top 60%', scrub: true,
-						onEnter: () => navTheme.set('light'),
-						onLeaveBack: () => navTheme.set('dark')
-					}
+				ScrollTrigger.create({
+					trigger: editorialTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
 				});
 				gsap.from('.cs-hero-element', { y: 40, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out' });
-				gsap.utils.toArray('.cs-fade-up').forEach((el: any) => {
-					gsap.from(el, { y: 40, opacity: 0, duration: 0.8, ease: 'power3.out',
-						scrollTrigger: { trigger: el, start: 'top 85%' }
-					});
+				gsap.set('.cs-fade-up', { y: 40, opacity: 0 });
+				ScrollTrigger.batch('.cs-fade-up', {
+					start: 'top 85%',
+					onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.8, stagger: 0.08, ease: 'power3.out' }),
+					once: true
 				});
 			});
 		}, 400);
@@ -255,7 +248,7 @@
 							</div>
 							<div class="hidden md:flex items-center justify-center px-10 border-l border-[#1DB954]/10">
 								<div class="text-center flex flex-col items-center gap-3">
-									<img src="/images/themeisle-icon.png" alt="Themeisle" class="w-12 h-12 rounded-xl object-contain" />
+									<img src="/images/themeisle-icon.webp" alt="Themeisle" class="w-12 h-12 rounded-xl object-contain" />
 									<span class="text-[9px] font-mono tracking-widest text-neutral-600 uppercase">Themeisle</span>
 								</div>
 							</div>
@@ -567,7 +560,7 @@
 						<div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/5">
 							<div class="p-8 md:p-10 flex flex-col">
 								<div class="flex items-center gap-3 mb-5">
-									<img src="/images/themeisle-icon.png" alt="Themeisle" class="w-5 h-5 rounded object-contain shrink-0" />
+									<img src="/images/themeisle-icon.webp" alt="Themeisle" class="w-5 h-5 rounded object-contain shrink-0" />
 									<span class="text-[8px] font-mono tracking-[0.3em] text-[#1DB954]/70 uppercase">The moment</span>
 								</div>
 								<p class="text-2xl font-black text-white leading-snug mb-3">No interview. One Figma trial. Job done.</p>

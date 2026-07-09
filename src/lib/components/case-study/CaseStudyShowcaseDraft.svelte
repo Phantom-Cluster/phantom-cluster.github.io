@@ -1,4 +1,42 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { gsap } from 'gsap';
+	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+
+	let sectionEl: HTMLElement;
+	let ctx: gsap.Context;
+
+	onMount(() => {
+		gsap.registerPlugin(ScrollTrigger);
+		const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		if (rm) return;
+
+		ctx = gsap.context(() => {
+			gsap.set('.sc-line-inner', { yPercent: 110 });
+			gsap.set('.sc-eyebrow', { opacity: 0, y: 14 });
+			gsap.set('.sc-chips', { opacity: 0, y: 12 });
+			gsap.set('.sc-ledger-col', { opacity: 0, y: 24 });
+
+			gsap.timeline({ scrollTrigger: { trigger: sectionEl, start: 'top 78%', once: true } })
+				.to('.sc-eyebrow', { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' })
+				.to('.sc-line-inner', { yPercent: 0, duration: 0.9, stagger: 0.09, ease: 'power4.out' }, '-=0.25')
+				.to('.sc-chips', { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, '-=0.5')
+				.to('.sc-ledger-col', { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: 'power3.out' }, '-=0.35');
+
+			const videoWraps = Array.from(sectionEl.querySelectorAll<HTMLElement>('.sc-video-wrap'));
+			gsap.set(videoWraps, { opacity: 0, y: 28, scale: 0.97 });
+			videoWraps.forEach((wrap, i) => {
+				gsap.to(wrap, {
+					opacity: 1, y: 0, scale: 1, duration: 0.65, ease: 'power3.out',
+					delay: i * 0.08,
+					scrollTrigger: { trigger: wrap, start: 'top 88%', once: true },
+				});
+			});
+		}, sectionEl);
+
+		return () => ctx?.revert();
+	});
+
 	let videoElement: HTMLVideoElement;
 	let playerWrapper: HTMLElement;
 
@@ -70,16 +108,17 @@
 	}
 </style>
 
-<section class="w-full bg-white pt-24 pb-20 overflow-x-hidden">
+<section bind:this={sectionEl} class="w-full bg-white pt-24 pb-20 overflow-x-hidden">
 	<div class="max-w-7xl mx-auto px-4 md:px-6">
 
 		<!-- ── Row 1: Title LEFT / Chips RIGHT ───────────────────── -->
-		<p class="text-[10px] font-mono tracking-[0.35em] text-neutral-400 uppercase mb-4">Design System</p>
+		<p class="sc-eyebrow text-[10px] font-mono tracking-[0.35em] text-neutral-400 uppercase mb-4">Design System</p>
 		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-12">
-			<h2 class="text-[clamp(2.8rem,7vw,5.5rem)] font-black tracking-tight text-gray-900 leading-none">
-				Re&#8209;Engineering<br/>the Core.
+			<h2 class="text-[clamp(2.8rem,7vw,5.5rem)] font-black tracking-tight text-gray-900 leading-[1.10]">
+				<span class="block overflow-hidden pb-[0.08em] mb-[-0.2em]"><span class="sc-line-inner block">Re&#8209;Engineering</span></span>
+				<span class="block overflow-hidden pb-[0.08em]"><span class="sc-line-inner block">the Core.</span></span>
 			</h2>
-			<div class="flex flex-row sm:flex-col items-center sm:items-end gap-2 shrink-0 flex-wrap">
+			<div class="sc-chips flex flex-row sm:flex-col items-center sm:items-end gap-2 shrink-0 flex-wrap">
 				<span class="px-3 py-1.5 bg-gray-100 text-gray-500 text-[10px] font-mono uppercase tracking-widest rounded-full">Architecture</span>
 				<span class="px-3 py-1.5 bg-gray-100 text-gray-500 text-[10px] font-mono uppercase tracking-widest rounded-full">Figma Variables</span>
 				<span class="px-3 py-1.5 bg-gray-100 text-gray-500 text-[10px] font-mono uppercase tracking-widest rounded-full">SUI 3 Atomic</span>
@@ -90,7 +129,7 @@
 		<div class="grid grid-cols-1 md:grid-cols-[1fr_1fr_1.6fr] border-t border-b border-gray-200 mb-0">
 
 			<!-- Col 1 — Components Audited -->
-			<div class="py-10 pr-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
+			<div class="sc-ledger-col py-10 pr-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
 				<span class="text-[10px] font-mono tracking-[0.18em] text-gray-500 uppercase block mb-4">Components Audited</span>
 				<div>
 					<div class="flex items-baseline leading-none mb-3">
@@ -104,7 +143,7 @@
 			</div>
 
 			<!-- Col 2 — Design Tokens -->
-			<div class="py-10 md:px-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
+			<div class="sc-ledger-col py-10 md:px-10 md:border-r border-gray-200 border-b md:border-b-0 flex flex-col justify-between">
 				<span class="text-[10px] font-mono tracking-[0.18em] text-gray-500 uppercase block mb-4">Design Tokens</span>
 				<div>
 					<div class="flex items-baseline leading-none mb-3">
@@ -118,7 +157,7 @@
 			</div>
 
 			<!-- Col 3 — Body copy -->
-			<div class="py-10 md:pl-10 flex flex-col justify-center">
+			<div class="sc-ledger-col py-10 md:pl-10 flex flex-col justify-center">
 				<p class="text-lg md:text-xl text-gray-600 leading-relaxed mb-5">
 					The technical debt was manifesting as high cognitive load — users couldn't find what mattered. We stripped the UI to its atomic elements to build a system that scales across all Smush and Hummingbird deployments.
 				</p>
@@ -133,15 +172,15 @@
 
 	<!-- ── VIDEO 1 ──────────────────────────────────────────── -->
 	<div class="max-w-7xl mx-auto px-4 md:px-6 mt-12">
-		<div class="bg-transparent rounded-3xl border border-neutral-200 dark:border-[#222222]
+		<div class="sc-video-wrap bg-transparent rounded-3xl border border-neutral-200 dark:border-[#222222]
 		            shadow-[0_12px_48px_rgba(0,0,0,0.11),0_2px_8px_rgba(0,0,0,0.05)]
 		            p-2">
 			<div class="relative overflow-hidden rounded-2xl bg-black group"
 			     bind:this={playerWrapper}>
 
 				<div class="absolute top-5 left-6 z-40 flex items-center gap-3
-				            bg-[#0A0A0A] border border-[#222222] rounded-full px-4 py-2">
-					<span class="w-1.5 h-1.5 rounded-full bg-[#00E676] animate-pulse shrink-0"></span>
+				            bg-portfolio-surface border border-portfolio-border rounded-full px-4 py-2">
+					<span class="w-1.5 h-1.5 rounded-full bg-portfolio-success animate-pulse shrink-0"></span>
 					<span class="text-[10px] font-mono tracking-widest text-[#9CA3AF] uppercase">SUI&nbsp;3 · Background Rules</span>
 				</div>
 
@@ -157,13 +196,12 @@
 					class="w-full h-auto object-cover aspect-video cursor-pointer transform-gpu will-change-transform"
 					playsinline
 					preload="metadata"
-					decoding="async"
 					muted
 					onclick={togglePlay}
 				></video>
 
 				<div class="absolute bottom-5 inset-x-5 flex flex-col gap-3 px-5 py-4 rounded-2xl
-				            bg-[#0A0A0A] border border-[#222222] shadow-[0_16px_32px_rgba(0,0,0,0.5)]
+				            bg-portfolio-surface border border-portfolio-border shadow-[0_16px_32px_rgba(0,0,0,0.5)]
 				            opacity-0 translate-y-3 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-[transform,opacity] duration-300 ease-out transform-gpu will-change-[transform,opacity]">
 					<div class="flex items-center gap-4 w-full">
 						<span class="text-[#9CA3AF] text-[10px] font-mono w-8 text-right">{formatTime(currentTime)}</span>
@@ -204,7 +242,7 @@
 		<div class="rounded-3xl overflow-hidden shadow-[0_16px_64px_rgba(0,0,0,0.12)]">
 
 			<!-- Core finding + quote -->
-			<div class="bg-[#050505] px-8 md:px-12 py-10 border-b border-[#222222]">
+			<div class="bg-portfolio-base px-8 md:px-12 py-10 border-b border-portfolio-border">
 				<div class="grid grid-cols-1 md:grid-cols-[1.4fr_1fr] gap-10">
 					<div class="flex flex-col justify-between gap-6">
 						<span class="text-[9px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Core research finding · SUI 3 Atomic</span>
@@ -218,7 +256,7 @@
 							<span class="px-3 py-1.5 rounded-full bg-[#111111] border border-[#222222] text-[9px] font-mono text-neutral-400 uppercase tracking-widest">SUI 3 audit</span>
 						</div>
 					</div>
-					<blockquote class="bg-[#0A0A0A] border border-[#222222] rounded-2xl px-7 pt-8 pb-7 relative overflow-hidden flex flex-col justify-between gap-8 min-h-[180px]">
+					<blockquote class="bg-portfolio-surface border border-portfolio-border rounded-2xl px-7 pt-8 pb-7 relative overflow-hidden flex flex-col justify-between gap-8 min-h-[180px]">
 						<span class="absolute -top-4 -left-2 text-[8rem] font-black leading-none select-none pointer-events-none" style="color: #121212;">"</span>
 						<p class="text-sm text-neutral-300 italic leading-relaxed relative z-10">
 							I spend more time figuring out where to click than actually using the plugin. Everything looks different.
@@ -229,7 +267,7 @@
 			</div>
 
 			<!-- Severity signal cards -->
-			<div class="bg-[#0A0A0A] px-8 md:px-12 py-8 border-b border-[#222222]">
+			<div class="bg-portfolio-surface px-8 md:px-12 py-8 border-b border-portfolio-border">
 				<span class="text-[9px] font-mono tracking-[0.3em] text-neutral-500 uppercase block mb-5">Research signals · 200+ component audit · 6 plugin analysis</span>
 				<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
 					{#each [
@@ -237,8 +275,8 @@
 						{ severity: 'Critical', bg: 'bg-[#1A0A0A] border-[#3D0A0C]',     pill: 'text-[#FF3B30] bg-[#2D0D10] border-[#5A1C20]',         stat: '43%',    insight: 'drop-off rate in the first 3 settings screens before the redesign shipped', tag: 'Onboarding drop-off' },
 						{ severity: 'High',     bg: 'bg-[#1A0A0A] border-[#3D0A0C]',     pill: 'text-[#FF3B30] bg-[#2D0D10] border-[#5A1C20]',         stat: '200+',   insight: 'existing components with no shared token mapping before the audit began', tag: 'Component debt' },
 						{ severity: 'High',     bg: 'bg-[#1A0A0A] border-[#3D0A0C]',     pill: 'text-[#FF3B30] bg-[#2D0D10] border-[#5A1C20]',         stat: '3×',     insight: 'longer to complete identical tasks across different plugins due to inconsistent affordances', tag: 'Cognitive load' },
-						{ severity: 'Medium',   bg: 'bg-[#0A0A0A] border-[#222222]',     pill: 'text-[#9CA3AF] bg-[#1A1A1A] border-[#2E2E2E]',         stat: '0',      insight: 'shared Figma libraries before the SUI 3 audit — each plugin had its own isolated file', tag: 'No source of truth' },
-						{ severity: 'Medium',   bg: 'bg-[#0A0A0A] border-[#222222]',     pill: 'text-[#9CA3AF] bg-[#1A1A1A] border-[#2E2E2E]',         stat: 'Manual', insight: 'every plugin used hand-coded spacing, color values, and radii — no token pipeline', tag: 'Token gap' },
+						{ severity: 'Medium',   bg: 'bg-portfolio-surface border-portfolio-border',     pill: 'text-[#9CA3AF] bg-[#1A1A1A] border-[#2E2E2E]',         stat: '0',      insight: 'shared Figma libraries before the SUI 3 audit — each plugin had its own isolated file', tag: 'No source of truth' },
+						{ severity: 'Medium',   bg: 'bg-portfolio-surface border-portfolio-border',     pill: 'text-[#9CA3AF] bg-[#1A1A1A] border-[#2E2E2E]',         stat: 'Manual', insight: 'every plugin used hand-coded spacing, color values, and radii — no token pipeline', tag: 'Token gap' },
 					] as card}
 						<div class="rounded-2xl border {card.bg} px-5 py-5 flex flex-col gap-3">
 							<div class="flex items-center justify-between">
@@ -271,7 +309,7 @@
 			<div class="h-[1px] bg-[#222222] w-full"></div>
 
 			<!-- Bottom: What we changed + Proof -->
-			<div class="bg-white dark:bg-[#0A0A0A] px-8 md:px-12 pt-10 pb-6 grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-10">
+			<div class="bg-white dark:bg-portfolio-surface px-8 md:px-12 pt-10 pb-6 grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-10">
 
 				<div class="flex flex-col gap-5">
 					<span class="text-[9px] font-mono tracking-[0.3em] text-neutral-400 uppercase">What we changed</span>
@@ -302,23 +340,23 @@
 							{ stat: '6',    label: 'Plugins unified',    sub: 'one system' },
 							{ stat: '−43%', label: 'Onboarding drop-off',sub: 'post-launch' },
 						] as m}
-							<div class="bg-neutral-950 dark:bg-[#050505] rounded-xl px-4 py-4 border border-[#222222]">
-								<span class="text-[clamp(1.4rem,3vw,2rem)] font-black text-[#00E676] tracking-tight leading-none block">{m.stat}</span>
+							<div class="bg-neutral-950 dark:bg-portfolio-base rounded-xl px-4 py-4 border border-portfolio-border">
+								<span class="text-[clamp(1.4rem,3vw,2rem)] font-black text-portfolio-success tracking-tight leading-none block">{m.stat}</span>
 								<span class="text-xs font-semibold text-white block mt-1">{m.label}</span>
 								<span class="text-[10px] text-neutral-500">{m.sub}</span>
 							</div>
 						{/each}
 					</div>
 					<div class="flex items-start gap-3 bg-green-50 dark:bg-[#042010] border border-green-200 dark:border-[#083E20] rounded-xl px-4 py-3">
-						<div class="dot-ripple w-2 h-2 bg-[#00E676] shrink-0 mt-0.5"></div>
-						<p class="text-xs font-semibold text-green-700 dark:text-[#00E676] leading-snug">Hypothesis confirmed — onboarding drop-off fell 43% and support tickets citing UI confusion dropped within 4 weeks of the SUI 3 rollout.</p>
+						<div class="dot-ripple w-2 h-2 bg-portfolio-success shrink-0 mt-0.5"></div>
+						<p class="text-xs font-semibold text-green-700 dark:text-portfolio-success leading-snug">Hypothesis confirmed — onboarding drop-off fell 43% and support tickets citing UI confusion dropped within 4 weeks of the SUI 3 rollout.</p>
 					</div>
 				</div>
 
 			</div>
 
 			<!-- Full-width note strip -->
-			<div class="bg-white dark:bg-[#0A0A0A] px-8 md:px-12 pb-10 border-t border-neutral-100 dark:border-[#222222] pt-5">
+			<div class="bg-white dark:bg-portfolio-surface px-8 md:px-12 pb-10 border-t border-neutral-100 dark:border-portfolio-border pt-5">
 				<div class="flex items-start gap-3 bg-neutral-50 dark:bg-[#111111] border border-neutral-200 dark:border-[#222222] rounded-xl px-5 py-4">
 					<div class="w-2 h-2 rounded-full bg-neutral-300 dark:bg-neutral-700 shrink-0 mt-0.5"></div>
 					<p class="text-[10px] text-neutral-500 dark:text-neutral-400 leading-snug">Onboarding drop-off measured across new free-tier installs in the 8 weeks post-SUI 3 rollout compared to the same period prior year.</p>

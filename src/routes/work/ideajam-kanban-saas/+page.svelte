@@ -46,87 +46,69 @@
 
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#000000',
-					color: '#ffffff',
-					ease: 'none',
-					scrollTrigger: {
-						trigger: bentoTriggerEl,
-						start: 'top 90%',
-						end: reducedMotion ? 'top 90%' : 'top 60%',
-						scrub: true,
-						onEnter: () => navTheme.set('dark'),
-						onLeaveBack: () => navTheme.set('light')
-					}
+				ScrollTrigger.create({
+					trigger: bentoTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
 				});
-
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#ffffff',
-					color: '#171717',
-					ease: 'none',
-					immediateRender: false,
-					scrollTrigger: {
-						trigger: editorialTriggerEl,
-						start: 'top 90%',
-						end: reducedMotion ? 'top 90%' : 'top 60%',
-						scrub: true,
-						onEnter: () => navTheme.set('light'),
-						onLeaveBack: () => navTheme.set('dark')
-					}
+				ScrollTrigger.create({
+					trigger: editorialTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
 				});
 
 				if (!reducedMotion) {
-					gsap.from('.cs-hero-element', {
-						y: 40,
-						opacity: 0,
-						duration: 0.9,
-						stagger: 0.12,
-						ease: 'power3.out'
-					});
+					// ── Hero entrance ─────────────────────────────────────────
+					gsap.set('.ij-hero-badge',    { opacity: 0, y: 14 });
+					gsap.set('.ij-hero-eyebrow',  { opacity: 0, y: 12 });
+					gsap.set('.ij-hero-line',     { yPercent: 110 });
+					gsap.set('.ij-hero-chips span', { opacity: 0, y: 10 });
+					gsap.set('.ij-hero-meta-item', { opacity: 0, y: 16 });
+					gsap.set('.ij-hero-ledger',   { opacity: 0, y: 20 });
+					gsap.set('.ij-hero-desc',     { opacity: 0, y: 16 });
+					gsap.set('.ij-hero-tags',     { opacity: 0, y: 16 });
 
-					gsap.utils.toArray('.cs-fade-up').forEach((el: any) => {
-						gsap.from(el, {
-							y: 36,
-							opacity: 0,
-							duration: 0.8,
-							ease: 'power3.out',
-							scrollTrigger: { trigger: el, start: 'top 88%', invalidateOnRefresh: true }
-						});
+					gsap.timeline({ delay: 0.05 })
+						.to('.ij-hero-badge',    { opacity: 1, y: 0, duration: 0.5,  ease: 'power2.out' })
+						.to('.ij-hero-line',     { yPercent: 0,       duration: 1.0,  stagger: 0.09, ease: 'power4.out' }, '-=0.2')
+						.to('.ij-hero-eyebrow',  { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 0.1)
+						.to('.ij-hero-chips span', { opacity: 1, y: 0, duration: 0.45, stagger: 0.055, ease: 'power3.out' }, '-=0.5')
+						.to('.ij-hero-meta-item', { opacity: 1, y: 0, duration: 0.5,  stagger: 0.07, ease: 'power3.out' }, '-=0.6')
+						.to('.ij-hero-ledger',   { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.4')
+						.to('.ij-hero-desc',     { opacity: 1, y: 0, duration: 0.5,  ease: 'power3.out' }, '-=0.35')
+						.to('.ij-hero-tags',     { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, '-=0.4');
+
+					// ── Scroll animations ─────────────────────────────────────
+					gsap.set('.cs-fade-up', { y: 36, opacity: 0 });
+					ScrollTrigger.batch('.cs-fade-up', {
+						start: 'top 88%',
+						onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.8, stagger: 0.08, ease: 'power3.out' }),
+						once: true
 					});
 
 					// cs-card: only animate cards NOT inside a cs-grid-stagger (avoid double-animation)
 					gsap.utils.toArray('.cs-card').forEach((el: any) => {
 						if (!(el as HTMLElement).closest('.cs-grid-stagger')) {
-							gsap.from(el, {
-								y: 32,
-								scale: 0.96,
-								opacity: 0,
-								duration: 0.75,
-								ease: 'power2.out',
-								scrollTrigger: { trigger: el, start: 'top 90%', invalidateOnRefresh: true }
+							gsap.set(el, { y: 32, scale: 0.96, opacity: 0 });
+							gsap.to(el, {
+								y: 0, scale: 1, opacity: 1, duration: 0.75, ease: 'power2.out',
+								scrollTrigger: { trigger: el, start: 'top 90%', once: true }
 							});
 						}
 					});
 
 					gsap.utils.toArray('.cs-grid-stagger').forEach((grid: any) => {
 						const children = Array.from((grid as HTMLElement).children);
-						gsap.from(children, {
-							y: 40,
-							opacity: 0,
-							scale: 0.96,
-							duration: 0.7,
-							stagger: 0.1,
-							ease: 'power2.out',
-							scrollTrigger: { trigger: grid, start: 'top 85%', invalidateOnRefresh: true }
+						gsap.set(children, { y: 40, opacity: 0, scale: 0.96 });
+						gsap.to(children, {
+							y: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.1, ease: 'power2.out',
+							scrollTrigger: { trigger: grid, start: 'top 85%', once: true }
 						});
 					});
 
 					gsap.utils.toArray('.cs-img').forEach((img: any) => {
-						gsap.from(img, {
-							scale: 1.06,
-							duration: 1.1,
-							ease: 'power2.out',
-							scrollTrigger: { trigger: img, start: 'top 90%', invalidateOnRefresh: true }
+						gsap.set(img, { scale: 1.06 });
+						gsap.to(img, {
+							scale: 1, duration: 1.1, ease: 'power2.out',
+							scrollTrigger: { trigger: img, start: 'top 90%', once: true }
 						});
 					});
 				}
@@ -394,7 +376,7 @@
 		<div class="max-w-7xl mx-auto w-full">
 
 			<!-- Top meta strip -->
-			<div class="flex items-center justify-between border-b border-neutral-200 pb-5 mb-12 cs-hero-element">
+			<div class="ij-hero-badge flex items-center justify-between border-b border-neutral-200 pb-5 mb-12">
 				<div class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
 					<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(0,0,0,0.75)_360deg)]"></div>
 					<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
@@ -405,38 +387,38 @@
 			</div>
 
 			<!-- Main split: title left / meta right -->
-			<div class="flex items-start gap-10 cs-hero-element">
+			<div class="flex items-start gap-10">
 				<div class="flex-1 min-w-0">
-					<p class="text-[11px] font-mono tracking-[0.35em] uppercase text-neutral-400 mb-5">Ideajam</p>
-					<h1 class="text-[clamp(3rem,8vw,7.5rem)] font-black tracking-tight leading-[0.9] text-neutral-900">
-						Kanban&nbsp;SaaS<br/>
-						<span class="text-neutral-300">&amp;&nbsp;White&#8209;label</span><br/>
-						Redesign.
+					<p class="ij-hero-eyebrow text-[11px] font-mono tracking-[0.35em] uppercase text-neutral-400 mb-5">Ideajam</p>
+					<h1 class="text-[clamp(2.8rem,7vw,6rem)] font-black tracking-tight leading-[1.10] text-neutral-900">
+						<span class="block overflow-hidden pb-[0.08em] mb-[-0.2em]"><span class="ij-hero-line block">Kanban&nbsp;SaaS</span></span>
+						<span class="block overflow-hidden pb-[0.08em] mb-[-0.2em]"><span class="ij-hero-line block text-neutral-300">&amp;&nbsp;White&#8209;label</span></span>
+						<span class="block overflow-hidden pb-[0.08em]"><span class="ij-hero-line block">Redesign.</span></span>
 					</h1>
-					<div class="flex flex-wrap gap-2 mt-8">
+					<div class="ij-hero-chips flex flex-wrap gap-2 mt-8">
 						{#each ['Kanban Board', 'Task Management', 'Design System', 'White-label'] as product}
 							<span class="px-3 py-1 rounded-full bg-neutral-50 border border-neutral-200 text-[10px] font-mono tracking-widest text-neutral-500 uppercase">{product}</span>
 						{/each}
 					</div>
 				</div>
 				<div class="shrink-0 w-56 hidden md:flex flex-col gap-6 pt-14">
-					<div>
+					<div class="ij-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Role</span>
 						<span class="text-sm font-semibold text-neutral-800">{project.role}</span>
 					</div>
-					<div>
+					<div class="ij-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Platform</span>
 						<span class="text-sm font-semibold text-neutral-800">SaaS / B2B</span>
 					</div>
-					<div>
+					<div class="ij-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Scope</span>
 						<span class="text-sm font-semibold text-neutral-800">Full Redesign + System</span>
 					</div>
-					<div>
+					<div class="ij-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Design System</span>
 						<span class="text-sm font-semibold text-neutral-800">Built from Scratch</span>
 					</div>
-					<div class="pt-5 border-t border-neutral-100">
+					<div class="ij-hero-meta-item pt-5 border-t border-neutral-100">
 						<div class="flex items-center gap-2 text-portfolio-accent">
 							<span class="text-[9px] font-mono tracking-widest uppercase">Scroll to explore</span>
 							<svg class="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -448,37 +430,41 @@
 			</div>
 
 			<!-- 3-col key impact ledger -->
-			<div class="grid grid-cols-3 border-t border-b border-neutral-200 mt-12 cs-hero-element">
+			<div class="ij-hero-ledger grid grid-cols-3 border-t border-b border-neutral-200 mt-12">
+				<!-- Flow Reduced — before/after -->
 				<div class="py-7 pr-4 md:pr-8 border-r border-neutral-200">
-					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Card Progression</span>
+					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Flow Reduced</span>
 					<div class="flex items-baseline gap-1.5 leading-none flex-wrap">
 						<span class="text-lg md:text-xl font-black text-neutral-300 tracking-tight line-through decoration-portfolio-error">4 Steps</span>
 						<span class="text-portfolio-accent font-black text-sm md:text-base leading-none">→</span>
 						<span class="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">2 Steps</span>
 					</div>
 				</div>
+				<!-- System Built — list -->
 				<div class="py-7 px-3 md:px-8 border-r border-neutral-200">
-					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Enterprise Adoption</span>
-					<div class="flex items-baseline gap-1 leading-none flex-wrap">
-						<span class="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">0</span>
-						<span class="text-xs md:text-sm font-semibold text-neutral-400 leading-none">Custom Requests</span>
+					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">System Built</span>
+					<div class="flex flex-col gap-0.5">
+						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">Design Tokens</span>
+						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">Component Library</span>
+						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">White-label Kit</span>
 					</div>
 				</div>
+				<!-- Enterprise Fit — big zero -->
 				<div class="py-7 pl-3 md:pl-8">
-					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">White-label System</span>
-					<div class="flex items-baseline gap-1 leading-none flex-wrap">
-						<span class="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">Ready</span>
-						<span class="text-xs md:text-sm font-semibold text-neutral-400 leading-none">Day&nbsp;One</span>
+					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Enterprise Fit</span>
+					<div class="flex items-baseline gap-1.5 leading-none">
+						<span class="text-3xl md:text-4xl font-black text-neutral-900 tracking-tight">0</span>
+						<span class="text-sm font-semibold text-neutral-400 leading-tight">Modification<br/>Requests</span>
 					</div>
 				</div>
 			</div>
 
 			<!-- Description + tags -->
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-10 pt-10 cs-hero-element">
-				<div class="md:col-span-2">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-10 pt-10">
+				<div class="ij-hero-desc md:col-span-2">
 					<p class="text-xl md:text-2xl text-neutral-500 leading-relaxed">{project.description}</p>
 				</div>
-				<div class="flex flex-wrap gap-2 content-start pt-1">
+				<div class="ij-hero-tags flex flex-wrap gap-2 content-start pt-1">
 					{#each project.tags as tag}
 						<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono tracking-wider uppercase bg-neutral-100 border border-neutral-200 text-neutral-600">{tag}</span>
 					{/each}
@@ -603,7 +589,7 @@
 			</div>
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-5 cs-grid-stagger">
 				<CsImageCard
-					src="/videos/ideajam/old design.png"
+					src="/videos/ideajam/old design.webp"
 					label="Before"
 					caption="Old Ideajam interface — table-based inline editing with no visual stage hierarchy"
 					labelVariant="error"
@@ -613,7 +599,7 @@
 					onOpen={openModal}
 				/>
 				<CsImageCard
-					src="/videos/ideajam/ideation  card and idea page.png"
+					src="/videos/ideajam/ideation  card and idea page.webp"
 					label="After"
 					caption="New Ideajam Kanban interface — structured card grid with explicit status tags and activity sidebar"
 					labelVariant="success"
@@ -640,7 +626,7 @@
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5 cs-grid-stagger">
 				<div class="md:col-span-2">
 					<CsImageCard
-						src="/videos/ideajam/idea page .png"
+						src="/videos/ideajam/idea page .webp"
 						label="Idea Detail — Stage Pipeline"
 						caption="Idea detail page showing stage pipeline tabs"
 						aspect="aspect-16/10"
@@ -648,7 +634,7 @@
 					/>
 				</div>
 				<CsImageCard
-					src="/videos/ideajam/ideation - rating.png"
+					src="/videos/ideajam/ideation - rating.webp"
 					label="Evaluation Panel"
 					caption="Evaluation panel showing 5-dimension scoring"
 					aspect="aspect-3/4"
@@ -659,14 +645,14 @@
 			<!-- Row 2 -->
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-5 cs-grid-stagger">
 				<CsImageCard
-					src="/videos/ideajam/ideation commulative rating.png"
+					src="/videos/ideajam/ideation commulative rating.webp"
 					label="Cumulative Innovation Score"
 					caption="Cumulative innovation score view showing 4.3 aggregate rating"
 					aspect="aspect-4/3"
 					onOpen={openModal}
 				/>
 				<CsImageCard
-					src="/videos/ideajam/data room.png"
+					src="/videos/ideajam/data room.webp"
 					label="Data Room — Document Versioning"
 					caption="Data room showing versioned documents"
 					aspect="aspect-4/3"
@@ -1209,7 +1195,7 @@
 					<h2 class="text-[34px] md:text-5xl font-black tracking-tight text-neutral-900 leading-[0.95] mb-12">Design<br/>System</h2>
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5 cs-grid-stagger">
 						<CsImageCard
-							src="/videos/ideajam/Brand color.png"
+							src="/videos/ideajam/Brand color.webp"
 							label="Default Colour Styles"
 							caption="Brand colour system showing neutral, primary pink, and secondary blue scales"
 							aspect="aspect-4/3"
@@ -1217,7 +1203,7 @@
 							onOpen={openModal}
 						/>
 						<CsImageCard
-							src="/videos/ideajam/NBT color style.png"
+							src="/videos/ideajam/NBT color style.webp"
 							label="NBT Colour Styles — White-label"
 							caption="NBT white-label colour system with neutral tones and alternative brand palette"
 							aspect="aspect-4/3"
@@ -1227,7 +1213,7 @@
 					</div>
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-5 cs-grid-stagger">
 						<CsImageCard
-							src="/videos/ideajam/Typescale .png"
+							src="/videos/ideajam/Typescale .webp"
 							label="Type Scale — Major Third · Poppins"
 							caption="Type scale documentation — Major Third ratio using Poppins"
 							aspect="aspect-video"
@@ -1235,7 +1221,7 @@
 							onOpen={openModal}
 						/>
 						<CsImageCard
-							src="/videos/ideajam/Rounded color.png"
+							src="/videos/ideajam/Rounded color.webp"
 							label="Rounded Corners + Colour Shadows"
 							caption="Border radius and shadow system — 6px cards, 4px elements, 40px buttons"
 							aspect="aspect-video"
@@ -1254,11 +1240,11 @@
 						<button
 							type="button"
 							class="img-trigger"
-							onclick={() => openModal('/videos/ideajam/user flow.png', 'User flow diagram showing authentication paths: sign in, sign up, and forget password recovery')}
+							onclick={() => openModal('/videos/ideajam/user flow.webp', 'User flow diagram showing authentication paths: sign in, sign up, and forget password recovery')}
 							aria-label="Preview: User flow diagram"
 						>
 							<div class="overflow-hidden aspect-video">
-								<img src="/videos/ideajam/user flow.png" alt="User flow diagram showing authentication paths" class="w-full h-full object-cover object-top cs-img" />
+								<img src="/videos/ideajam/user flow.webp" alt="User flow diagram showing authentication paths" class="w-full h-full object-cover object-top cs-img" />
 							</div>
 							<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 							<div class="img-preview-badge">

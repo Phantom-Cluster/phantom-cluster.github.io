@@ -150,7 +150,7 @@
 					},
 				);
 
-				// Note: no GSAP bg revert needed — Core Strengths and below have explicit bg-[#f4f4f6]
+				// Note: no GSAP bg revert needed — Core Strengths and below have explicit bg-[#F4F0E8]
 
 				// ── Work Experience — chip slide + heading curtain wipe ──
 				gsap.from('.work-exp-chip', {
@@ -576,7 +576,7 @@
 
 <div
 	bind:this={pageWrapperEl}
-	class="bg-[#f4f4f6] text-neutral-900 min-h-screen"
+	class="bg-[#F4F0E8] text-neutral-900 min-h-screen"
 >
 	<!-- Phase 2: Hero Section -->
 	<section

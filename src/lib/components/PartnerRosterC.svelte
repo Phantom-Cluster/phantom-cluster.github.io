@@ -123,7 +123,7 @@
 <!-- ─── VERSION C: Dual marquee + dark stat cards ─────────────────────────── -->
 <section
 	bind:this={sectionEl}
-	class="py-28 sm:py-36 lg:py-48 bg-[#f4f4f6]"
+	class="py-28 sm:py-36 lg:py-48 bg-[#F4F0E8]"
 >
 	<!-- Outer max-width container -->
 	<div class="max-w-[1320px] mx-auto px-6 lg:px-10">

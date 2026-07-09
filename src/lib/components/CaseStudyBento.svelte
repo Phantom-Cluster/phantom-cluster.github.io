@@ -54,6 +54,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { gsap } from 'gsap';
+	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
 	// ── Prop Types ────────────────────────────────────────────────────────────
 	interface Narrative {
@@ -119,9 +120,9 @@
 
 	onMount(() => {
 		isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+		gsap.registerPlugin(ScrollTrigger);
 
-		// GSAP stagger entrance — clearProps:'all' removes every inline style after
-		// animation so no residual compositing layers block CSS :hover hit-testing
+		// Scroll-triggered entrance — fires when bento scrolls into view, not on mount
 		if (bentoGridEl) {
 			const cards = Array.from(bentoGridEl.querySelectorAll(':scope > div'));
 			gsap.set(cards, { opacity: 0, y: 26, scale: 0.97, force3D: true });
@@ -130,9 +131,9 @@
 				duration: 0.68,
 				ease: 'power2.out',
 				stagger: 0.08,
-				delay: 0.1,
 				clearProps: 'all',
 				force3D: true,
+				scrollTrigger: { trigger: bentoGridEl, start: 'top 82%', once: true },
 			});
 		}
 
@@ -316,7 +317,7 @@
 			<!-- ── 2. Video Anchor (2×2 top-right) ──────────────────────────── -->
 			<div class="col-span-1 md:col-span-2 lg:col-span-2 md:row-span-2 lg:row-span-2 lg:col-start-3 lg:row-start-1 csb-wrap">
 				<div class="csb-spin"></div>
-				<div class="csb-inner bg-[#050505] cursor-crosshair group">
+				<div class="csb-inner bg-portfolio-base cursor-crosshair group">
 					<video src={anchor.videoSrc} autoplay loop muted playsinline
 					       class="absolute inset-0 w-full h-full object-cover object-left-top z-0
 					              transform-gpu will-change-transform transition-all duration-1000
@@ -324,7 +325,7 @@
 					              {isTouchDevice ? 'touch-opacity' : ''}">
 					</video>
 					<!-- Dark veil: dissolves on hover -->
-					<div class="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/90 to-[#050505]/40 z-10 transition-opacity duration-700 group-hover:opacity-0"></div>
+					<div class="absolute inset-0 bg-gradient-to-t from-portfolio-base via-portfolio-base/90 to-portfolio-base/40 z-10 transition-opacity duration-700 group-hover:opacity-0"></div>
 					<!-- Logo + hint: sinks away on hover -->
 					<div class="absolute inset-0 flex flex-col items-center justify-center z-20 transition-all duration-700 ease-out group-hover:opacity-0 group-hover:translate-y-8 pointer-events-none">
 						<div class="w-20 h-20 rounded-full border border-white/[0.1] flex items-center justify-center mb-6 bg-[#0a0a0a] shadow-2xl p-4">

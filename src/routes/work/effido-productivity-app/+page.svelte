@@ -43,44 +43,24 @@
 
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#000000',
-					color: '#ffffff',
-					ease: 'none',
-					scrollTrigger: {
-						trigger: bentoTriggerEl,
-						start: 'top 90%',
-						end: 'top 60%',
-						scrub: true,
-						onEnter: () => navTheme.set('dark'),
-						onLeaveBack: () => navTheme.set('light')
-					}
+				ScrollTrigger.create({
+					trigger: bentoTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
 				});
-
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#ffffff',
-					color: '#171717',
-					ease: 'none',
-					immediateRender: false,
-					scrollTrigger: {
-						trigger: editorialTriggerEl,
-						start: 'top 90%',
-						end: 'top 60%',
-						scrub: true,
-						onEnter: () => navTheme.set('light'),
-						onLeaveBack: () => navTheme.set('dark')
-					}
+				ScrollTrigger.create({
+					trigger: editorialTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
 				});
 
 				gsap.from('.cs-hero-element', {
 					y: 40, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out'
 				});
 
-				gsap.utils.toArray('.cs-fade-up').forEach((el: any) => {
-					gsap.from(el, {
-						y: 40, opacity: 0, duration: 0.8, ease: 'power3.out',
-						scrollTrigger: { trigger: el, start: 'top 85%' }
-					});
+				gsap.set('.cs-fade-up', { y: 40, opacity: 0 });
+				ScrollTrigger.batch('.cs-fade-up', {
+					start: 'top 85%',
+					onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.8, stagger: 0.08, ease: 'power3.out' }),
+					once: true
 				});
 			});
 		}, 400);
@@ -249,7 +229,7 @@
 			</div>
 
 			<div class="bg-neutral-950 rounded-4xl overflow-hidden border border-white/5 mb-5 cs-fade-up">
-				<img src="/images/projects/effido/Hero cover of presentation. .png" alt="EffiDo — full product overview" class="w-full block" loading="eager" />
+				<img src="/images/projects/effido/thumbs/Hero cover of presentation. .webp" alt="EffiDo — full product overview" class="w-full block" loading="eager" decoding="async" />
 			</div>
 
 			<div class="effido-video-card group cs-fade-up" bind:this={wrapperEl}>
@@ -264,7 +244,7 @@
 						bind:duration
 						src="/images/projects/effido/Effido Project.mp4"
 						class="w-full aspect-video object-cover block cursor-pointer"
-						playsinline preload="metadata" muted
+						autoplay loop muted playsinline preload="metadata"
 						onclick={togglePlay}
 					></video>
 
@@ -422,16 +402,16 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<div class="bg-neutral-100 rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase mb-3 pl-1">Light Mode</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/effido/Main Dashboard.png', 'EffiDo Dashboard — Light Mode')} aria-label="Preview Dashboard Light Mode">
-						<img src="/images/projects/effido/Main Dashboard.png" alt="EffiDo Dashboard — Light Mode" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/effido/Main Dashboard.webp', 'EffiDo Dashboard — Light Mode')} aria-label="Preview Dashboard Light Mode">
+						<img src="/images/projects/effido/thumbs/Main Dashboard.webp" alt="EffiDo Dashboard — Light Mode" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
 				</div>
 				<div class="bg-neutral-900 rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase mb-3 pl-1">Dark Mode</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Dashboard - Dark mode.png', 'EffiDo Dashboard — Dark Mode')} aria-label="Preview Dashboard Dark Mode">
-						<img src="/images/projects/effido/Dashboard - Dark mode.png" alt="EffiDo Dashboard — Dark Mode" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Dashboard - Dark mode.webp', 'EffiDo Dashboard — Dark Mode')} aria-label="Preview Dashboard Dark Mode">
+						<img src="/images/projects/effido/thumbs/Dashboard - Dark mode.webp" alt="EffiDo Dashboard — Dark Mode" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
@@ -458,16 +438,16 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<div class="bg-[#eeece9] rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase mb-3 pl-1">Light Mode</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Today task.png', 'EffiDo Today — Light Mode')} aria-label="Preview Today Light Mode">
-						<img src="/images/projects/effido/Today task.png" alt="EffiDo Today — Light Mode" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Today task.webp', 'EffiDo Today — Light Mode')} aria-label="Preview Today Light Mode">
+						<img src="/images/projects/effido/thumbs/Today task.webp" alt="EffiDo Today — Light Mode" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
 				</div>
 				<div class="bg-[#111111] rounded-3xl p-4 lg:p-5 border border-white/5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-600 uppercase mb-3 pl-1">Dark Mode</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Today task - Dark mode.png', 'EffiDo Today — Dark Mode')} aria-label="Preview Today Dark Mode">
-						<img src="/images/projects/effido/Today task - Dark mode.png" alt="EffiDo Today — Dark Mode" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Today task - Dark mode.webp', 'EffiDo Today — Dark Mode')} aria-label="Preview Today Dark Mode">
+						<img src="/images/projects/effido/thumbs/Today task - Dark mode.webp" alt="EffiDo Today — Dark Mode" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
@@ -494,16 +474,16 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<div class="bg-neutral-100 rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase mb-3 pl-1">Light Mode</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/effido/Upcoming task.png', 'EffiDo Upcoming — Light Mode')} aria-label="Preview Upcoming Light Mode">
-						<img src="/images/projects/effido/Upcoming task.png" alt="EffiDo Upcoming — Light Mode" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/effido/Upcoming task.webp', 'EffiDo Upcoming — Light Mode')} aria-label="Preview Upcoming Light Mode">
+						<img src="/images/projects/effido/thumbs/Upcoming task.webp" alt="EffiDo Upcoming — Light Mode" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
 				</div>
 				<div class="bg-neutral-900 rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase mb-3 pl-1">Dark Mode</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Upcoming task dark mode.png', 'EffiDo Upcoming — Dark Mode')} aria-label="Preview Upcoming Dark Mode">
-						<img src="/images/projects/effido/Upcoming task dark mode.png" alt="EffiDo Upcoming — Dark Mode" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Upcoming task dark mode.webp', 'EffiDo Upcoming — Dark Mode')} aria-label="Preview Upcoming Dark Mode">
+						<img src="/images/projects/effido/thumbs/Upcoming task dark mode.webp" alt="EffiDo Upcoming — Dark Mode" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
@@ -530,16 +510,16 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<div class="bg-[#eeece9] rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase mb-3 pl-1">Light Mode</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Pomodoro timer.png', 'EffiDo Pomodoro — Light Mode')} aria-label="Preview Pomodoro Light Mode">
-						<img src="/images/projects/effido/Pomodoro timer.png" alt="EffiDo Pomodoro — Light Mode" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Pomodoro timer.webp', 'EffiDo Pomodoro — Light Mode')} aria-label="Preview Pomodoro Light Mode">
+						<img src="/images/projects/effido/thumbs/Pomodoro timer.webp" alt="EffiDo Pomodoro — Light Mode" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
 				</div>
 				<div class="bg-[#111111] rounded-3xl p-4 lg:p-5 border border-white/5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-600 uppercase mb-3 pl-1">Dark Mode</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Pomodoro timer dark mode.png', 'EffiDo Pomodoro — Dark Mode')} aria-label="Preview Pomodoro Dark Mode">
-						<img src="/images/projects/effido/Pomodoro timer dark mode.png" alt="EffiDo Pomodoro — Dark Mode" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Pomodoro timer dark mode.webp', 'EffiDo Pomodoro — Dark Mode')} aria-label="Preview Pomodoro Dark Mode">
+						<img src="/images/projects/effido/thumbs/Pomodoro timer dark mode.webp" alt="EffiDo Pomodoro — Dark Mode" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
@@ -566,16 +546,16 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<div class="bg-neutral-100 rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase mb-3 pl-1">Light Mode</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/effido/Task list - currently working, in progress not working in present time , already done .png', 'EffiDo Task List — Light Mode')} aria-label="Preview Task List Light Mode">
-						<img src="/images/projects/effido/Task list - currently working, in progress not working in present time , already done .png" alt="EffiDo Task List — Light Mode" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/effido/Task list - currently working, in progress not working in present time , already done .webp', 'EffiDo Task List — Light Mode')} aria-label="Preview Task List Light Mode">
+						<img src="/images/projects/effido/thumbs/Task list - currently working, in progress not working in present time , already done .webp" alt="EffiDo Task List — Light Mode" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
 				</div>
 				<div class="bg-neutral-900 rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-500 uppercase mb-3 pl-1">Dark Mode</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Task list dark mode .png', 'EffiDo Task List — Dark Mode')} aria-label="Preview Task List Dark Mode">
-						<img src="/images/projects/effido/Task list dark mode .png" alt="EffiDo Task List — Dark Mode" class="w-full block" loading="lazy" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden" onclick={() => openModal('/images/projects/effido/Task list dark mode .webp', 'EffiDo Task List — Dark Mode')} aria-label="Preview Task List Dark Mode">
+						<img src="/images/projects/effido/thumbs/Task list dark mode .webp" alt="EffiDo Task List — Dark Mode" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
@@ -941,4 +921,8 @@
 	.fi-e-half { transform-box: view-box; transform-origin: 50% 50%; }
 	.eff-card:hover .fi-e-half { animation: eff-half-spin 0.6s cubic-bezier(0.34,1.56,0.64,1) both; }
 
+	@media (pointer: coarse) {
+		.effido-video-card .absolute.bottom-4 { opacity: 1 !important; transform: translateY(0) !important; }
+		.effido-video-card .pointer-events-none { display: none; }
+	}
 </style>

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import FeaturedProject from "$lib/components/FeaturedProject.svelte";
 	import StackedProjectsV2 from "$lib/components/StackedProjectsV2.svelte";
-	import PartnerMarquee from "$lib/components/PartnerMarquee.svelte";
 	import PartnerRosterC from "$lib/components/PartnerRosterC.svelte";
 	import Chip from "$lib/components/Chip.svelte";
 	import { onMount } from "svelte";
@@ -425,7 +424,7 @@
 	id="studio"
 	aria-label="System Architecture"
 	data-theme="light"
-	class="bg-[#f4f4f6] border-t border-neutral-200/50"
+	class="bg-[#F4F0E8] border-t border-neutral-200/50"
 >
 	<div
 		class="w-full max-w-[1320px] mx-auto px-6 py-14 sm:py-20 lg:py-24 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-center"
@@ -910,7 +909,7 @@
 		<div class="border-t border-gray-800">
 			{#each capabilities as cap}
 				<div
-					class="cap-row grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-16 py-8 md:py-12 border-b border-gray-800 group hover:bg-white/2 transition-colors duration-300"
+					class="cap-row grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-16 py-8 md:py-12 border-b border-gray-800 group transition-colors duration-300"
 				>
 					<div class="md:col-span-3 flex items-start md:items-center">
 						<span
@@ -959,7 +958,7 @@
 					class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(255,255,255,0.65)_360deg)]"
 				></div>
 				<div
-					class="inline-flex h-full w-full items-center justify-center rounded-full bg-[#050505] px-6 py-2.5 relative z-10"
+					class="inline-flex h-full w-full items-center justify-center rounded-full bg-portfolio-base px-6 py-2.5 relative z-10"
 				>
 					<span
 						class="text-xs md:text-sm font-mono tracking-widest text-gray-300 uppercase"
@@ -1178,8 +1177,6 @@
 	</div>
 </section>
 
-<!-- BOTTOM MARQUEE -->
-<PartnerMarquee />
 
 <style>
 	/* This guarantees the width doesn't collapse and the animation runs natively */

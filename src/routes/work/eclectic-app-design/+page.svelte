@@ -26,59 +26,57 @@
 
 		const t = setTimeout(() => {
 			ctx = gsap.context(() => {
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#000000',
-					color: '#ffffff',
-					ease: 'none',
-					scrollTrigger: {
-						trigger: bentoTriggerEl,
-						start: 'top 90%',
-						end: 'top 60%',
-						scrub: true,
-						onEnter: () => navTheme.set('dark'),
-						onLeaveBack: () => navTheme.set('light')
-					}
+				ScrollTrigger.create({
+					trigger: bentoTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
+				});
+				ScrollTrigger.create({
+					trigger: editorialTriggerEl, start: 'top 90%',
+					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
 				});
 
-				gsap.to(pageWrapperEl, {
-					backgroundColor: '#ffffff',
-					color: '#171717',
-					ease: 'none',
-					immediateRender: false,
-					scrollTrigger: {
-						trigger: editorialTriggerEl,
-						start: 'top 90%',
-						end: 'top 60%',
-						scrub: true,
-						onEnter: () => navTheme.set('light'),
-						onLeaveBack: () => navTheme.set('dark')
-					}
-				});
+				// ── Hero entrance ─────────────────────────────────────────
+				gsap.set('.ec-hero-badge',     { opacity: 0, y: 14 });
+				gsap.set('.ec-hero-eyebrow',   { opacity: 0, y: 12 });
+				gsap.set('.ec-hero-line',      { yPercent: 110 });
+				gsap.set('.ec-hero-chips span',{ opacity: 0, y: 10 });
+				gsap.set('.ec-hero-meta-item', { opacity: 0, y: 16 });
+				gsap.set('.ec-hero-ledger',    { opacity: 0, y: 20 });
+				gsap.set('.ec-hero-desc',      { opacity: 0, y: 16 });
+				gsap.set('.ec-hero-tags',      { opacity: 0, y: 16 });
 
-				gsap.from('.cs-hero-element', {
-					y: 40, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out'
-				});
+				gsap.timeline({ delay: 0.05 })
+					.to('.ec-hero-badge',     { opacity: 1, y: 0, duration: 0.5,  ease: 'power2.out' })
+					.to('.ec-hero-line',      { yPercent: 0,       duration: 1.0,  stagger: 0.09, ease: 'power4.out' }, '-=0.2')
+					.to('.ec-hero-eyebrow',   { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, 0.1)
+					.to('.ec-hero-chips span',{ opacity: 1, y: 0, duration: 0.45, stagger: 0.055, ease: 'power3.out' }, '-=0.5')
+					.to('.ec-hero-meta-item', { opacity: 1, y: 0, duration: 0.5,  stagger: 0.07, ease: 'power3.out' }, '-=0.6')
+					.to('.ec-hero-ledger',    { opacity: 1, y: 0, duration: 0.55, ease: 'power3.out' }, '-=0.4')
+					.to('.ec-hero-desc',      { opacity: 1, y: 0, duration: 0.5,  ease: 'power3.out' }, '-=0.35')
+					.to('.ec-hero-tags',      { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }, '-=0.4');
 
-				gsap.utils.toArray('.cs-fade-up').forEach((el: any) => {
-					gsap.from(el, {
-						y: 36, opacity: 0, duration: 0.8, ease: 'power3.out',
-						scrollTrigger: { trigger: el, start: 'top 88%', invalidateOnRefresh: true }
-					});
+				// ── Scroll animations ─────────────────────────────────────────
+				gsap.set('.cs-fade-up', { y: 36, opacity: 0 });
+				ScrollTrigger.batch('.cs-fade-up', {
+					start: 'top 88%',
+					onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.8, stagger: 0.08, ease: 'power3.out' }),
+					once: true
 				});
 
 				gsap.utils.toArray('.cs-grid-stagger').forEach((grid: any) => {
 					const children = Array.from((grid as HTMLElement).children);
-					gsap.from(children, {
-						y: 40, opacity: 0, scale: 0.96, duration: 0.7, stagger: 0.1, ease: 'power2.out',
-						scrollTrigger: { trigger: grid, start: 'top 85%', invalidateOnRefresh: true }
+					gsap.set(children, { y: 40, opacity: 0, scale: 0.96 });
+					gsap.to(children, {
+						y: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.1, ease: 'power2.out',
+						scrollTrigger: { trigger: grid, start: 'top 85%', once: true }
 					});
 				});
 
-				// Subtle scale-from-inside on each cs-img (same as Ideajam)
 				gsap.utils.toArray('.cs-img').forEach((img: any) => {
-					gsap.from(img, {
-						scale: 1.06, duration: 1.1, ease: 'power2.out',
-						scrollTrigger: { trigger: img, start: 'top 90%', invalidateOnRefresh: true }
+					gsap.set(img, { scale: 1.06 });
+					gsap.to(img, {
+						scale: 1, duration: 1.1, ease: 'power2.out',
+						scrollTrigger: { trigger: img, start: 'top 90%', once: true }
 					});
 				});
 			});
@@ -210,7 +208,7 @@
 	<section data-theme="light" class="w-full bg-white px-6 pt-[160px] md:pt-[180px] pb-16 flex flex-col justify-center">
 		<div class="max-w-7xl mx-auto w-full">
 
-			<div class="flex items-center justify-between border-b border-neutral-200 pb-5 mb-12 cs-hero-element">
+			<div class="ec-hero-badge flex items-center justify-between border-b border-neutral-200 pb-5 mb-12">
 				<div class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200">
 					<div class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(transparent_270deg,rgba(0,0,0,0.75)_360deg)]"></div>
 					<div class="inline-flex h-full w-full items-center justify-center rounded-full bg-white px-6 py-2 relative z-10">
@@ -220,38 +218,38 @@
 				<span class="text-[11px] font-mono tracking-widest text-neutral-400 uppercase hidden sm:block">Mar 2025 — Present</span>
 			</div>
 
-			<div class="flex items-start gap-10 cs-hero-element">
+			<div class="flex items-start gap-10">
 				<div class="flex-1 min-w-0">
-					<p class="text-[11px] font-mono tracking-[0.35em] uppercase text-neutral-400 mb-5">Eclectic</p>
-					<h1 class="text-[clamp(3rem,8vw,7.5rem)] font-black tracking-tight leading-[0.9] text-neutral-900">
-						Built to<br/>
-						<span class="text-neutral-300">Convert.</span><br/>
-						Then&nbsp;Keep.
+					<p class="ec-hero-eyebrow text-[11px] font-mono tracking-[0.35em] uppercase text-neutral-400 mb-5">Eclectic</p>
+					<h1 class="text-[clamp(2.8rem,7vw,6rem)] font-black tracking-tight leading-[1.10] text-neutral-900">
+						<span class="block overflow-hidden pb-[0.08em] mb-[-0.2em]"><span class="ec-hero-line block">Built&nbsp;to</span></span>
+						<span class="block overflow-hidden pb-[0.08em] mb-[-0.2em]"><span class="ec-hero-line block text-neutral-300">Convert.</span></span>
+						<span class="block overflow-hidden pb-[0.08em]"><span class="ec-hero-line block">Then&nbsp;Keep.</span></span>
 					</h1>
-					<div class="flex flex-wrap gap-2 mt-8">
+					<div class="ec-hero-chips flex flex-wrap gap-2 mt-8">
 						{#each ['Mobile App', 'Consumer Product', 'Travel Guides', 'Multi-region'] as product}
 							<span class="px-3 py-1 rounded-full bg-neutral-50 border border-neutral-200 text-[10px] font-mono tracking-widest text-neutral-500 uppercase">{product}</span>
 						{/each}
 					</div>
 				</div>
 				<div class="shrink-0 w-56 hidden md:flex flex-col gap-6 pt-14">
-					<div>
+					<div class="ec-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Role</span>
 						<span class="text-sm font-semibold text-neutral-800">{project.role}</span>
 					</div>
-					<div>
+					<div class="ec-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Platform</span>
 						<span class="text-sm font-semibold text-neutral-800">Mobile · iOS &amp; Android</span>
 					</div>
-					<div>
+					<div class="ec-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Tools</span>
 						<span class="text-sm font-semibold text-neutral-800">Figma · Protopie</span>
 					</div>
-					<div>
+					<div class="ec-hero-meta-item">
 						<span class="text-[9px] font-mono tracking-[0.25em] text-neutral-400 uppercase block mb-1.5">Regions</span>
 						<span class="text-sm font-semibold text-neutral-800">3 Simultaneous Markets</span>
 					</div>
-					<div class="pt-5 border-t border-neutral-100">
+					<div class="ec-hero-meta-item pt-5 border-t border-neutral-100">
 						<div class="flex items-center gap-2 text-portfolio-accent">
 							<span class="text-[9px] font-mono tracking-widest uppercase">Scroll to explore</span>
 							<svg class="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -263,7 +261,7 @@
 			</div>
 
 			<!-- 3-col impact ledger -->
-			<div class="grid grid-cols-3 border-t border-b border-neutral-200 mt-12 cs-hero-element">
+			<div class="ec-hero-ledger grid grid-cols-3 border-t border-b border-neutral-200 mt-12">
 				<div class="py-7 pr-4 md:pr-8 border-r border-neutral-200">
 					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Net-new Features</span>
 					<div class="flex flex-col gap-0.5">
@@ -289,11 +287,11 @@
 				</div>
 			</div>
 
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-10 pt-10 cs-hero-element">
-				<div class="md:col-span-2">
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-10 pt-10">
+				<div class="ec-hero-desc md:col-span-2">
 					<p class="text-xl md:text-2xl text-neutral-500 leading-relaxed">{project.description}</p>
 				</div>
-				<div class="flex flex-wrap gap-2 content-start pt-1">
+				<div class="ec-hero-tags flex flex-wrap gap-2 content-start pt-1">
 					{#each project.tags as tag}
 						<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono tracking-wider uppercase bg-neutral-100 border border-neutral-200 text-neutral-600">{tag}</span>
 					{/each}
@@ -380,7 +378,7 @@
 				</div>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-5 cs-grid-stagger">
 					<CsImageCard
-						src="/videos/Eclectic/old UI.png"
+						src="/videos/Eclectic/old UI.webp"
 						label="Before"
 						caption="Eclectic original UI — before redesign"
 						labelVariant="error"
@@ -389,7 +387,7 @@
 						onOpen={openModal}
 					/>
 					<CsImageCard
-						src="/videos/Eclectic/New UI .png"
+						src="/videos/Eclectic/New UI .webp"
 						label="After"
 						caption="Eclectic redesigned UI — new app with localized design system and AI-assisted pipeline"
 						labelVariant="success"
@@ -412,9 +410,9 @@
 				<!-- Row 1: 3 phone screenshots -->
 				<div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5 cs-grid-stagger">
 					{#each [
-						{ src: '/videos/Eclectic/New UI second screenshot.png', label: 'App UI — View 2', caption: 'Second primary screen' },
-						{ src: '/videos/Eclectic/New Walkthrough.png',           label: 'New Walkthrough',  caption: 'Onboarding walkthrough flow' },
-						{ src: '/videos/Eclectic/New Sign up and sign in process.png', label: 'Auth Flow', caption: 'Sign-up & sign-in redesign' },
+						{ src: '/videos/Eclectic/New UI second screenshot.webp', label: 'App UI — View 2', caption: 'Second primary screen' },
+						{ src: '/videos/Eclectic/New Walkthrough.webp',           label: 'New Walkthrough',  caption: 'Onboarding walkthrough flow' },
+						{ src: '/videos/Eclectic/New Sign up and sign in process.webp', label: 'Auth Flow', caption: 'Sign-up & sign-in redesign' },
 					] as screen}
 						<CsImageCard
 							src={screen.src}
@@ -428,8 +426,8 @@
 				<!-- Row 2: 2 more screens -->
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-5 cs-grid-stagger">
 					{#each [
-						{ src: '/videos/Eclectic/checkout.png', label: 'Checkout Flow', caption: 'Purchase flow — checkout screen' },
-						{ src: '/videos/Eclectic/Switch language.png', label: 'Language Switch', caption: 'Multi-region language switching — single Figma source' },
+						{ src: '/videos/Eclectic/checkout.webp', label: 'Checkout Flow', caption: 'Purchase flow — checkout screen' },
+						{ src: '/videos/Eclectic/Switch language.webp', label: 'Language Switch', caption: 'Multi-region language switching — single Figma source' },
 					] as screen}
 						<CsImageCard
 							src={screen.src}
@@ -496,11 +494,11 @@
 							<button
 								type="button"
 								class="img-trigger"
-								onclick={() => openModal('/videos/Eclectic/old UI.png', 'Eclectic original UI — before redesign')}
+								onclick={() => openModal('/videos/Eclectic/old UI.webp', 'Eclectic original UI — before redesign')}
 								aria-label="Preview: original UI"
 							>
 								<div class="relative overflow-hidden w-full h-72 md:h-96">
-									<img src="/videos/Eclectic/old UI.png" alt="Eclectic original UI" class="w-full h-full object-cover object-top cs-img" />
+									<img src="/videos/Eclectic/old UI.webp" alt="Eclectic original UI" class="w-full h-full object-cover object-top cs-img" />
 								</div>
 								<div class="img-trigger-overlay">
 									<div class="img-expand-icon">
@@ -564,10 +562,10 @@
 						<!-- Design system token grid -->
 						<div class="grid grid-cols-2 gap-4 cs-fade-up">
 							{#each [
-								{ src: '/videos/Eclectic/Color tokens with accessibility.png', label: 'Color Tokens' },
-								{ src: '/videos/Eclectic/Typography.png',                      label: 'Typography Scale' },
-								{ src: '/videos/Eclectic/Breakpoints.png',                     label: 'Breakpoints' },
-								{ src: '/videos/Eclectic/Radius.png',                          label: 'Radius Tokens' },
+								{ src: '/videos/Eclectic/Color tokens with accessibility.webp', label: 'Color Tokens' },
+								{ src: '/videos/Eclectic/Typography.webp',                      label: 'Typography Scale' },
+								{ src: '/videos/Eclectic/Breakpoints.webp',                     label: 'Breakpoints' },
+								{ src: '/videos/Eclectic/Radius.webp',                          label: 'Radius Tokens' },
 							] as token}
 								<CsImageCard
 									src={token.src}
@@ -623,8 +621,8 @@
 						<!-- New UI screenshots side by side -->
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-4 cs-fade-up">
 							{#each [
-								{ src: '/videos/Eclectic/New Walkthrough.png',  label: 'New Onboarding', caption: 'Redesigned onboarding walkthrough' },
-								{ src: '/videos/Eclectic/Switch language.png',  label: 'Language Switch', caption: 'Multi-region language switching' },
+								{ src: '/videos/Eclectic/New Walkthrough.webp',  label: 'New Onboarding', caption: 'Redesigned onboarding walkthrough' },
+								{ src: '/videos/Eclectic/Switch language.webp',  label: 'Language Switch', caption: 'Multi-region language switching' },
 							] as screen}
 								<CsImageCard
 									src={screen.src}
@@ -659,12 +657,12 @@
 			<!-- 3-col grid of remaining phone screens -->
 			<div class="grid grid-cols-2 md:grid-cols-3 gap-4 cs-grid-stagger">
 				{#each [
-					{ src: '/videos/Eclectic/Tours when u dont buy, right one when u buy the play is there.png', label: 'Tour States', caption: 'Tour states — pre and post purchase' },
-					{ src: '/videos/Eclectic/Preview of transcript in the live .png',                           label: 'Live Transcript', caption: 'Transcript preview in live session' },
-					{ src: '/videos/Eclectic/User dropping feedback.png',                                       label: 'User Feedback', caption: 'User feedback drop flow' },
-					{ src: '/videos/Eclectic/FAQ and support.png',                                             label: 'FAQ & Support', caption: 'FAQ and support screen' },
-					{ src: '/videos/Eclectic/effect.png',                                                      label: 'Motion Details', caption: 'Motion and effect details' },
-					{ src: '/videos/Eclectic/New Sign up and sign in process.png',                             label: 'Auth Flow', caption: 'Sign-up and sign-in redesigned flow' },
+					{ src: '/videos/Eclectic/Tours when u dont buy, right one when u buy the play is there.webp', label: 'Tour States', caption: 'Tour states — pre and post purchase' },
+					{ src: '/videos/Eclectic/Preview of transcript in the live .webp',                           label: 'Live Transcript', caption: 'Transcript preview in live session' },
+					{ src: '/videos/Eclectic/User dropping feedback.webp',                                       label: 'User Feedback', caption: 'User feedback drop flow' },
+					{ src: '/videos/Eclectic/FAQ and support.webp',                                             label: 'FAQ & Support', caption: 'FAQ and support screen' },
+					{ src: '/videos/Eclectic/effect.webp',                                                      label: 'Motion Details', caption: 'Motion and effect details' },
+					{ src: '/videos/Eclectic/New Sign up and sign in process.webp',                             label: 'Auth Flow', caption: 'Sign-up and sign-in redesigned flow' },
 				] as screen}
 					<CsImageCard
 						src={screen.src}
