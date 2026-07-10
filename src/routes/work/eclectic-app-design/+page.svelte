@@ -263,15 +263,16 @@
 			<!-- 3-col impact ledger -->
 			<div class="ec-hero-ledger grid grid-cols-3 border-t border-b border-neutral-200 mt-12">
 				<div class="py-7 pr-4 md:pr-8 border-r border-neutral-200">
-					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Net-new Features</span>
-					<div class="flex flex-col gap-0.5">
-						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">Transcript</span>
-						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">3D Live Map</span>
-						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">−10s / +15s Seek</span>
+					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Market Scale</span>
+					<div class="flex items-baseline gap-1.5 leading-none flex-wrap">
+						<span class="text-lg md:text-xl font-black text-neutral-300 tracking-tight line-through decoration-portfolio-error">1</span>
+						<span class="text-portfolio-accent font-black text-sm md:text-base leading-none">→</span>
+						<span class="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">3×</span>
 					</div>
+					<span class="text-[9px] text-neutral-400 font-mono block mt-1">Regional Markets</span>
 				</div>
 				<div class="py-7 px-3 md:px-8 border-r border-neutral-200">
-					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Rebuilt from Zero</span>
+					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Rebuilt</span>
 					<div class="flex flex-col gap-0.5">
 						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">Onboarding</span>
 						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">Player Controls</span>
@@ -279,10 +280,11 @@
 					</div>
 				</div>
 				<div class="py-7 pl-3 md:pl-8">
-					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Deployment</span>
-					<div class="flex items-baseline gap-1.5 leading-none">
-						<span class="text-3xl md:text-4xl font-black text-neutral-900 tracking-tight">3</span>
-						<span class="text-sm font-semibold text-neutral-400 leading-tight">Simultaneous<br/>Markets</span>
+					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Net-new</span>
+					<div class="flex flex-col gap-0.5">
+						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">Transcript</span>
+						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">3D Live Map</span>
+						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">−10s / +15s Seek</span>
 					</div>
 				</div>
 			</div>

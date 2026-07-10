@@ -217,25 +217,26 @@
 
 			<div class="ts-hero-ledger grid grid-cols-3 border-t border-b border-neutral-200 mt-12">
 				<div class="py-7 pr-4 md:pr-8 border-r border-neutral-200">
-					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Templates Delivered</span>
-					<div class="flex items-baseline gap-1.5 leading-none flex-wrap">
-						<span class="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">50+</span>
-					</div>
-					<span class="text-[9px] text-neutral-400 font-mono block mt-1">across 20+ industry niches</span>
-				</div>
-				<div class="py-7 px-3 md:px-8 border-r border-neutral-200">
-					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">PageSpeed Score</span>
+					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Neve Impact</span>
 					<div class="flex items-baseline gap-1 leading-none flex-wrap">
-						<span class="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">100%</span>
-					</div>
-					<span class="text-[9px] text-neutral-400 font-mono block mt-1">0.6s load · 28KB base theme</span>
-				</div>
-				<div class="py-7 pl-3 md:pl-8">
-					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Neve Installs</span>
-					<div class="flex items-baseline gap-1 leading-none flex-wrap">
-						<span class="text-xl md:text-2xl font-black tracking-tight" style="color: #4EA361;">200K+</span>
+						<span class="text-xl md:text-2xl font-black text-portfolio-success tracking-tight">200K+</span>
 					</div>
 					<span class="text-[9px] text-neutral-400 font-mono block mt-1">active installations</span>
+				</div>
+				<div class="py-7 px-3 md:px-8 border-r border-neutral-200">
+					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Scope</span>
+					<div class="flex flex-col gap-0.5">
+						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">50+ Templates</span>
+						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">20+ Niches</span>
+						<span class="text-sm md:text-base font-black text-neutral-900 tracking-tight">4-day Delivery</span>
+					</div>
+				</div>
+				<div class="py-7 pl-3 md:pl-8">
+					<span class="text-[9px] font-mono tracking-[0.22em] text-neutral-400 uppercase block mb-2">Quality</span>
+					<div class="flex items-baseline gap-1 leading-none flex-wrap">
+						<span class="text-xl md:text-2xl font-black text-neutral-900 tracking-tight">100</span>
+					</div>
+					<span class="text-[9px] text-neutral-400 font-mono block mt-1">PageSpeed · 0.6s · 28KB</span>
 				</div>
 			</div>
 
