@@ -1,7 +1,6 @@
 <script lang="ts">
 	import FeaturedProject from "$lib/components/FeaturedProject.svelte";
 	import StackedProjectsV2 from "$lib/components/StackedProjectsV2.svelte";
-	import PartnerRosterC from "$lib/components/PartnerRosterC.svelte";
 	import Chip from "$lib/components/Chip.svelte";
 	import { onMount } from "svelte";
 	import { afterNavigate } from "$app/navigation";
@@ -126,6 +125,7 @@
 			gsap.to(rightGlassWrapper, { x: xPos * 50, y: yPos * 50, duration: 1, ease: 'power2.out' });
 		};
 		workSectionRef?.addEventListener('mousemove', onParallax);
+
 
 		if (!rm) {
 			// ── Hero entrance — Awwwards curtain wipe per line ──────────────────
@@ -574,133 +574,107 @@
 	</div>
 </section>
 
-<!-- UNIFIED WORK SECTION (Bridging The Gap, Marquee, Case Study) -->
+<!-- UNIFIED WORK SECTION (Bridging The Gap + Real Teams combined) -->
 <section
 	id="projects"
 	aria-label="Selected Work"
 	bind:this={workSectionRef}
-	class="relative w-full overflow-hidden py-32 flex flex-col items-center gap-y-20 bg-[#f8f9fa] border-t border-gray-200"
+	class="relative w-full overflow-hidden bg-[#F4F0E8] border-t border-black/[0.06]"
 >
-	<div
-		class="bridging-section relative w-full max-w-[1320px] mx-auto px-6 text-center z-10 mt-12"
-	>
+	<!-- ── Combined heading ─────────────────────────────────────────────── -->
+	<div class="bridging-section relative w-full max-w-[1320px] mx-auto px-6 text-center z-10 pt-24 pb-16">
+
+		<!-- Eyebrow -->
+		<div class="inline-flex items-center gap-3 mb-14">
+			<span class="text-[10px] font-mono tracking-[0.28em] text-neutral-500 uppercase">Client Work</span>
+			<span class="h-px w-8 bg-black/20"></span>
+			<span class="text-[10px] font-mono tracking-[0.28em] text-neutral-500 uppercase">Design &amp; Frontend</span>
+		</div>
+
+		<!-- Floating glass objects with GSAP parallax -->
 		<div
 			bind:this={leftGlassWrapper}
 			class="hidden md:block absolute md:left-4 lg:left-12 top-1/2 -translate-y-1/2 w-20 md:w-28 pointer-events-none"
 			style="will-change: transform;"
 		>
-			<img
-				src={cubeImg}
-				alt="Glass Cube"
-				class="glass-asset w-full h-auto drop-shadow-2xl"
-			/>
+			<img src={cubeImg} alt="Glass Cube" class="glass-asset w-full h-auto drop-shadow-2xl" />
 		</div>
-
 		<div
 			bind:this={rightGlassWrapper}
-			class="hidden md:block absolute md:right-4 lg:right-12 top-1/4 w-16 md:w-24 pointer-events-none"
+			class="hidden md:block absolute md:right-4 lg:right-12 top-1/3 w-16 md:w-24 pointer-events-none"
 			style="will-change: transform;"
 		>
-			<img
-				src={gemImg}
-				alt="Glass Gem"
-				class="glass-asset w-full h-auto drop-shadow-2xl"
-			/>
+			<img src={gemImg} alt="Glass Gem" class="glass-asset w-full h-auto drop-shadow-2xl" />
 		</div>
 
+		<!-- Combined heading -->
 		<h2
-			class="font-black tracking-tighter leading-[0.9] text-[#111] mb-6 relative z-10"
-			style="font-size: clamp(3.5rem, 8vw, 8rem);"
+			class="font-black tracking-tighter leading-[0.92] text-[#111] relative z-10"
+			style="font-size: clamp(2.25rem, 4.5vw, 5rem);"
 		>
-			<span class="bridging-line block overflow-hidden"><span class="bridging-line-inner block">BRIDGING</span></span>
-			<span class="bridging-line block overflow-hidden"><span class="bridging-line-inner block">THE <span class="shimmer-light">GAP.</span></span></span>
+			<span class="bridging-line block overflow-hidden"><span class="bridging-line-inner block">BRIDGING THE GAP</span></span>
+			<span class="bridging-line block overflow-hidden"><span class="bridging-line-inner block">WITH <span class="shimmer-light">REAL TEAMS.</span></span></span>
 		</h2>
-		<p
-			class="bridging-sub text-xl md:text-2xl text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed relative z-10 mt-6"
-		>
-			Architecting high-fidelity designs into scalable, production-ready
-			frontends.
+
+		<p class="bridging-sub mt-8 text-lg md:text-xl text-neutral-500 font-medium max-w-xl mx-auto leading-relaxed relative z-10">
+			7 years architecting high-fidelity designs into scalable,
+			production-ready frontends — across 6 real client teams.
 		</p>
 	</div>
 
+	<!-- ── Dual marquee — full bleed ─────────────────────────────────────── -->
 	<div
-		class="w-full relative z-20 flex flex-col items-center overflow-hidden mt-16 mb-24"
+		class="overflow-hidden select-none"
+		style="mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);"
 	>
-		<div
-			class="relative w-full max-w-[1320px] mx-auto overflow-hidden"
-			style="mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);"
-		>
-			<div class="marquee-track flex items-center">
-				<div class="flex items-center gap-16 md:gap-32 px-8 md:px-16">
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>WPMU DEV</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>Themeisle</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>Searchmetrics</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>Ideajam</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>Eclectic</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>Spotify</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-				</div>
-
-				<div class="flex items-center gap-16 md:gap-32 px-8 md:px-16">
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>WPMU DEV</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>Themeisle</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>Searchmetrics</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>Ideajam</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>Eclectic</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-					<span
-						class="text-2xl md:text-3xl font-black tracking-[0.25em] text-gray-300 uppercase transition-colors hover:text-gray-800 cursor-default"
-						>Spotify</span
-					>
-					<span class="w-2 h-2 rounded-full bg-primary"></span>
-				</div>
+		<div class="border-y border-black/[0.07] py-6">
+			<div class="comb-scroll-l flex items-center gap-12 whitespace-nowrap">
+				{#each [...['WPMU DEV','Themeisle','Ideajam','Eclectic','Searchmetrics','SomeTechWork'],...['WPMU DEV','Themeisle','Ideajam','Eclectic','Searchmetrics','SomeTechWork'],...['WPMU DEV','Themeisle','Ideajam','Eclectic','Searchmetrics','SomeTechWork'],...['WPMU DEV','Themeisle','Ideajam','Eclectic','Searchmetrics','SomeTechWork']] as name}
+					<span class="font-black tracking-[-0.02em] text-black leading-none" style="font-size: clamp(1.4rem, 2.4vw, 2.1rem);">{name}</span>
+					<span class="w-[5px] h-[5px] rounded-full bg-black/20 shrink-0"></span>
+				{/each}
+			</div>
+		</div>
+		<div class="border-b border-black/[0.07] py-6">
+			<div class="comb-scroll-r flex items-center gap-12 whitespace-nowrap">
+				{#each [...['Product Design','Template Design','UI/UX Design','Product Design','Brand & Motion','Product & Frontend'],...['Product Design','Template Design','UI/UX Design','Product Design','Brand & Motion','Product & Frontend'],...['Product Design','Template Design','UI/UX Design','Product Design','Brand & Motion','Product & Frontend'],...['Product Design','Template Design','UI/UX Design','Product Design','Brand & Motion','Product & Frontend']] as role}
+					<span class="font-normal tracking-tight text-black/30 leading-none" style="font-size: clamp(1.4rem, 2.4vw, 2.1rem);">{role}</span>
+					<span class="w-[5px] h-[5px] rounded-full bg-black/12 shrink-0"></span>
+				{/each}
 			</div>
 		</div>
 	</div>
 
-	<div class="w-full max-w-[1320px] mx-auto px-6 relative z-30 mt-24">
+	<!-- ── Stat cards ─────────────────────────────────────────────────────── -->
+	<div class="max-w-[1320px] mx-auto px-6 lg:px-10 mt-16">
+		<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+			{#each [
+				{ value: '2M+', label: 'Users Impacted'    },
+				{ value: '+47%', label: 'Conversion Uplift' },
+				{ value: '50+', label: 'Templates Shipped' },
+				{ value: '−37%', label: 'Bounce Rate Drop' },
+			] as stat}
+				<div class="bg-[#111] rounded-2xl px-8 py-8 flex flex-col gap-5">
+					<span class="text-[2.75rem] font-black tracking-tighter text-white leading-none tabular-nums">{stat.value}</span>
+					<span class="text-[10px] font-mono tracking-[0.18em] text-white/50 uppercase">{stat.label}</span>
+				</div>
+			{/each}
+		</div>
+	</div>
+
+	<!-- ── Footer meta bar ───────────────────────────────────────────────── -->
+	<div class="max-w-[1320px] mx-auto px-6 lg:px-10 mt-10 mb-6">
+		<div class="border-t border-black/[0.08] pt-7 flex flex-wrap items-center gap-6 md:gap-0 md:justify-between">
+			<span class="text-[11px] font-mono tracking-[0.22em] text-neutral-400 uppercase">6 Production Teams</span>
+			<span class="hidden md:block w-px h-4 bg-black/15"></span>
+			<span class="text-[11px] font-mono tracking-[0.22em] text-neutral-400 uppercase">7+ Years Embedded</span>
+			<span class="hidden md:block w-px h-4 bg-black/15"></span>
+			<span class="text-[11px] font-mono tracking-[0.22em] text-neutral-400 uppercase">Product, Design &amp; Frontend</span>
+		</div>
+	</div>
+
+	<!-- ── Case Study Highlight ──────────────────────────────────────────── -->
+	<div class="w-full max-w-[1320px] mx-auto px-6 relative z-30 mt-16 mb-16">
 		<div class="text-center mb-8 flex justify-center">
 			<div
 				class="relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
@@ -938,7 +912,6 @@
 </section>
 
 <!-- (06) CLIENT WORK / PARTNER SECTION -->
-<PartnerRosterC />
 
 <!-- (08) GET IN TOUCH (CONTACT FORM SECTION - Dark Section) -->
 <section
@@ -1178,21 +1151,26 @@
 </section>
 
 
+
 <style>
-	/* This guarantees the width doesn't collapse and the animation runs natively */
-	.marquee-track {
+	/* ── DRAFT: Combined section marquee + bob ──────────────────────────── */
+	.comb-scroll-l {
 		width: max-content;
-		animation: infinite-scroll 40s linear infinite;
+		animation: comb-left 32s linear infinite;
+	}
+	.comb-scroll-r {
+		width: max-content;
+		animation: comb-right 28s linear infinite;
+	}
+	@keyframes comb-left {
+		from { transform: translateX(0); }
+		to   { transform: translateX(-50%); }
+	}
+	@keyframes comb-right {
+		from { transform: translateX(-50%); }
+		to   { transform: translateX(0); }
 	}
 
-	@keyframes infinite-scroll {
-		0% {
-			transform: translateX(0);
-		}
-		100% {
-			transform: translateX(-50%);
-		}
-	}
 
 	/* ── Shimmer wipe — mirrors CaseStudyBento stat-hero approach ── */
 	@keyframes shimmer-sweep {

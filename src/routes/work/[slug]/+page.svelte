@@ -101,7 +101,7 @@
 	</header>
 
 	<!-- Main Image -->
-	<div class="container mx-auto px-6 max-w-[1440px] mb-32 cs-hero-img-container overflow-hidden rounded-[2rem]">
+	<div class="container mx-auto px-6 max-w-[1440px] mb-32 cs-hero-img-container overflow-hidden rounded-4xl">
 		<img 
 			src={project.images[0] || project.thumbnail} 
 			alt="Project Showcase" 
@@ -119,7 +119,7 @@
 				</div>
 			</div>
 			<div class="md:w-2/3 pt-2 md:pt-0">
-				<p class="text-[21px] md:text-[24px] font-light text-muted-foreground leading-[1.5] cs-fade-up">
+				<p class="text-[21px] md:text-[24px] font-light text-muted-foreground leading-normal cs-fade-up">
 					{project.problem}
 				</p>
 			</div>
@@ -132,7 +132,7 @@
 				</div>
 			</div>
 			<div class="md:w-2/3 pt-2 md:pt-0">
-				<p class="text-[21px] md:text-[24px] font-light text-muted-foreground leading-[1.5] cs-fade-up">
+				<p class="text-[21px] md:text-[24px] font-light text-muted-foreground leading-normal cs-fade-up">
 					{project.process}
 				</p>
 			</div>
@@ -144,7 +144,7 @@
 				<img 
 					src={project.images[1]} 
 					alt="Process visual" 
-					class="w-full h-auto rounded-[2rem] cs-fade-up transform hover:scale-[1.02] transition-transform duration-700"
+					class="w-full h-auto rounded-4xl cs-fade-up transform hover:scale-[1.02] transition-transform duration-700"
 				/>
 			</section>
 		{/if}
@@ -156,14 +156,14 @@
 				</div>
 			</div>
 			<div class="md:w-2/3 pt-2 md:pt-0">
-				<p class="text-[21px] md:text-[24px] font-light text-muted-foreground leading-[1.5] cs-fade-up">
+				<p class="text-[21px] md:text-[24px] font-light text-muted-foreground leading-normal cs-fade-up">
 					{project.solution}
 				</p>
 			</div>
 		</section>
 
 		<section class="cs-section">
-			<div class="bg-background/50 backdrop-blur-xl p-8 md:p-20 rounded-[2rem] cs-fade-up border border-border/40 shadow-sm">
+			<div class="bg-background/50 backdrop-blur-xl p-8 md:p-20 rounded-4xl cs-fade-up border border-border/40 shadow-sm">
 				<h2 class="text-[40px] md:text-[56px] font-semibold tracking-[-0.04em] mb-6">Outcome</h2>
 				<p class="text-[21px] md:text-[28px] font-light text-muted-foreground leading-[1.14] mb-16 max-w-3xl tracking-[0.01em]">
 					{project.outcome}
