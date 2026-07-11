@@ -22,6 +22,14 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
+# Personal planning and design docs — not needed for the build
+prd.md
+TODO.md
+DESIGN.md
+main_design.md
+apple/DESIGN.md
+resume.txt
+
 # AI and IDE specific files
 .agents/
 .claude/
