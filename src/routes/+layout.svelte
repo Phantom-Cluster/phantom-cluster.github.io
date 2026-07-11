@@ -2,7 +2,9 @@
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import Navbar from '$lib/components/Navbar.svelte';
-	import Footer from '$lib/components/Footer.svelte';
+	// import NavbarDraft from '$lib/components/NavbarDraft.svelte'; // archived — static editorial bar draft
+	// import Footer from '$lib/components/Footer.svelte'; // archived — original minimal footer
+	import FooterDraft from '$lib/components/FooterDraft.svelte';
 	import UpdateNoticeBar from '$lib/components/UpdateNoticeBar.svelte';
 	import { page } from '$app/state';
 	import { fade } from 'svelte/transition';
@@ -40,10 +42,9 @@
 </svelte:head>
 
 <UpdateNoticeBar />
+<Navbar />
 <div class="min-h-screen flex flex-col bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
-	<Navbar />
-	
-	<main class="flex-grow {['/', '/work/wpmu-dev-dashboard', '/work/ideajam-kanban-saas', '/work/eclectic-app-design', '/work/themeisle-starter-templates', '/work/wordpress-redesign', '/work/effido-productivity-app', '/work/alt-news-concept', '/work/discord-redesign'].includes(page.url.pathname) ? '' : 'pt-20'}">
+	<main class="grow {['/', '/work/wpmu-dev-dashboard', '/work/ideajam-kanban-saas', '/work/eclectic-app-design', '/work/themeisle-starter-templates', '/work/wordpress-redesign', '/work/effido-productivity-app', '/work/alt-news-concept', '/work/discord-redesign'].includes(page.url.pathname) ? '' : 'pt-20'}">
 		{#key page.url.pathname}
 			<div in:fade={{ duration: 300, delay: 300 }} out:fade={{ duration: 300 }}>
 				{@render children()}
@@ -51,5 +52,5 @@
 		{/key}
 	</main>
 
-	<Footer />
+	<FooterDraft />
 </div>

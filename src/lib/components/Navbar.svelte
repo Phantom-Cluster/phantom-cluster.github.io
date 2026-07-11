@@ -17,7 +17,7 @@
 
 	function setupObserver() {
 		if (observer) observer.disconnect();
-		
+
 		// Small delay to allow SvelteKit layout transitions to mount the new page
 		setTimeout(() => {
 			const sections = document.querySelectorAll('[data-theme]');
@@ -72,21 +72,12 @@
 		capsuleEl.style.setProperty('--opacity', '0');
 	}
 
-	// Reactive class sets driven by currentTheme
 	// Dark: translucent dark glass — saturation pulls background hues through
-	// Light: translucent white glass — bright specular rim, ambient shadow below
+	// Light: warm parchment glass (#F4F0E8 tinted) — contrast opposite of dark
 	const capsuleClasses = $derived(
 		currentTheme === 'dark'
 			? 'bg-[rgba(8,8,16,0.40)] border-transparent shadow-[0_1px_0_rgba(255,255,255,0.22)_inset,0_-1px_0_rgba(0,0,0,0.50)_inset,1px_0_0_rgba(200,185,255,0.18)_inset,-1px_0_0_rgba(140,205,255,0.12)_inset,0_16px_52px_rgba(0,0,0,0.30),0_4px_16px_rgba(0,0,0,0.18)]'
-			: 'bg-white/[0.38] border-transparent shadow-[0_1px_0_rgba(255,255,255,0.98)_inset,0_-1px_0_rgba(0,0,0,0.07)_inset,1px_0_0_rgba(200,185,255,0.14)_inset,-1px_0_0_rgba(140,205,255,0.10)_inset,0_14px_40px_rgba(0,0,0,0.09),0_2px_10px_rgba(0,0,0,0.05)]'
-	);
-
-	const logoClasses = $derived(currentTheme === 'dark' ? 'text-white' : 'text-black');
-
-	const aboutLinkClasses = $derived(
-		currentTheme === 'dark'
-			? 'text-gray-300 bg-white/5 hover:bg-white/10 hover:text-white'
-			: 'text-gray-700 bg-black/5 hover:bg-black/10 hover:text-black'
+			: 'bg-[rgba(244,240,232,0.72)] border-transparent shadow-[0_1px_0_rgba(255,255,255,1)_inset,0_-1px_0_rgba(27,25,22,0.06)_inset,1px_0_0_rgba(200,185,170,0.20)_inset,-1px_0_0_rgba(180,195,175,0.14)_inset,0_14px_40px_rgba(27,25,22,0.10),0_2px_10px_rgba(27,25,22,0.06)]'
 	);
 
 	// ── Dropdown data ────────────────────────────────────────────────────────
@@ -113,7 +104,6 @@
 	const ddOther = (k: 'projects' | 'explore') => k === 'projects' ? 'explore' : 'projects';
 
 	function ddHoverOpen(k: 'projects' | 'explore') {
-		// Closing the other on hover keeps only one open at a time
 		ddClose(ddOther(k));
 		clearTimeout(ddTimers[`${k}_close`]);
 		ddOpen[k] = true;
@@ -175,18 +165,43 @@
 		class="w-full max-w-[1320px] h-16 md:h-18 rounded-4xl flex items-center justify-between px-6 md:px-8 border pointer-events-auto transition-[background-color,box-shadow] duration-500 ease-out relative liquid-glass {capsuleClasses}"
 	>
 
-		<!-- Logo (Left) -->
-		<a
-			href="/"
-			class="relative z-10 text-lg md:text-xl font-extrabold tracking-tight hover:opacity-90 transition-opacity flex items-center gap-1 {logoClasses}"
-		>
-			Hitanshu <span class="text-primary">Sahu</span>
-		</a>
+		<!-- LEFT: Stacked wordmark + hairline + availability pill -->
+		<div class="flex items-center gap-5 shrink-0 relative z-10">
 
-		<!-- Desktop Dropdown Navigation -->
+			<a href="/" class="flex flex-col leading-none group">
+				<span class="text-[1.05rem] font-black tracking-[-0.04em] transition-opacity group-hover:opacity-75 {currentTheme === 'dark' ? 'text-white' : 'text-[#1B1916]'}">
+					HITANSHU SAHU
+				</span>
+				<span class="text-[8.5px] font-mono tracking-[0.22em] uppercase mt-[3px] {currentTheme === 'dark' ? 'text-white/30' : 'text-black/35'}">
+					Product Designer
+				</span>
+			</a>
+
+			<!-- Hairline divider -->
+			<span class="hidden lg:block w-px h-7 shrink-0 {currentTheme === 'dark' ? 'bg-white/10' : 'bg-black/10'}"></span>
+
+			<!-- Availability pill -->
+			<div class="hidden lg:inline-flex items-center gap-2 rounded-full px-3 py-1.5
+				{currentTheme === 'dark'
+					? 'bg-emerald-500/10 border border-emerald-500/20'
+					: 'bg-emerald-700/[0.06] border border-emerald-700/15'}">
+				<span class="relative flex h-1.5 w-1.5">
+					<span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-70
+						{currentTheme === 'dark' ? 'bg-emerald-400' : 'bg-emerald-600'}"></span>
+					<span class="relative inline-flex rounded-full h-1.5 w-1.5
+						{currentTheme === 'dark' ? 'bg-emerald-400' : 'bg-emerald-600'}"></span>
+				</span>
+				<span class="text-[9px] font-mono tracking-[0.18em] uppercase whitespace-nowrap
+					{currentTheme === 'dark' ? 'text-emerald-400/80' : 'text-emerald-700/75'}">
+					Open to join a team
+				</span>
+			</div>
+		</div>
+
+		<!-- CENTER: Desktop nav links -->
 		<nav aria-label="Desktop navigation" class="hidden md:flex items-center gap-0.5 relative z-10">
 
-			<!-- Projects dropdown -->
+			<!-- Work (Projects) dropdown -->
 			<div
 				class="relative"
 				role="none"
@@ -200,9 +215,9 @@
 					aria-haspopup="menu"
 					class="dd-trigger {ddOpen.projects
 						? (currentTheme === 'dark' ? 'dd-trigger-active-dark' : 'dd-trigger-active-light')
-						: (currentTheme === 'dark' ? 'dd-trigger-dark' : 'dd-trigger-light')}"
+						: (currentTheme === 'dark' ? 'dd-trigger-dark dd-work-glow-dark' : 'dd-trigger-light dd-work-glow-light')}"
 				>
-					Projects
+					Work
 					<svg class="dd-chevron {ddOpen.projects ? 'dd-chevron-open' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
 					</svg>
@@ -211,7 +226,7 @@
 				{#if ddOpen.projects}
 					<div class="nav-dropdown {currentTheme === 'dark' ? 'dd-dark' : 'dd-light'}" role="menu">
 						<div class="dd-header {currentTheme === 'dark' ? 'dd-header-dark' : 'dd-header-light'}">
-							<span>Selected Work</span><span>4 case studies</span>
+							<span>Case Studies</span><span>{mainProjects.length}</span>
 						</div>
 						{#each mainProjects as p}
 							<a href="/work/{p.slug}" role="menuitem" class="nav-dd-item {currentTheme === 'dark' ? 'nav-dd-item-dark' : 'nav-dd-item-light'}" onclick={() => ddClose('projects')}>
@@ -229,7 +244,7 @@
 				{/if}
 			</div>
 
-			<!-- Explore (concepts) dropdown -->
+			<!-- Lab (Explore) dropdown -->
 			<div
 				class="relative"
 				role="none"
@@ -254,7 +269,7 @@
 				{#if ddOpen.explore}
 					<div class="nav-dropdown explore-dd {currentTheme === 'dark' ? 'dd-dark' : 'dd-light'}" role="menu">
 						<div class="dd-header {currentTheme === 'dark' ? 'dd-header-dark' : 'dd-header-light'}">
-							<span>Concepts & Explorations</span><span>6</span>
+							<span>Concepts &amp; Explorations</span><span>{conceptProjects.length}</span>
 						</div>
 						{#each conceptProjects as p}
 							<a href="/work/{p.slug}" role="menuitem" class="nav-dd-item explore-item {currentTheme === 'dark' ? 'nav-dd-item-dark' : 'nav-dd-item-light'}" onclick={() => ddClose('explore')}>
@@ -266,69 +281,85 @@
 				{/if}
 			</div>
 
-		</nav>
-
-		<!-- Desktop Action Button vs Mobile Hamburger (Right) -->
-		<div class="flex items-center gap-3 relative z-10">
-
-			<!-- About Pill with Tooltip (Desktop Only) -->
-			<div class="hidden md:block relative group">
-				<a
-					href="/about"
-					class="relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors duration-300 {aboutLinkClasses}"
-				>
-					About
-					<svg class="attention-nudge w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-					</svg>
-				</a>
-
-				<!-- Motion Tooltip (Desktop Only) -->
-				<div class="absolute top-[130%] left-1/2 -translate-x-1/2 mt-2 px-3 py-1.5 bg-neutral-900 text-white text-[11px] font-medium rounded-md opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none whitespace-nowrap shadow-xl">
-					View Capabilities &amp; Credentials
-					<div class="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-neutral-900"></div>
-				</div>
-			</div>
-
-			<!-- Contact CTA — always near-black, readable on any theme -->
+			<!-- About -->
 			<a
-				href="/#contact"
-				class="hidden md:inline-flex bg-neutral-900 hover:bg-black text-white px-5 py-2.5 rounded-full text-xs font-extrabold uppercase tracking-wider items-center gap-2 transition-all active:scale-95 shadow-md shadow-black/20"
+				href="/about"
+				class="dd-trigger {currentTheme === 'dark' ? 'dd-trigger-dark' : 'dd-trigger-light'}"
 			>
-				Contact Us
+				About
 			</a>
 
-			<!-- Mobile Only: Hamburger Toggle Button -->
+		</nav>
+
+		<!-- RIGHT: Resume ghost pill + Hire Me CTA + mobile hamburger -->
+		<div class="flex items-center gap-2 relative z-10">
+
+			<!-- Resume ghost pill (desktop) -->
+			<a
+				href="/resume.pdf"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all duration-150
+					{currentTheme === 'dark'
+						? 'text-white/50 border border-white/10 hover:text-white hover:border-white/30'
+						: 'text-black/45 border border-black/10 hover:text-black hover:border-black/25'}"
+			>
+				Resume
+				<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+				</svg>
+			</a>
+
+			<!-- Hire Me CTA — inverts between themes for max contrast -->
+			<a
+				href="/#contact"
+				class="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider active:scale-95 transition-all duration-150
+					{currentTheme === 'dark'
+						? 'text-black bg-white hover:bg-white/90 shadow-lg shadow-black/40'
+						: 'text-white bg-[#1B1916] hover:bg-[#2a2620] shadow-lg shadow-black/15'}"
+			>
+				<span class="relative flex h-1.5 w-1.5">
+					<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-80"></span>
+					<span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+				</span>
+				Hire Me
+			</a>
+
+			<!-- Mobile hamburger -->
 			<button
 				onclick={() => (isOpen = !isOpen)}
-				class="inline-flex md:hidden bg-neutral-900 hover:bg-black text-white px-5 py-2.5 rounded-full text-xs font-extrabold uppercase tracking-wider items-center gap-2.5 transition-all active:scale-95 shadow-md shadow-black/20"
+				class="inline-flex md:hidden items-center gap-2 px-4 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider transition-all
+					{currentTheme === 'dark'
+						? 'text-white border border-white/15 hover:bg-white/10'
+						: 'text-black border border-black/12 hover:bg-black/05'}"
 				aria-label="Toggle navigation menu"
 			>
-				<span>Menu</span>
 				{#if isOpen}
-					<X class="size-3.5 text-white animate-spin-once" />
+					<X class="size-3.5 animate-spin-once" />
 				{:else}
-					<Menu class="size-3.5 text-white" />
+					<Menu class="size-3.5" />
 				{/if}
+				<span>Menu</span>
 			</button>
 		</div>
 	</div>
 </header>
 
-<!-- Slide-Out Mobile Navigation Sheet Drawer Overlay -->
+<!-- Slide-Out Mobile Navigation Drawer -->
 {#if isOpen}
 	<div
-		class="fixed inset-0 z-60 bg-black/90 backdrop-blur-2xl flex flex-col justify-between p-8 md:p-16 transition-all duration-500"
+		class="fixed inset-0 z-[999] bg-[#0E0D0C]/96 backdrop-blur-2xl flex flex-col justify-between p-8 md:p-16"
 		style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);"
 	>
-		<!-- Top Space Drawer Bar -->
+		<!-- Top bar -->
 		<div class="flex justify-between items-center w-full">
 			<a
 				href="/"
-				class="text-2xl font-bold tracking-tight text-white flex items-center gap-1"
 				onclick={() => (isOpen = false)}
+				class="flex flex-col leading-none"
 			>
-				Hitanshu <span class="text-primary">Sahu</span>
+				<span class="text-white font-black tracking-[-0.04em] text-xl">HITANSHU SAHU</span>
+				<span class="text-[9px] font-mono tracking-[0.2em] text-white/30 uppercase mt-0.5">Product Designer</span>
 			</a>
 
 			<button
@@ -340,10 +371,10 @@
 			</button>
 		</div>
 
-		<!-- Center Links Stack -->
+		<!-- Center nav stack -->
 		<nav class="flex flex-col gap-1 my-auto">
 
-			<!-- Projects accordion -->
+			<!-- Work accordion -->
 			<button
 				type="button"
 				onclick={() => mobileExpanded = mobileExpanded === 'projects' ? null : 'projects'}
@@ -351,7 +382,7 @@
 			>
 				<span class="flex items-center gap-4">
 					<span class="text-xs font-mono text-neutral-600">01</span>
-					Projects
+					Work
 				</span>
 				<svg class="w-5 h-5 opacity-40 transition-transform duration-300 {mobileExpanded === 'projects' ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
@@ -407,7 +438,7 @@
 				</div>
 			{/if}
 
-			<!-- About & Contact -->
+			<!-- About -->
 			<a
 				href="/about"
 				class="text-4xl font-bold tracking-tighter text-white py-3 hover:text-primary transition-colors flex items-center gap-4"
@@ -416,19 +447,33 @@
 				<span class="text-xs font-mono text-neutral-600">03</span>
 				About
 			</a>
+
+			<!-- Resume -->
 			<a
-				href="/#contact"
+				href="/resume.pdf"
+				target="_blank"
+				rel="noopener noreferrer"
 				class="text-4xl font-bold tracking-tighter text-white py-3 hover:text-primary transition-colors flex items-center gap-4"
 				onclick={() => (isOpen = false)}
 			>
 				<span class="text-xs font-mono text-neutral-600">04</span>
-				Contact
+				Resume ↗
 			</a>
 
 		</nav>
 
-		<!-- Bottom Details: Social Icons -->
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-white/10 w-full text-sm text-neutral-400">
+		<!-- Hire Me full-width CTA -->
+		<a
+			href="/#contact"
+			onclick={() => (isOpen = false)}
+			class="mt-8 w-full flex items-center justify-center gap-2 bg-white text-black px-6 py-4 rounded-2xl font-black uppercase tracking-wider text-sm"
+		>
+			<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+			Hire Me
+		</a>
+
+		<!-- Bottom: email + socials -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 mt-6 border-t border-white/10 w-full text-sm text-neutral-400">
 			<div>
 				<p class="font-mono text-xs text-neutral-600 mb-2 uppercase tracking-wider">Get in touch</p>
 				<a href="mailto:phantomcluster17@gmail.com" class="text-white hover:text-primary transition-colors text-lg">
@@ -436,7 +481,6 @@
 				</a>
 			</div>
 
-			<!-- Social monochrome SVG icons -->
 			<div class="flex items-center gap-6 md:justify-end flex-wrap">
 				<a href="https://www.linkedin.com/in/phantom-cluster/" target="_blank" rel="noopener noreferrer" class="hover:text-primary text-white transition-all flex items-center gap-2 group text-xs font-bold uppercase tracking-wider">
 					<svg aria-hidden="true" class="size-4 fill-neutral-400 group-hover:fill-primary transition-colors" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -470,17 +514,6 @@
 	}
 	:global(.animate-spin-once) {
 		animation: spin-once 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-	}
-
-	@keyframes subtle-nudge {
-		0%, 85%, 100% { transform: translateX(0); opacity: 0.4; }
-		88% { transform: translateX(3px); opacity: 1; }
-		91% { transform: translateX(0); opacity: 0.4; }
-		94% { transform: translateX(3px); opacity: 1; }
-	}
-	.attention-nudge {
-		animation: subtle-nudge 6s infinite ease-in-out;
-		will-change: transform, opacity;
 	}
 
 	/* ── LIQUID GLASS CORE ──────────────────────────────────────────────
@@ -525,14 +558,15 @@
 		cursor: pointer;
 		transition: background 0.14s ease, color 0.14s ease;
 		letter-spacing: -0.01em;
+		text-decoration: none;
 	}
 	.dd-trigger-dark        { color: rgba(255,255,255,0.52); }
 	.dd-trigger-dark:hover  { color: #fff; background: rgba(255,255,255,0.13); }
 	.dd-trigger-active-dark { color: #fff; background: rgba(255,255,255,0.15); }
 
 	.dd-trigger-light        { color: rgba(0,0,0,0.52); }
-	.dd-trigger-light:hover  { color: #000; background: rgba(0,0,0,0.09); }
-	.dd-trigger-active-light { color: #000; background: rgba(0,0,0,0.10); }
+	.dd-trigger-light:hover  { color: #1B1916; background: rgba(0,0,0,0.08); }
+	.dd-trigger-active-light { color: #1B1916; background: rgba(0,0,0,0.09); }
 
 	.dd-chevron {
 		width: 11px; height: 11px;
@@ -540,6 +574,37 @@
 		opacity: 0.7;
 	}
 	.dd-chevron-open { transform: rotate(180deg); }
+
+	/* ── WORK LINK GLOW PULSE ───────────────────────────────────────────
+	   Dark bg: white glow. Light bg: muted dark shimmer. */
+	@keyframes work-glow-dark {
+		0%, 100% { color: rgba(255,255,255,0.55); background: transparent; box-shadow: 0 0 0 transparent; }
+		50%       { color: #fff; background: rgba(255,255,255,0.08); box-shadow: 0 0 18px rgba(255,255,255,0.12), 0 0 6px rgba(255,255,255,0.08); }
+	}
+	.dd-work-glow-dark {
+		animation: work-glow-dark 2.8s ease-in-out infinite;
+	}
+	.dd-work-glow-dark:hover,
+	.dd-trigger-active-dark.dd-work-glow-dark {
+		animation: none;
+		color: #fff;
+		background: rgba(255,255,255,0.13);
+		box-shadow: none;
+	}
+
+	@keyframes work-glow-light {
+		0%, 100% { color: rgba(0,0,0,0.52); background: transparent; }
+		50%       { color: #1B1916; background: rgba(0,0,0,0.06); }
+	}
+	.dd-work-glow-light {
+		animation: work-glow-light 2.8s ease-in-out infinite;
+	}
+	.dd-work-glow-light:hover,
+	.dd-trigger-active-light.dd-work-glow-light {
+		animation: none;
+		color: #1B1916;
+		background: rgba(0,0,0,0.08);
+	}
 
 	/* ── DROPDOWN PANELS ───────────────────────────────────────────────── */
 	.nav-dropdown {
@@ -566,12 +631,12 @@
 			0 8px 24px rgba(0,0,0,0.30);
 	}
 	.dd-light {
-		background: rgba(250,250,253,0.96);
-		border: 1px solid rgba(0,0,0,0.07);
+		background: rgba(248,245,238,0.97);
+		border: 1px solid rgba(27,25,22,0.08);
 		box-shadow:
 			0 1px 0 rgba(255,255,255,1) inset,
-			0 20px 56px rgba(0,0,0,0.13),
-			0 4px 12px rgba(0,0,0,0.07);
+			0 20px 56px rgba(27,25,22,0.12),
+			0 4px 12px rgba(27,25,22,0.07);
 	}
 
 	@keyframes dd-appear {
@@ -591,7 +656,7 @@
 		text-transform: uppercase;
 	}
 	.dd-header-dark  { color: rgba(255,255,255,0.25); border-bottom: 1px solid rgba(255,255,255,0.07); }
-	.dd-header-light { color: rgba(0,0,0,0.30); border-bottom: 1px solid rgba(0,0,0,0.07); }
+	.dd-header-light { color: rgba(27,25,22,0.30); border-bottom: 1px solid rgba(27,25,22,0.08); }
 
 	/* ── DROPDOWN ITEMS ─────────────────────────────────────────────── */
 	.nav-dd-item {
@@ -605,9 +670,9 @@
 	}
 	.nav-dd-item:last-child { margin-bottom: 4px; }
 
-	.nav-dd-item-light        { color: #111; border-bottom: 1px solid rgba(0,0,0,0.05); }
+	.nav-dd-item-light        { color: #1B1916; border-bottom: 1px solid rgba(27,25,22,0.06); }
 	.nav-dd-item-light:last-child { border-bottom: none; }
-	.nav-dd-item-light:hover  { background: rgba(0,0,0,0.07); }
+	.nav-dd-item-light:hover  { background: rgba(27,25,22,0.06); }
 	.nav-dd-item-light:hover .dd-arrow { opacity: 0.5; transform: translateX(0); }
 
 	.nav-dd-item-dark        { color: rgba(255,255,255,0.88); border-bottom: 1px solid rgba(255,255,255,0.06); }
