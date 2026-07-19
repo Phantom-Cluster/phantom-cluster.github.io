@@ -1,42 +1,64 @@
-# sv
+# Hitanshu Sahu — Portfolio
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Personal portfolio of **Hitanshu Sahu**, a tech-obsessed Product Designer with 7+ years of experience designing intuitive, scalable UI/UX systems for complex SaaS platforms and the WordPress ecosystem.
 
-## Creating a project
+🌐 **Live site:** [phantom-cluster.github.io](https://phantom-cluster.github.io)
 
-If you're seeing this, you've probably already done this step. Congrats!
+---
+
+## About Me
+
+I specialise in creating **Starter Templates**, optimising **Gutenberg/Elementor** workflows, and translating technical requirements into human-centered solutions. Known for an accessibility-first mindset, strategic thinking, and the ability to balance user delight with engineering constraints in fast-paced environments.
+
+**Location:** Kanpur, Uttar Pradesh, India  
+**Email:** phantomcluster17@gmail.com  
+**Behance:** [behance.net/phantomcluster](https://behance.net/phantomcluster)
+
+---
+
+## Tech Stack
+
+This portfolio is built with:
+
+- **Framework:** SvelteKit (static adapter)
+- **Styling:** Tailwind CSS + Vanilla CSS
+- **Animations:** GSAP + Framer Motion
+- **Deployment:** GitHub Pages via GitHub Actions
+
+---
+
+## Experience Highlights
+
+- **WPMU DEV** (2022–2024) — Led Design System V3, Smush Plugin (1M → 2M+ installs), Hummingbird, Snapshot & Dashboard redesigns
+- **Themeisle** (2018–2021) — Designed 50+ Starter Templates for Neve Theme
+- **Ideajam** — Led Kanban SaaS redesign with white-labeling focus
+- **Searchmetrics** — SaaS animations, brand guidelines & marketing materials
+- **Eclectic** — Full app redesign with scalable Figma Design System
+- **SomeTechWork** — Product blueprints & WordPress frontend implementation
+
+---
+
+## Core Skills
+
+Design Systems · Starter Templates · WordPress (Gutenberg/Elementor) · UX Strategy · Accessibility (WCAG) · Interaction Design · Motion UI · SaaS Product Design · Figma · Spline · After Effects · Generative AI / LLMs
+
+---
+
+## Running Locally
 
 ```sh
-# create a new project
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
-
-```sh
-# recreate this project
-npx sv@0.15.2 create --template minimal --types ts --add tailwindcss="plugins:typography" sveltekit-adapter="adapter:static" --install npm .
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
+npm install
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
-
-To create a production version of your app:
+Build for production:
 
 ```sh
 npm run build
 ```
 
-You can preview the production build with `npm run preview`.
+---
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## License
+
+© 2026 Hitanshu Sahu. All rights reserved.
