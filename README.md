@@ -16,17 +16,6 @@ I specialise in creating **Starter Templates**, optimising **Gutenberg/Elementor
 
 ---
 
-## Tech Stack
-
-This portfolio is built with:
-
-- **Framework:** SvelteKit (static adapter)
-- **Styling:** Tailwind CSS + Vanilla CSS
-- **Animations:** GSAP + Framer Motion
-- **Deployment:** GitHub Pages via GitHub Actions
-
----
-
 ## Experience Highlights
 
 - **WPMU DEV** (2022–2024) — Led Design System V3, Smush Plugin (1M → 2M+ installs), Hummingbird, Snapshot & Dashboard redesigns
@@ -42,23 +31,4 @@ This portfolio is built with:
 
 Design Systems · Starter Templates · WordPress (Gutenberg/Elementor) · UX Strategy · Accessibility (WCAG) · Interaction Design · Motion UI · SaaS Product Design · Figma · Spline · After Effects · Generative AI / LLMs
 
----
 
-## Running Locally
-
-```sh
-npm install
-npm run dev
-```
-
-Build for production:
-
-```sh
-npm run build
-```
-
----
-
-## License
-
-© 2026 Hitanshu Sahu. All rights reserved.
