@@ -38,7 +38,7 @@
 	<link rel="icon" href={favicon} type="image/svg+xml" />
 	<link rel="apple-touch-icon" href="/favicon.svg" />
 	<link rel="apple-touch-icon-precomposed" href="/favicon.svg" />
-	<title>Hitanshu Sahu — Product Designer & Anti-Gravity</title>
+	<title>Hitanshu Sahu — Product Designer & UX Strategist</title>
 </svelte:head>
 
 <UpdateNoticeBar />
