@@ -296,7 +296,7 @@
 
 			<!-- Resume ghost pill (desktop) -->
 			<a
-				href="/resume.pdf"
+				href="/Hitanshu_Sahu___Resume_JUN_Updated.pdf"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="hidden md:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all duration-150
@@ -450,7 +450,7 @@
 
 			<!-- Resume -->
 			<a
-				href="/resume.pdf"
+				href="/Hitanshu_Sahu___Resume_JUN_Updated.pdf"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="text-4xl font-bold tracking-tighter text-white py-3 hover:text-primary transition-colors flex items-center gap-4"
