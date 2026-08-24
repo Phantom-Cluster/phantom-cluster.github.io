@@ -117,13 +117,13 @@
 			ScrollTrigger.refresh();
 		}, 400);
 
-		return () => { clearTimeout(t); metricsObs.disconnect(); };
-	});
-
-	onDestroy(() => {
-		navTheme.set(null);
-		if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
-		if (ctx) ctx.revert();
+		return () => {
+			if (t) clearTimeout(t);
+			if (ctx) ctx.revert();
+			metricsObs.disconnect();
+			navTheme.set(null);
+			if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
+		};
 	});
 </script>
 

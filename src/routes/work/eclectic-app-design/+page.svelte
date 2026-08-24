@@ -21,19 +21,24 @@
 
 	onMount(() => {
 		navTheme.set('light');
-		document.body.style.backgroundColor = '#ffffff';
+		if (typeof document !== 'undefined') document.body.style.backgroundColor = '#ffffff';
 		gsap.registerPlugin(ScrollTrigger);
 
-		const t = setTimeout(() => {
+		let timer: ReturnType<typeof setTimeout> | null = null;
+		timer = setTimeout(() => {
 			ctx = gsap.context(() => {
-				ScrollTrigger.create({
-					trigger: bentoTriggerEl, start: 'top 90%',
-					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
-				});
-				ScrollTrigger.create({
-					trigger: editorialTriggerEl, start: 'top 90%',
-					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
-				});
+				if (bentoTriggerEl) {
+					ScrollTrigger.create({
+						trigger: bentoTriggerEl, start: 'top 90%',
+						onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
+					});
+				}
+				if (editorialTriggerEl) {
+					ScrollTrigger.create({
+						trigger: editorialTriggerEl, start: 'top 90%',
+						onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
+					});
+				}
 
 				// ── Hero entrance ─────────────────────────────────────────
 				gsap.set('.ec-hero-badge',     { opacity: 0, y: 14 });
@@ -82,15 +87,14 @@
 			});
 
 			ScrollTrigger.refresh();
-		}, 400);
+		}, 150);
 
-		return () => clearTimeout(t);
-	});
-
-	onDestroy(() => {
-		navTheme.set(null);
-		if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
-		if (ctx) ctx.revert();
+		return () => {
+			if (timer) clearTimeout(timer);
+			if (ctx) ctx.revert();
+			navTheme.set(null);
+			if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
+		};
 	});
 </script>
 

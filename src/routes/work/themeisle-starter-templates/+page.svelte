@@ -64,13 +64,14 @@
 		{ src: TH + 'Neve%20Cycle%20racing.webp',   full: T + 'Neve%20Cycle%20racing.webp',   label: 'Cycle Racing' },
 	];
 
+	let rafId: number;
+
 	onMount(() => {
 		navTheme.set('light');
-		document.body.style.backgroundColor = '#ffffff';
+		if (typeof document !== 'undefined') document.body.style.backgroundColor = '#ffffff';
 		gsap.registerPlugin(ScrollTrigger);
-		ScrollTrigger.config({ limitCallbacks: true, ignoreMobileResize: true });
 
-		const t = setTimeout(() => {
+		rafId = requestAnimationFrame(() => {
 			ctx = gsap.context(() => {
 				ScrollTrigger.create({
 					trigger: bentoTriggerEl, start: 'top 85%',
@@ -121,7 +122,7 @@
 				// ── Scroll animations — batched (one observer, not N) ──
 				gsap.set('.cs-fade-up', { y: 40, opacity: 0 });
 				ScrollTrigger.batch('.cs-fade-up', {
-					start: 'top 85%',
+					start: 'top 92%',
 					onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.75, stagger: 0.08, ease: 'power3.out' }),
 					once: true,
 				});
@@ -134,20 +135,20 @@
 					once: true,
 				});
 			});
-		}, 400);
+			ScrollTrigger.refresh();
+		});
 
 		_museumInterval = setInterval(() => {
 			if (museumPlaying) museumView = (museumView + 1) % museumViews.length;
 		}, 2800);
 
-		return () => clearTimeout(t);
-	});
-
-	onDestroy(() => {
-		navTheme.set(null);
-		if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
-		if (ctx) ctx.revert();
-		clearInterval(_museumInterval);
+		return () => {
+			if (rafId) cancelAnimationFrame(rafId);
+			if (ctx) ctx.revert();
+			if (_museumInterval) clearInterval(_museumInterval);
+			navTheme.set(null);
+			if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
+		};
 	});
 </script>
 

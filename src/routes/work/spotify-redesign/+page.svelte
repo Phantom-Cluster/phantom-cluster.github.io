@@ -20,38 +20,44 @@
 	let modalImg = $state<{ src: string; alt: string } | null>(null);
 	function openModal(src: string, alt: string) { modalImg = { src, alt }; }
 
+	let rafId: number;
+
 	onMount(() => {
 		navTheme.set('light');
-		document.body.style.backgroundColor = '#ffffff';
+		if (typeof document !== 'undefined') document.body.style.backgroundColor = '#ffffff';
 		gsap.registerPlugin(ScrollTrigger);
 
-		const t = setTimeout(() => {
+		rafId = requestAnimationFrame(() => {
 			ctx = gsap.context(() => {
-				ScrollTrigger.create({
-					trigger: bentoTriggerEl, start: 'top 90%',
-					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
-				});
-				ScrollTrigger.create({
-					trigger: editorialTriggerEl, start: 'top 90%',
-					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
-				});
+				if (bentoTriggerEl) {
+					ScrollTrigger.create({
+						trigger: bentoTriggerEl, start: 'top 90%',
+						onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
+					});
+				}
+				if (editorialTriggerEl) {
+					ScrollTrigger.create({
+						trigger: editorialTriggerEl, start: 'top 90%',
+						onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
+					});
+				}
 				gsap.from('.cs-hero-element', { y: 40, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out' });
 				gsap.set('.cs-fade-up', { y: 40, opacity: 0 });
 				ScrollTrigger.batch('.cs-fade-up', {
-					start: 'top 85%',
+					start: 'top 92%',
 					onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.8, stagger: 0.08, ease: 'power3.out' }),
 					once: true
 				});
 			});
-		}, 400);
+			ScrollTrigger.refresh();
+		});
 
-		return () => clearTimeout(t);
-	});
-
-	onDestroy(() => {
-		navTheme.set(null);
-		if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
-		if (ctx) ctx.revert();
+		return () => {
+			if (rafId) cancelAnimationFrame(rafId);
+			if (ctx) ctx.revert();
+			navTheme.set(null);
+			if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
+		};
 	});
 </script>
 

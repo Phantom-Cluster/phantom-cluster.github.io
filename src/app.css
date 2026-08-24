@@ -113,8 +113,12 @@
   * {
     @apply border-border;
   }
+  html {
+    overflow-x: hidden;
+  }
   body {
     @apply bg-background text-foreground font-sans antialiased selection:bg-primary selection:text-primary-foreground;
+    overflow-x: hidden;
   }
 
   /* WCAG 2.2 AA standard high-contrast keyboard focus indicators */

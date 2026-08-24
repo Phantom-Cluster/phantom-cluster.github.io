@@ -34,29 +34,30 @@
 
 	onMount(() => {
 		navTheme.set('light'); // hero is white — lock navbar to light immediately
-		document.body.style.backgroundColor = '#ffffff';
+		if (typeof document !== 'undefined') document.body.style.backgroundColor = '#ffffff';
 		gsap.registerPlugin(ScrollTrigger);
 
-		const t = setTimeout(() => {
-			ctx = gsap.context(() => {
+		ctx = gsap.context(() => {
+			if (bentoTriggerEl) {
 				ScrollTrigger.create({
 					trigger: bentoTriggerEl, start: 'top 90%',
 					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
 				});
+			}
+			if (editorialTriggerEl) {
 				ScrollTrigger.create({
 					trigger: editorialTriggerEl, start: 'top 90%',
 					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
 				});
-			});
-		}, 400);
+			}
+		});
+		ScrollTrigger.refresh();
 
-		return () => clearTimeout(t);
-	});
-
-	onDestroy(() => {
-		navTheme.set(null); // hand theme control back to IntersectionObserver on other pages
-		if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
-		if (ctx) ctx.revert();
+		return () => {
+			if (ctx) ctx.revert();
+			navTheme.set(null);
+			if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
+		};
 	});
 </script>
 
@@ -77,7 +78,7 @@
 	</div>
 
 	<!-- STAGE 2: DARK BENTO -->
-	<div bind:this={bentoTriggerEl} data-theme="dark">
+	<div bind:this={bentoTriggerEl} data-theme="dark" class="bg-[#000000] text-white">
 		<CaseStudyBento
 			narrative={{
 				heading: 'A <span class="text-shimmer-white">full redesign</span> of the optimization flow — built for clarity, speed, and confidence at scale.',

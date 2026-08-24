@@ -11,28 +11,36 @@
 
 	let { title, description, role, tags }: Props = $props();
 
+	let ctx: gsap.Context;
+
 	onMount(() => {
 		const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		if (rm) return;
 
-		// Per-line curtain wipe on H1, then stagger everything else
-		gsap.set('.cs-hero-line-inner', { yPercent: 110 });
-		gsap.set('.cs-hero-eyebrow, .cs-hero-badge', { opacity: 0, y: 14 });
-		gsap.set('.cs-hero-chips span', { opacity: 0, y: 12 });
-		gsap.set('.cs-hero-meta-item', { opacity: 0, y: 16 });
-		gsap.set('.cs-hero-ledger-cell', { opacity: 0, y: 20 });
-		gsap.set('.cs-hero-desc', { opacity: 0, y: 18 });
-		gsap.set('.cs-hero-tags span', { opacity: 0, y: 10 });
+		ctx = gsap.context(() => {
+			// Per-line curtain wipe on H1, then stagger everything else
+			gsap.set('.cs-hero-line-inner', { yPercent: 110 });
+			gsap.set('.cs-hero-eyebrow, .cs-hero-badge', { opacity: 0, y: 14 });
+			gsap.set('.cs-hero-chips span', { opacity: 0, y: 12 });
+			gsap.set('.cs-hero-meta-item', { opacity: 0, y: 16 });
+			gsap.set('.cs-hero-ledger-cell', { opacity: 0, y: 20 });
+			gsap.set('.cs-hero-desc', { opacity: 0, y: 18 });
+			gsap.set('.cs-hero-tags span', { opacity: 0, y: 10 });
 
-		gsap.timeline({ delay: 0.05 })
-			.to('.cs-hero-badge', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' })
-			.to('.cs-hero-line-inner', { yPercent: 0, duration: 1.0, stagger: 0.09, ease: 'power4.out' }, '-=0.2')
-			.to('.cs-hero-eyebrow', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.1)
-			.to('.cs-hero-chips span', { opacity: 1, y: 0, duration: 0.45, stagger: 0.055, ease: 'power3.out' }, '-=0.5')
-			.to('.cs-hero-meta-item', { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power3.out' }, '-=0.6')
-			.to('.cs-hero-ledger-cell', { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: 'power3.out' }, '-=0.4')
-			.to('.cs-hero-desc', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.3')
-			.to('.cs-hero-tags span', { opacity: 1, y: 0, duration: 0.4, stagger: 0.045, ease: 'power2.out' }, '-=0.45');
+			gsap.timeline({ delay: 0.05 })
+				.to('.cs-hero-badge', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' })
+				.to('.cs-hero-line-inner', { yPercent: 0, duration: 1.0, stagger: 0.09, ease: 'power4.out' }, '-=0.2')
+				.to('.cs-hero-eyebrow', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.1)
+				.to('.cs-hero-chips span', { opacity: 1, y: 0, duration: 0.45, stagger: 0.055, ease: 'power3.out' }, '-=0.5')
+				.to('.cs-hero-meta-item', { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power3.out' }, '-=0.6')
+				.to('.cs-hero-ledger-cell', { opacity: 1, y: 0, duration: 0.55, stagger: 0.1, ease: 'power3.out' }, '-=0.4')
+				.to('.cs-hero-desc', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.3')
+				.to('.cs-hero-tags span', { opacity: 1, y: 0, duration: 0.4, stagger: 0.045, ease: 'power2.out', clearProps: 'all' }, '-=0.45');
+		});
+
+		return () => {
+			if (ctx) ctx.revert();
+		};
 	});
 </script>
 

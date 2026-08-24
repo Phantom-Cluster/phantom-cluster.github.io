@@ -458,14 +458,16 @@
 		{ name: "Premiere Pro",   iconUrl: "/images/logos/adobepremierepro.svg",color: "#9999FF", years: 12, category: "Video Editing" },
 		{ name: "Media Encoder",  iconUrl: "/images/logos/mediaencoder.svg",    color: "#9999FF", years: 12, category: "Export / Render" },
 		{ name: "After Effects",  iconUrl: "/images/logos/aftereffects.svg",    color: "#9999FF", years: 12, category: "Motion"         },
-		{ name: "Miro",           iconUrl: "/images/logos/miro.svg",            color: "#FFD02F", years: 4, category: "Whiteboarding"  },
-		{ name: "Maze",           iconUrl: "/images/logos/maze.svg",            color: "#EF5343", years: 3, category: "User Testing"   },
+		{ name: "Miro",           iconUrl: "/images/logos/miro.png",            color: "#FFD02F", years: 4, category: "Whiteboarding"  },
+		{ name: "Maze",           iconUrl: "/images/logos/maze.png",            color: "#180048", years: 3, category: "User Testing"   },
 		{ name: "Elementor",      iconUrl: "/images/logos/elementor.svg",       color: "#92003B", years: 6, category: "WordPress"      },
-		{ name: "Spline",         iconUrl: "/images/logos/spline.svg",          color: "#0D6EFD", years: 2, category: "3D Design"      },
+		{ name: "Spline",         iconUrl: "/images/logos/spline.png",          color: "#0D6EFD", years: 2, category: "3D Design"      },
 		{ name: "Framer",         iconUrl: "/images/logos/framer.svg",          color: "#0559F9", years: 2, category: "Prototyping"    },
 		{ name: "VS Code",        iconUrl: "/images/logos/vscode.svg",          color: "#007ACC", years: 6, category: "Dev Env"        },
 		{ name: "Notion",         iconUrl: "/images/logos/notion.svg",          color: "#a8a29e", years: 3, category: "Workflow"       },
 		{ name: "Vertex AI",      iconUrl: "/images/logos/googlecloud.svg",     color: "#4285F4", years: 1, category: "AI Ops"         },
+		{ name: "Anti-Gravity",   iconUrl: "/images/logos/antigravity.png",     color: "#8B5CF6", years: 1, category: "AI Coding"      },
+		{ name: "Claude Code",    iconUrl: "/images/logos/claudecode.png",      color: "#D97757", years: 1, category: "AI Coding"      },
 	];
 	let hoveredToolIdx = $state(-1);
 
@@ -576,7 +578,7 @@
 
 <div
 	bind:this={pageWrapperEl}
-	class="bg-[#F4F0E8] text-neutral-900 min-h-screen"
+	class="bg-[#F4F0E8] text-neutral-900 min-h-screen overflow-x-hidden"
 >
 	<!-- Phase 2: Hero Section -->
 	<section
@@ -893,26 +895,28 @@
 				</div>
 
 				<!-- 5: AI Ops — col 1-2, row 3 (wide banner) -->
-				<div role="group" class="bento-card b-ai rounded-2xl border border-white/[0.07] bg-[#111116] p-6 flex items-center gap-6 cursor-default"
+				<div role="group" class="bento-card b-ai rounded-2xl border border-white/[0.07] bg-[#111116] p-6 flex flex-col justify-between cursor-default"
 					onmouseenter={() => bentoHover(tlAi)} onmouseleave={() => bentoLeave(tlAi)}>
 					<div class="bento-glow" aria-hidden="true"></div>
-					<div class="bento-icon icon-ai shrink-0">
-						<svg width="36" height="36" viewBox="0 0 24 24" fill="none">
-							<line bind:this={aiRayT} x1="12" y1="12" x2="12" y2="3"  stroke="#A78BFA" stroke-width="2"   stroke-linecap="round"/>
-							<line bind:this={aiRayR} x1="12" y1="12" x2="21" y2="12" stroke="#A78BFA" stroke-width="1.6" stroke-linecap="round"/>
-							<line bind:this={aiRayB} x1="12" y1="12" x2="12" y2="21" stroke="#A78BFA" stroke-width="2"   stroke-linecap="round"/>
-							<line bind:this={aiRayL} x1="12" y1="12" x2="3"  y2="12" stroke="#A78BFA" stroke-width="1.6" stroke-linecap="round"/>
-							<circle cx="12" cy="12" r="2.5" fill="#A78BFA"/>
-						</svg>
+					<div class="flex items-start justify-between gap-4">
+						<span class="text-[10px] font-mono tracking-[0.2em] text-neutral-500 uppercase pt-0.5">AI · Operations</span>
+						<div class="bento-icon icon-ai shrink-0">
+							<svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+								<line bind:this={aiRayT} x1="12" y1="12" x2="12" y2="3"  stroke="#A78BFA" stroke-width="2"   stroke-linecap="round"/>
+								<line bind:this={aiRayR} x1="12" y1="12" x2="21" y2="12" stroke="#A78BFA" stroke-width="1.6" stroke-linecap="round"/>
+								<line bind:this={aiRayB} x1="12" y1="12" x2="12" y2="21" stroke="#A78BFA" stroke-width="2"   stroke-linecap="round"/>
+								<line bind:this={aiRayL} x1="12" y1="12" x2="3"  y2="12" stroke="#A78BFA" stroke-width="1.6" stroke-linecap="round"/>
+								<circle cx="12" cy="12" r="2.5" fill="#A78BFA"/>
+							</svg>
+						</div>
 					</div>
-					<div class="flex-1 min-w-0">
-						<span class="text-[10px] font-mono tracking-[0.2em] text-neutral-500 uppercase">AI · Operations</span>
-						<p class="text-xl font-black text-white tracking-tight mt-1">AI-Assisted Design Operations</p>
-					</div>
-					<div class="flex flex-wrap gap-1.5 shrink-0">
-						{#each ['Prompt Engineering', 'Midjourney', 'Cursor', 'Workflow Automation'] as t}
-							<span class="text-[10px] font-mono text-neutral-600 bg-white/4 px-2 py-0.5 rounded-full">{t}</span>
-						{/each}
+					<div>
+						<p class="text-base sm:text-xl font-black text-white tracking-tight leading-snug mb-2 sm:mb-3">AI-Assisted Design Operations</p>
+						<div class="flex flex-wrap gap-1.5">
+							{#each ['Prompt Engineering', 'Midjourney', 'Cursor', 'Workflow Automation'] as t}
+								<span class="text-[10px] font-mono text-neutral-600 bg-white/4 px-2 py-0.5 rounded-full">{t}</span>
+							{/each}
+						</div>
 					</div>
 				</div>
 
@@ -934,8 +938,12 @@
 						</div>
 					</div>
 					<div>
-						<p class="text-sm font-black text-white tracking-tight leading-snug mb-1">Accessibility-First UI Engineering</p>
-						<p class="text-[11px] font-mono text-neutral-600">WCAG 2.1 AA</p>
+						<p class="text-base font-black text-white tracking-tight leading-snug mb-2">Accessibility-First UI Engineering</p>
+						<div class="flex flex-wrap gap-1.5">
+							{#each ['WCAG 2.1 AA', 'Screen Readers', 'A11y Audit'] as t}
+								<span class="text-[10px] font-mono text-neutral-600 bg-white/4 px-2 py-0.5 rounded-full">{t}</span>
+							{/each}
+						</div>
 					</div>
 				</div>
 

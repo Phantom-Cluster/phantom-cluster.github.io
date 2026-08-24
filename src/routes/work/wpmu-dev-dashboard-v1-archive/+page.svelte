@@ -71,12 +71,12 @@
 			});
 		}, 400);
 
-		return () => clearTimeout(t);
-	});
-
-	onDestroy(() => {
-		navTheme.set(null); // hand theme control back to IntersectionObserver on other pages
-		if (ctx) ctx.revert();
+		return () => {
+			if (t) clearTimeout(t);
+			if (ctx) ctx.revert();
+			navTheme.set(null);
+			if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
+		};
 	});
 </script>
 

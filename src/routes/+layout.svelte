@@ -7,6 +7,7 @@
 	import FooterDraft from '$lib/components/FooterDraft.svelte';
 	import UpdateNoticeBar from '$lib/components/UpdateNoticeBar.svelte';
 	import { page } from '$app/state';
+	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
 	import Lenis from 'lenis';
@@ -14,12 +15,13 @@
 	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
 
 	let { children } = $props();
+	let lenis: Lenis | null = null;
 
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
 
 		// Initialize Lenis
-		const lenis = new Lenis({
+		lenis = new Lenis({
 			autoRaf: false,
 		});
 
@@ -27,10 +29,32 @@
 		lenis.on('scroll', ScrollTrigger.update);
 
 		gsap.ticker.add((time) => {
-			lenis.raf(time * 1000);
+			lenis?.raf(time * 1000);
 		});
 
 		gsap.ticker.lagSmoothing(0);
+	});
+
+	beforeNavigate(() => {
+		if (typeof window !== 'undefined') {
+			window.scrollTo(0, 0);
+		}
+		if (lenis) {
+			lenis.scrollTo(0, { immediate: true });
+		}
+	});
+
+	afterNavigate(() => {
+		if (typeof window !== 'undefined') {
+			window.scrollTo(0, 0);
+		}
+		if (lenis) {
+			lenis.scrollTo(0, { immediate: true });
+		}
+
+		requestAnimationFrame(() => {
+			ScrollTrigger.refresh();
+		});
 	});
 </script>
 
@@ -45,11 +69,7 @@
 <Navbar />
 <div class="min-h-screen flex flex-col bg-background text-foreground font-sans selection:bg-primary selection:text-primary-foreground">
 	<main class="grow {['/', '/work/wpmu-dev-dashboard', '/work/ideajam-kanban-saas', '/work/eclectic-app-design', '/work/themeisle-starter-templates', '/work/wordpress-redesign', '/work/effido-productivity-app', '/work/alt-news-concept', '/work/discord-redesign'].includes(page.url.pathname) ? '' : 'pt-20'}">
-		{#key page.url.pathname}
-			<div in:fade={{ duration: 300, delay: 300 }} out:fade={{ duration: 300 }}>
-				{@render children()}
-			</div>
-		{/key}
+		{@render children()}
 	</main>
 
 	<FooterDraft />

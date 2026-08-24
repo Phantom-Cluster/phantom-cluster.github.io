@@ -117,86 +117,101 @@
 	let bounce37El: HTMLElement;
 	let conv47El: HTMLElement;
 	let isTouchDevice = $state(false);
+	let ctx: gsap.Context;
+	let rafId: number;
 
 	onMount(() => {
-		isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+		if (typeof window !== 'undefined') {
+			isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+		}
 		gsap.registerPlugin(ScrollTrigger);
 
-		// Scroll-triggered entrance — fires when bento scrolls into view, not on mount
-		if (bentoGridEl) {
-			const cards = Array.from(bentoGridEl.querySelectorAll(':scope > div'));
-			gsap.set(cards, { opacity: 0, y: 26, scale: 0.97, force3D: true });
-			gsap.to(cards, {
-				opacity: 1, y: 0, scale: 1,
-				duration: 0.68,
-				ease: 'power2.out',
-				stagger: 0.08,
-				clearProps: 'all',
-				force3D: true,
-				scrollTrigger: { trigger: bentoGridEl, start: 'top 82%', once: true },
+		rafId = requestAnimationFrame(() => {
+			ctx = gsap.context(() => {
+				// Scroll-triggered entrance — fires when bento scrolls into view, not on mount
+				if (bentoGridEl) {
+					const cards = Array.from(bentoGridEl.querySelectorAll(':scope > div'));
+					gsap.set(cards, { opacity: 0, y: 26, scale: 0.97, force3D: true });
+					gsap.to(cards, {
+						opacity: 1, y: 0, scale: 1,
+						duration: 0.68,
+						ease: 'power2.out',
+						stagger: 0.08,
+						clearProps: 'all',
+						force3D: true,
+						scrollTrigger: { trigger: bentoGridEl, start: 'top 92%', once: true },
+					});
+				}
+
+				// ── GPU-optimised infinite animations (force3D → compositor thread) ──
+
+				// Arrow: smooth breath — soft rightward drift, no elastic physics
+				if (arrowEl) {
+					gsap.timeline({ repeat: -1, yoyo: true })
+						.to(arrowEl, {
+							x: 9, opacity: 0.85,
+							duration: 2.2, ease: 'sine.inOut', force3D: true,
+						})
+						.to(arrowEl, {
+							x: 0, opacity: 0.38,
+							duration: 2.2, ease: 'sine.inOut', force3D: true,
+						});
+				}
+
+				// Metric2 number: float + % sign glow pulse (electric mint #00E676)
+				if (perf80El) {
+					gsap.to(perf80El, {
+						y: -6, duration: 2.4, ease: 'sine.inOut',
+						yoyo: true, repeat: -1, force3D: true,
+					});
+					const pctSign = perf80El.querySelector('.pct-sign') as HTMLElement;
+					if (pctSign) {
+						gsap.to(pctSign, {
+							textShadow: '0 0 22px rgba(0,230,118,1), 0 0 50px rgba(0,230,118,0.45)',
+							scale: 1.1, duration: 1.0, ease: 'sine.inOut',
+							yoyo: true, repeat: -1, force3D: true,
+						});
+					}
+				}
+
+				// Metric1 stat: counter-tick jolt + elastic settle (electric mint #00E676)
+				if (bounce37El) {
+					gsap.timeline({ repeat: -1, repeatDelay: 2.5 })
+						.to(bounce37El, {
+							y: -3, skewX: -3,
+							textShadow: '0 0 24px rgba(0,230,118,1), 0 0 55px rgba(0,230,118,0.5)',
+							duration: 0.18, ease: 'power3.out', force3D: true,
+						})
+						.to(bounce37El, {
+							y: 0, skewX: 0,
+							textShadow: '0 0 8px rgba(0,230,118,0.4)',
+							duration: 0.5, ease: 'elastic.out(1.2, 0.4)', force3D: true,
+						});
+				}
+
+				// Conversion chip: scale bounce + glow (electric mint #00E676)
+				if (conv47El) {
+					gsap.timeline({ repeat: -1, repeatDelay: 1.8 })
+						.to(conv47El, {
+							scale: 1.12,
+							textShadow: '0 0 20px rgba(0,230,118,0.95), 0 0 45px rgba(0,230,118,0.4)',
+							duration: 0.3, ease: 'back.out(2)', force3D: true,
+						})
+						.to(conv47El, {
+							scale: 1,
+							textShadow: '0 0 0px rgba(0,230,118,0)',
+							duration: 0.6, ease: 'power3.inOut', force3D: true,
+						});
+				}
+
+				ScrollTrigger.refresh();
 			});
-		}
+		});
 
-		// ── GPU-optimised infinite animations (force3D → compositor thread) ──
-
-		// Arrow: smooth breath — soft rightward drift, no elastic physics
-		if (arrowEl) {
-			gsap.timeline({ repeat: -1, yoyo: true })
-				.to(arrowEl, {
-					x: 9, opacity: 0.85,
-					duration: 2.2, ease: 'sine.inOut', force3D: true,
-				})
-				.to(arrowEl, {
-					x: 0, opacity: 0.38,
-					duration: 2.2, ease: 'sine.inOut', force3D: true,
-				});
-		}
-
-		// Metric2 number: float + % sign glow pulse (electric mint #00E676)
-		if (perf80El) {
-			gsap.to(perf80El, {
-				y: -6, duration: 2.4, ease: 'sine.inOut',
-				yoyo: true, repeat: -1, force3D: true,
-			});
-			const pctSign = perf80El.querySelector('.pct-sign') as HTMLElement;
-			if (pctSign) {
-				gsap.to(pctSign, {
-					textShadow: '0 0 22px rgba(0,230,118,1), 0 0 50px rgba(0,230,118,0.45)',
-					scale: 1.1, duration: 1.0, ease: 'sine.inOut',
-					yoyo: true, repeat: -1, force3D: true,
-				});
-			}
-		}
-
-		// Metric1 stat: counter-tick jolt + elastic settle (electric mint #00E676)
-		if (bounce37El) {
-			gsap.timeline({ repeat: -1, repeatDelay: 2.5 })
-				.to(bounce37El, {
-					y: -3, skewX: -3,
-					textShadow: '0 0 24px rgba(0,230,118,1), 0 0 55px rgba(0,230,118,0.5)',
-					duration: 0.18, ease: 'power3.out', force3D: true,
-				})
-				.to(bounce37El, {
-					y: 0, skewX: 0,
-					textShadow: '0 0 8px rgba(0,230,118,0.4)',
-					duration: 0.5, ease: 'elastic.out(1.2, 0.4)', force3D: true,
-				});
-		}
-
-		// Conversion chip: scale bounce + glow (electric mint #00E676)
-		if (conv47El) {
-			gsap.timeline({ repeat: -1, repeatDelay: 1.8 })
-				.to(conv47El, {
-					scale: 1.12,
-					textShadow: '0 0 20px rgba(0,230,118,0.95), 0 0 45px rgba(0,230,118,0.4)',
-					duration: 0.3, ease: 'back.out(2)', force3D: true,
-				})
-				.to(conv47El, {
-					scale: 1,
-					textShadow: '0 0 0px rgba(0,230,118,0)',
-					duration: 0.6, ease: 'power3.inOut', force3D: true,
-				});
-		}
+		return () => {
+			if (rafId) cancelAnimationFrame(rafId);
+			if (ctx) ctx.revert();
+		};
 	});
 
 </script>
@@ -283,11 +298,11 @@
 	}
 </style>
 
-<section class="w-full px-4 md:px-6 pt-24 pb-28 bg-transparent">
-	<div class="max-w-7xl mx-auto">
+<section class="w-full px-4 md:px-6 pt-24 pb-28 bg-transparent overflow-hidden">
+	<div class="max-w-7xl mx-auto overflow-hidden">
 		<div bind:this={bentoGridEl}
 		     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5
-		            auto-rows-[minmax(220px,auto)] lg:auto-rows-[280px] grid-flow-row-dense">
+		            auto-rows-auto lg:auto-rows-[280px] grid-flow-row-dense overflow-hidden">
 
 			<!-- ── 1. Narrative (Wide 2×1) ──────────────────────────────────── -->
 			<div class="col-span-1 md:col-span-2 lg:col-span-2 lg:row-span-1 lg:col-start-1 lg:row-start-1 csb-wrap">

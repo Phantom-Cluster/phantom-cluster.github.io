@@ -277,7 +277,7 @@
 	onmousemove={handleMouseMove}
 	data-theme="dark"
 	aria-label="Hero"
-	class="relative h-[100svh] w-full overflow-hidden bg-black flex flex-col"
+	class="relative min-h-[100svh] lg:h-[100svh] w-full overflow-hidden bg-black flex flex-col justify-between"
 >
 	<!-- ─── Video Background (full-width, edge-to-edge) ──────────────────── -->
 	<div
@@ -306,41 +306,41 @@
 
 	<!-- ─── Content wrapper (constrained) ───────────────────────────────── -->
 	<div
-		class="relative z-10 flex-1 flex flex-col justify-center max-w-[1320px] mx-auto w-full px-6 md:px-8 mt-20 md:mt-0 md:pt-16"
+		class="relative z-10 flex-1 flex flex-col justify-center max-w-[1320px] mx-auto w-full px-5 sm:px-6 md:px-8 pt-20 sm:pt-24 md:pt-28 lg:pt-20 pb-4 lg:pb-0"
 	>
 		<!-- 12-col primary grid -->
 		<div
-			class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 items-center w-full"
+			class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-8 items-center w-full"
 		>
 			<!-- Left col · span 9 · three-tier nameplate -->
-			<div class="col-span-1 md:col-span-9 flex flex-col justify-center">
-				<div class="relative z-20 flex flex-col justify-center">
+			<div class="col-span-1 md:col-span-12 lg:col-span-9 flex flex-col justify-center items-center text-center lg:items-start lg:text-left mx-auto lg:mx-0 max-w-3xl lg:max-w-none">
+				<div class="relative z-20 flex flex-col justify-center items-center text-center lg:items-start lg:text-left w-full">
 					<h1
-						class="leading-[0.85] tracking-tighter font-medium text-white select-none"
-						style="font-size: clamp(3rem, 8vw + 1rem, 10rem);"
+						class="leading-[0.88] tracking-tighter font-medium text-white select-none"
+						style="font-size: clamp(2.5rem, 6.5vw + 0.5rem, 9.5rem);"
 					>
 						<span class="hero-line block overflow-hidden"><span class="hero-line-inner block">Hitanshu</span></span>
 						<span class="hero-line block overflow-hidden"><span class="hero-line-inner block">Sahu.</span></span>
 					</h1>
 
 					<h2
-						class="text-gray-300 font-normal tracking-tight mt-6 overflow-hidden"
-						style="font-size: clamp(1.2rem, 2vw + 0.75rem, 2.25rem);"
+						class="text-gray-300 font-normal tracking-tight mt-4 sm:mt-6 overflow-hidden"
+						style="font-size: clamp(1.1rem, 1.8vw + 0.6rem, 2.25rem);"
 					>
 						<span class="hero-sub-inner block">Product Designer.</span>
 					</h2>
 
-					<div class="hero-available flex items-center gap-2 mt-5">
+					<div class="hero-available flex items-center justify-center lg:justify-start gap-2 mt-4 sm:mt-5">
 						<span class="relative flex h-2 w-2" aria-hidden="true">
 							<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
 							<span class="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
 						</span>
-						<span class="text-[11px] font-mono tracking-widest text-green-400/80 uppercase">Available — open to full-time roles</span>
+						<span class="text-[10px] sm:text-[11px] font-mono tracking-widest text-green-400/80 uppercase">Available — open to full-time roles</span>
 					</div>
 
 					<p
 						bind:this={heroBio}
-						class="w-full text-gray-400 mt-5 text-lg font-normal leading-relaxed"
+						class="w-full text-gray-400 mt-4 sm:mt-5 text-base sm:text-lg font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0"
 					>
 						I design SaaS products that reduce operational friction
 						and scale — at the intersection of product strategy,
@@ -348,11 +348,11 @@
 						at WPMU DEV and across high-growth platforms.
 					</p>
 
-					<div class="flex flex-col sm:flex-row gap-3 mt-8">
+					<div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 mt-6 sm:mt-8 w-full sm:w-auto">
 						<button
 							type="button"
 							onclick={() => openNavDropdown.set('projects')}
-							class="hero-cta inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-black rounded-full text-sm font-bold tracking-wide hover:bg-gray-100 transition-all duration-200 active:scale-95 shadow-lg shadow-black/30"
+							class="hero-cta inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-white text-black rounded-full text-xs sm:text-sm font-bold tracking-wide hover:bg-gray-100 transition-all duration-200 active:scale-95 shadow-lg shadow-black/30"
 						>
 							View Work
 							<ArrowRight class="size-3.5" />
@@ -361,7 +361,7 @@
 							href="/Hitanshu_Sahu___Resume_JUN_Updated.pdf"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="hero-cta inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-white/20 text-white rounded-full text-sm font-bold tracking-wide hover:border-white/50 hover:bg-white/5 transition-all duration-200"
+							class="hero-cta inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 border border-white/20 text-white rounded-full text-xs sm:text-sm font-bold tracking-wide hover:border-white/50 hover:bg-white/5 transition-all duration-200"
 						>
 							Download Resume
 							<svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -372,9 +372,9 @@
 				</div>
 			</div>
 
-			<!-- Right col · span 3 · greyscale portrait — hidden on mobile -->
+			<!-- Right col · span 3 · greyscale portrait — desktop only (lg:flex) -->
 			<div
-				class="hidden md:flex col-span-1 md:col-span-3 justify-start md:justify-end"
+				class="hidden lg:flex col-span-1 lg:col-span-3 justify-end"
 			>
 				<div
 					bind:this={heroImage}
@@ -394,24 +394,24 @@
 
 	<!-- ─── Pinned Utility Bar ──────────────────────────────────────────── -->
 	<div
-		class="relative z-20 w-full max-w-[1320px] mx-auto px-6 md:px-8 pb-8 mt-auto"
+		class="relative z-20 w-full max-w-[1320px] mx-auto px-4 sm:px-6 md:px-8 pb-3 sm:pb-5 md:pb-6 mt-auto"
 	>
-		<div class="border-t border-white/10 pt-6">
+		<div class="border-t border-white/10 pt-3 sm:pt-4">
 			<!-- Utility chips · content-hugging flex row -->
 			<div
 				bind:this={heroBar}
-				class="w-full flex flex-col md:flex-row flex-wrap justify-center items-center gap-4"
+				class="w-full flex flex-col sm:flex-row flex-wrap justify-center items-center gap-2 sm:gap-2.5 lg:gap-3.5 text-center"
 			>
-				<Chip theme="dark" spin="glow" class="w-full md:w-auto" innerClass="px-6 py-3.5">
-					<span class="text-[10px] md:text-xs font-mono uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors duration-200">Core: Figma, Svelte, WordPress</span>
+				<Chip theme="dark" spin="glow" class="w-auto max-w-full" innerClass="px-3.5 py-1.5 sm:px-4 sm:py-2 lg:px-5 lg:py-2.5">
+					<span class="text-[9px] sm:text-[10px] lg:text-[11px] font-mono uppercase tracking-wider text-gray-400 group-hover:text-white transition-colors duration-200">Core: Figma, Svelte, WordPress</span>
 				</Chip>
 
-				<Chip theme="dark" spin="glow" class="w-full md:w-auto" innerClass="px-6 py-3.5">
-					<span class="text-[10px] md:text-xs font-mono uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors duration-200">Specialization: SaaS, Dashboards &amp; Atomic Systems</span>
+				<Chip theme="dark" spin="glow" class="w-auto max-w-full" innerClass="px-3.5 py-1.5 sm:px-4 sm:py-2 lg:px-5 lg:py-2.5">
+					<span class="text-[9px] sm:text-[10px] lg:text-[11px] font-mono uppercase tracking-wider text-gray-400 group-hover:text-white transition-colors duration-200">Specialization: SaaS, Dashboards &amp; Atomic Systems</span>
 				</Chip>
 
-				<Chip theme="dark" spin="glow" class="w-full md:w-auto" innerClass="px-6 py-3.5">
-					<span class="text-[10px] md:text-xs font-mono uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors duration-200">7+ Years Deep Ecosystem Experience</span>
+				<Chip theme="dark" spin="glow" class="w-auto max-w-full" innerClass="px-3.5 py-1.5 sm:px-4 sm:py-2 lg:px-5 lg:py-2.5">
+					<span class="text-[9px] sm:text-[10px] lg:text-[11px] font-mono uppercase tracking-wider text-gray-400 group-hover:text-white transition-colors duration-200">7+ Years Deep Ecosystem Experience</span>
 				</Chip>
 			</div>
 		</div>
@@ -427,9 +427,9 @@
 	class="bg-[#F4F0E8] border-t border-neutral-200/50"
 >
 	<div
-		class="w-full max-w-[1320px] mx-auto px-6 py-14 sm:py-20 lg:py-24 grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12 items-center"
+		class="w-full max-w-[1320px] mx-auto px-6 py-14 sm:py-20 lg:py-24 grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center"
 	>
-		<div class="md:col-span-8 flex flex-col space-y-8">
+		<div class="md:col-span-7 lg:col-span-7 flex flex-col space-y-8">
 			<div>
 				<div
 					class="studio-chip mb-8 relative inline-flex overflow-hidden rounded-full p-[1.5px] shadow-sm bg-neutral-200"
@@ -518,9 +518,9 @@
 			</ul>
 		</div>
 
-		<div class="md:col-span-4 flex items-center">
+		<div class="md:col-span-5 lg:col-span-5 flex items-center">
 			<div
-				class="metrics-card bg-[#0a0a0a] rounded-[2rem] p-8 lg:p-10 w-full flex flex-col justify-center space-y-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
+				class="metrics-card bg-[#0a0a0a] rounded-[2rem] p-6 sm:p-7 lg:p-10 w-full flex flex-col justify-center space-y-6 lg:space-y-8 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)]"
 			>
 				<p
 					class="text-xs font-mono tracking-widest text-portfolio-success uppercase"
@@ -531,12 +531,12 @@
 				<div>
 					<h3
 						bind:this={metric1El}
-						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1 tabular-nums"
+						class="text-4xl sm:text-5xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1 tabular-nums"
 					>
 						0%
 					</h3>
 					<p
-						class="text-sm lg:text-base font-medium tracking-widest text-gray-400 uppercase"
+						class="text-xs lg:text-base font-medium tracking-wider lg:tracking-widest text-gray-400 uppercase"
 					>
 						Client Satisfaction
 					</p>
@@ -545,12 +545,12 @@
 				<div>
 					<h3
 						bind:this={metric2El}
-						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1 tabular-nums"
+						class="text-4xl sm:text-5xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1 tabular-nums"
 					>
 						0M+
 					</h3>
 					<p
-						class="text-sm lg:text-base font-medium tracking-widest text-gray-400 uppercase"
+						class="text-xs lg:text-base font-medium tracking-wider lg:tracking-widest text-gray-400 uppercase"
 					>
 						Active Plugin Users
 					</p>
@@ -559,12 +559,12 @@
 				<div>
 					<h3
 						bind:this={metric3El}
-						class="text-6xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1 tabular-nums"
+						class="text-4xl sm:text-5xl lg:text-7xl font-bold text-white tracking-tighter leading-none mb-1 tabular-nums"
 					>
 						0+
 					</h3>
 					<p
-						class="text-sm lg:text-base font-medium tracking-widest text-gray-400 uppercase"
+						class="text-xs lg:text-base font-medium tracking-wider lg:tracking-widest text-gray-400 uppercase"
 					>
 						Starter Templates Completed
 					</p>
@@ -646,17 +646,17 @@
 	</div>
 
 	<!-- ── Stat cards ─────────────────────────────────────────────────────── -->
-	<div class="max-w-[1320px] mx-auto px-6 lg:px-10 mt-16">
-		<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+	<div class="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-10 mt-12 sm:mt-16">
+		<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
 			{#each [
 				{ value: '2M+', label: 'Users Impacted'    },
 				{ value: '+47%', label: 'Conversion Uplift' },
 				{ value: '50+', label: 'Templates Shipped' },
 				{ value: '−37%', label: 'Bounce Rate Drop' },
 			] as stat}
-				<div class="bg-[#111] rounded-2xl px-8 py-8 flex flex-col gap-5">
-					<span class="text-[2.75rem] font-black tracking-tighter text-white leading-none tabular-nums">{stat.value}</span>
-					<span class="text-[10px] font-mono tracking-[0.18em] text-white/50 uppercase">{stat.label}</span>
+				<div class="bg-[#111] rounded-2xl px-4 py-5 sm:px-6 sm:py-7 lg:px-8 lg:py-8 flex flex-col gap-3 sm:gap-5 min-w-0 overflow-hidden">
+					<span class="text-[1.75rem] sm:text-[2.25rem] lg:text-[2.75rem] font-black tracking-tighter text-white leading-none tabular-nums truncate">{stat.value}</span>
+					<span class="text-[9px] sm:text-[10px] font-mono tracking-[0.12em] sm:tracking-[0.18em] text-white/50 uppercase truncate">{stat.label}</span>
 				</div>
 			{/each}
 		</div>
@@ -664,7 +664,7 @@
 
 	<!-- ── Footer meta bar ───────────────────────────────────────────────── -->
 	<div class="max-w-[1320px] mx-auto px-6 lg:px-10 mt-10 mb-6">
-		<div class="border-t border-black/[0.08] pt-7 flex flex-wrap items-center gap-6 md:gap-0 md:justify-between">
+		<div class="border-t border-black/[0.08] pt-7 flex flex-wrap items-center justify-center md:justify-between gap-4 md:gap-0 text-center md:text-left">
 			<span class="text-[11px] font-mono tracking-[0.22em] text-neutral-400 uppercase">6 Production Teams</span>
 			<span class="hidden md:block w-px h-4 bg-black/15"></span>
 			<span class="text-[11px] font-mono tracking-[0.22em] text-neutral-400 uppercase">7+ Years Embedded</span>
@@ -964,18 +964,13 @@
 					href="mailto:phantomcluster17@gmail.com"
 					class="group flex items-center text-gray-300 hover:text-white transition-colors text-base font-medium"
 				>
-					<svg
+					<!-- @ts-ignore -->
+					<ion-icon
+						name="mail-outline"
 						class="w-6 h-6 mr-4 text-gray-600 group-hover:text-primary transition-colors"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-						></path></svg
-					>
+						aria-hidden="true"
+						style="font-size: 24px; color: inherit;"
+					></ion-icon>
 					phantomcluster17@gmail.com
 				</a>
 				<a
@@ -984,14 +979,13 @@
 					rel="noopener noreferrer"
 					class="group flex items-center text-gray-300 hover:text-white transition-colors text-base font-medium"
 				>
-					<svg
+					<!-- @ts-ignore -->
+					<ion-icon
+						name="logo-linkedin"
 						class="w-6 h-6 mr-4 text-gray-600 group-hover:text-primary transition-colors"
-						fill="currentColor"
-						viewBox="0 0 24 24"
-						><path
-							d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
-						/></svg
-					>
+						aria-hidden="true"
+						style="font-size: 24px; color: inherit;"
+					></ion-icon>
 					LinkedIn Profile
 				</a>
 			</div>

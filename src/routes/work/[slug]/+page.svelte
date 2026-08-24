@@ -8,57 +8,65 @@
 	let { data }: { data: PageData } = $props();
 	let project = $derived(data.project);
 
+	let ctx: gsap.Context;
+
 	onMount(() => {
 		gsap.registerPlugin(ScrollTrigger);
 
-		// Hero fade up
-		gsap.from('.cs-hero-element', {
-			y: 50,
-			opacity: 0,
-			duration: 1,
-			stagger: 0.15,
-			ease: 'power3.out'
-		});
-
-		// Parallax for hero image
-		gsap.to('.cs-hero-img', {
-			yPercent: 20,
-			ease: 'none',
-			scrollTrigger: {
-				trigger: '.cs-hero-img-container',
-				start: 'top bottom',
-				end: 'bottom top',
-				scrub: true
-			}
-		});
-
-		// Section reveals and pinning
-		gsap.utils.toArray('.cs-section').forEach((section: any) => {
-			// Fade up content
-			gsap.from(section.querySelectorAll('.cs-fade-up'), {
+		ctx = gsap.context(() => {
+			// Hero fade up
+			gsap.from('.cs-hero-element', {
 				y: 50,
 				opacity: 0,
 				duration: 1,
 				stagger: 0.15,
-				ease: 'power3.out',
+				ease: 'power3.out'
+			});
+
+			// Parallax for hero image
+			gsap.to('.cs-hero-img', {
+				yPercent: 20,
+				ease: 'none',
 				scrollTrigger: {
-					trigger: section,
-					start: 'top 85%'
+					trigger: '.cs-hero-img-container',
+					start: 'top bottom',
+					end: 'bottom top',
+					scrub: true
 				}
 			});
 
-			// Pin target (if exists and on larger screens)
-			const pinTarget = section.querySelector('.cs-pin-target');
-			if (pinTarget && window.innerWidth > 768) {
-				ScrollTrigger.create({
-					trigger: section,
-					start: 'top 20%',
-					end: 'bottom 50%',
-					pin: pinTarget,
-					pinSpacing: false
+			// Section reveals and pinning
+			gsap.utils.toArray('.cs-section').forEach((section: any) => {
+				// Fade up content
+				gsap.from(section.querySelectorAll('.cs-fade-up'), {
+					y: 50,
+					opacity: 0,
+					duration: 1,
+					stagger: 0.15,
+					ease: 'power3.out',
+					scrollTrigger: {
+						trigger: section,
+						start: 'top 85%'
+					}
 				});
-			}
+
+				// Pin target (if exists and on larger screens)
+				const pinTarget = section.querySelector('.cs-pin-target');
+				if (pinTarget && window.innerWidth > 768) {
+					ScrollTrigger.create({
+						trigger: section,
+						start: 'top 20%',
+						end: 'bottom 50%',
+						pin: pinTarget,
+						pinSpacing: false
+					});
+				}
+			});
 		});
+
+		return () => {
+			if (ctx) ctx.revert();
+		};
 	});
 </script>
 

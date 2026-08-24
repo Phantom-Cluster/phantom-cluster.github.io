@@ -11,7 +11,20 @@ const config = {
 		prerender: {
 			handleHttpError: 'warn',
 			handleMissingId: 'ignore',
-			handleUnseenRoutes: 'ignore'
+			handleUnseenRoutes: 'ignore',
+			entries: [
+				'*',
+				'/work/wpmu-dev-dashboard',
+				'/work/spotify-redesign',
+				'/work/alt-news-concept',
+				'/work/discord-redesign',
+				'/work/wordpress-redesign',
+				'/work/effido-productivity-app',
+				'/work/resort-island-design',
+				'/work/themeisle-starter-templates',
+				'/work/eclectic-app-design',
+				'/work/ideajam-kanban-saas'
+			]
 		}
 	}
 };

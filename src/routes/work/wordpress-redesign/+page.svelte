@@ -44,36 +44,44 @@
 		{ icon: '◈', title: 'Structured Settings Hierarchy', desc: 'Three clear categories: WebPages (core WP), WordPress Settings (appearance/plugins/users/advanced), and dedicated Plugin pages that never mix with each other.' },
 	];
 
+	let rafId: number;
+
 	onMount(() => {
 		navTheme.set('light');
-		document.body.style.backgroundColor = '#ffffff';
+		if (typeof document !== 'undefined') document.body.style.backgroundColor = '#ffffff';
 		gsap.registerPlugin(ScrollTrigger);
-		const t = setTimeout(() => {
+
+		rafId = requestAnimationFrame(() => {
 			ctx = gsap.context(() => {
-				ScrollTrigger.create({
-					trigger: bentoTriggerEl, start: 'top 90%',
-					onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
-				});
-				ScrollTrigger.create({
-					trigger: editorialTriggerEl, start: 'top 90%',
-					onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
-				});
+				if (bentoTriggerEl) {
+					ScrollTrigger.create({
+						trigger: bentoTriggerEl, start: 'top 90%',
+						onEnter: () => navTheme.set('dark'), onLeaveBack: () => navTheme.set('light')
+					});
+				}
+				if (editorialTriggerEl) {
+					ScrollTrigger.create({
+						trigger: editorialTriggerEl, start: 'top 90%',
+						onEnter: () => navTheme.set('light'), onLeaveBack: () => navTheme.set('dark')
+					});
+				}
 				gsap.from('.cs-hero-element', { y: 40, opacity: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out' });
 				gsap.set('.cs-fade-up', { y: 40, opacity: 0 });
 				ScrollTrigger.batch('.cs-fade-up', {
-					start: 'top 85%',
+					start: 'top 92%',
 					onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, duration: 0.8, stagger: 0.08, ease: 'power3.out' }),
 					once: true
 				});
 			});
-		}, 400);
-		return () => clearTimeout(t);
-	});
+			ScrollTrigger.refresh();
+		});
 
-	onDestroy(() => {
-		navTheme.set(null);
-		if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
-		if (ctx) ctx.revert();
+		return () => {
+			if (rafId) cancelAnimationFrame(rafId);
+			if (ctx) ctx.revert();
+			navTheme.set(null);
+			if (typeof document !== 'undefined') document.body.style.backgroundColor = '';
+		};
 	});
 </script>
 
@@ -360,9 +368,9 @@
 						<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse"></span>
 						<span class="text-[10px] font-mono tracking-widest text-emerald-400 uppercase">After — Redesigned</span>
 					</div>
-					<button type="button" class="img-trigger" onclick={() => openModal('/images/projects/wordpress/Dashboard.webp', 'Redesigned WordPress Dashboard')} aria-label="View redesigned WordPress dashboard">
+					<button type="button" class="img-trigger" onclick={() => openModal('/images/projects/wordpress/dashboard.webp', 'Redesigned WordPress Dashboard')} aria-label="View redesigned WordPress dashboard">
 						<div class="h-[260px] overflow-hidden">
-							<img src="/images/projects/wordpress/thumbs/Dashboard.webp" alt="Redesigned WordPress Dashboard" class="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
+							<img src="/images/projects/wordpress/thumbs/dashboard.webp" alt="Redesigned WordPress Dashboard" class="w-full h-full object-cover object-top" loading="lazy" decoding="async" />
 						</div>
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 					</button>
@@ -451,8 +459,8 @@
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<div class="bg-neutral-100 rounded-3xl p-4 lg:p-5">
 					<p class="text-[8px] font-mono tracking-widest text-neutral-400 uppercase mb-3 pl-1">Dashboard Redesign</p>
-					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/wordpress/Dashboard.webp', 'Redesigned WordPress Dashboard')} aria-label="View Dashboard redesign">
-						<img src="/images/projects/wordpress/thumbs/Dashboard.webp" alt="Redesigned WordPress Dashboard" class="w-full block" loading="lazy" decoding="async" />
+					<button type="button" class="img-trigger rounded-2xl overflow-hidden shadow-sm" onclick={() => openModal('/images/projects/wordpress/dashboard.webp', 'Redesigned WordPress Dashboard')} aria-label="View Dashboard redesign">
+						<img src="/images/projects/wordpress/thumbs/dashboard.webp" alt="Redesigned WordPress Dashboard" class="w-full block" loading="lazy" decoding="async" />
 						<div class="img-trigger-overlay"><div class="img-expand-icon"><svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg></div></div>
 						<div class="img-preview-badge"><svg class="w-2.5 h-2.5 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg><span class="text-[9px] text-white/60 font-mono tracking-wider">View full</span></div>
 					</button>
