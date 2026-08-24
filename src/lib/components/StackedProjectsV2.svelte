@@ -1,49 +1,75 @@
 <script lang="ts">
-	import { projects } from '$lib/data/projects';
-	import { ArrowRight } from 'lucide-svelte';
-	import { onMount, onDestroy } from 'svelte';
-	import { browser } from '$app/environment';
-	import { goto } from '$app/navigation';
-	import { gsap } from 'gsap';
-	import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-	import Chip from '$lib/components/Chip.svelte';
+	import { projects } from "$lib/data/projects";
+	import { ArrowRight } from "lucide-svelte";
+	import { onMount, onDestroy } from "svelte";
+	import { browser } from "$app/environment";
+	import { goto } from "$app/navigation";
+	import { gsap } from "gsap";
+	import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+	import Chip from "$lib/components/Chip.svelte";
 
-	const featuredSlugs = ['ideajam-kanban-saas', 'eclectic-app-design', 'themeisle-starter-templates'];
-	const stackedProjects = projects.filter(p => featuredSlugs.includes(p.slug));
+	const featuredSlugs = [
+		"ideajam-kanban-saas",
+		"eclectic-app-design",
+		"themeisle-starter-templates",
+	];
+	const stackedProjects = projects.filter((p) =>
+		featuredSlugs.includes(p.slug),
+	);
 
 	const cardMeta = [
 		{
-			hookStat: '−68%', hookLabel: 'Task Steps Reduced',
-			fallbackHex: '#e0533c', fallbackRgb: '224,83,60',
-			pills: ['White-label ready', '4→2 click flow', 'Zero onboarding'],
-			year: '2024', role: 'UI/UX Designer',
+			hookStat: "−68%",
+			hookLabel: "Task Steps Reduced",
+			fallbackHex: "#e0533c",
+			fallbackRgb: "224,83,60",
+			pills: ["White-label ready", "4→2 click flow", "Zero onboarding"],
+			year: "2024",
+			role: "UI/UX Designer",
 			// Actual project screenshot — replaces generic Unsplash placeholder
-			image: '/videos/ideajam/ideation  card and idea page.webp',
+			image: "/videos/ideajam/ideation%20%20card%20and%20idea%20page.webp",
 		},
 		{
-			hookStat: '3×', hookLabel: 'Regional Markets',
-			fallbackHex: '#14b8a6', fallbackRgb: '20,184,166',
-			pills: ['AI asset pipeline', 'Mobile-first DLS', 'Rapid publish'],
-			year: '2024', role: 'Product Designer',
-			image: '/videos/Eclectic/New UI .webp',
+			hookStat: "3×",
+			hookLabel: "Regional Markets",
+			fallbackHex: "#14b8a6",
+			fallbackRgb: "20,184,166",
+			pills: ["AI asset pipeline", "Mobile-first DLS", "Rapid publish"],
+			year: "2024",
+			role: "Product Designer",
+			image: "/videos/Eclectic/New%20UI%20.webp",
 		},
 		{
-			hookStat: '50+', hookLabel: 'Sites Shipped',
-			fallbackHex: '#3b82f6', fallbackRgb: '59,130,246',
-			pills: ['300K+ user reach', 'Dual block system', '4-day delivery'],
-			year: '2023', role: 'WordPress Specialist',
+			hookStat: "50+",
+			hookLabel: "Sites Shipped",
+			fallbackHex: "#3b82f6",
+			fallbackRgb: "59,130,246",
+			pills: ["300K+ user reach", "Dual block system", "4-day delivery"],
+			year: "2023",
+			role: "WordPress Specialist",
 			image: null,
 		},
 	];
 
-	let extractedColors = $state<Array<{ hex: string; rgb: string } | null>>([null, null, null]);
+	let extractedColors = $state<Array<{ hex: string; rgb: string } | null>>([
+		null,
+		null,
+		null,
+	]);
 
 	function accent(i: number) {
-		return extractedColors[i] ?? { hex: cardMeta[i].fallbackHex, rgb: cardMeta[i].fallbackRgb };
+		return (
+			extractedColors[i] ?? {
+				hex: cardMeta[i].fallbackHex,
+				rgb: cardMeta[i].fallbackRgb,
+			}
+		);
 	}
 
 	function rgbToHex(r: number, g: number, b: number) {
-		return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+		return (
+			"#" + [r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("")
+		);
 	}
 
 	function hexToRgb(hex: string) {
@@ -61,11 +87,11 @@
 
 		// ColorThief runs outside the GSAP context — no animations involved
 		try {
-			const ColorThiefModule = await import('colorthief');
+			const ColorThiefModule = await import("colorthief");
 			const colorThief = new (ColorThiefModule as any).default();
 			stackedProjects.forEach((project, i) => {
 				const img = new Image();
-				img.crossOrigin = 'anonymous';
+				img.crossOrigin = "anonymous";
 				img.onload = () => {
 					try {
 						const [r, g, b] = colorThief.getColor(img);
@@ -83,45 +109,117 @@
 		gsapCtx = gsap.context(() => {
 			// Scope toArray explicitly to sectionEl so we never pick up
 			// .v2-stack-card elements that belong to a concurrent page transition.
-			const cards = gsap.utils.toArray<HTMLElement>('.v2-stack-card', sectionEl);
+			const cards = gsap.utils.toArray<HTMLElement>(
+				".v2-stack-card",
+				sectionEl,
+			);
 
 			const isStacked = new Array(cards.length).fill(false);
 
 			cards.forEach((card, i) => {
-				const tiltEl  = card.querySelector<HTMLElement>('.v2-tilt-inner');
-				const imgEl   = card.querySelector<HTMLElement>('.v2-project-img');
-				const glowEl  = card.querySelector<HTMLElement>('.v2-glow');
-				const overlay = card.querySelector<HTMLElement>('.v2-overlay');
+				const tiltEl =
+					card.querySelector<HTMLElement>(".v2-tilt-inner");
+				const imgEl =
+					card.querySelector<HTMLElement>(".v2-project-img");
+				const glowEl = card.querySelector<HTMLElement>(".v2-glow");
+				const overlay = card.querySelector<HTMLElement>(".v2-overlay");
+
+				// GSAP ScrollTrigger Pinning — locks each card in 3D stack cleanly without CSS sticky conflicts
+				ScrollTrigger.create({
+					trigger: card,
+					start: () => {
+						const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+						return `top ${isMobile ? 70 + i * 20 : 120 + i * 32}px`;
+					},
+					endTrigger: sectionEl,
+					end: 'bottom bottom',
+					pin: true,
+					pinSpacing: false,
+					invalidateOnRefresh: true,
+				});
 
 				// immediateRender: false — prevents GSAP from setting opacity:0 as
 				// an inline style on tween creation. Cards stay at natural visible CSS
 				// until the trigger fires, so back-nav never leaves them invisible.
 				gsap.from(card, {
 					immediateRender: false,
-					y: 60, opacity: 0, scale: 0.97,
-					duration: 1.1, ease: 'expo.out',
-					scrollTrigger: { trigger: card, start: 'top 88%', once: true, invalidateOnRefresh: true },
+					y: 60,
+					opacity: 0,
+					scale: 0.97,
+					duration: 1.1,
+					ease: "expo.out",
+					clearProps: "transform",
+					scrollTrigger: {
+						trigger: card,
+						start: "top 88%",
+						once: true,
+						invalidateOnRefresh: true,
+					},
 				});
 
 				// Mouse-tracking 3D tilt — subtle values to avoid dizzying perspective
-				card.addEventListener('mousemove', (e: MouseEvent) => {
+				card.addEventListener("mousemove", (e: MouseEvent) => {
 					if (isStacked[i]) return;
 					const rect = card.getBoundingClientRect();
-					const dx = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
-					const dy = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
-					if (tiltEl) gsap.to(tiltEl, { rotateY: dx * 1.2, rotateX: -dy * 0.8, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
-					if (imgEl)  gsap.to(imgEl,  { x: -dx * 8, y: -dy * 5,                duration: 0.8, ease: 'power2.out', overwrite: 'auto' });
+					const dx =
+						(e.clientX - rect.left - rect.width / 2) /
+						(rect.width / 2);
+					const dy =
+						(e.clientY - rect.top - rect.height / 2) /
+						(rect.height / 2);
+					if (tiltEl)
+						gsap.to(tiltEl, {
+							rotateY: dx * 1.2,
+							rotateX: -dy * 0.8,
+							duration: 0.6,
+							ease: "power2.out",
+							overwrite: "auto",
+						});
+					if (imgEl)
+						gsap.to(imgEl, {
+							x: -dx * 8,
+							y: -dy * 5,
+							duration: 0.8,
+							ease: "power2.out",
+							overwrite: "auto",
+						});
 				});
 
-				card.addEventListener('mouseenter', () => {
+				card.addEventListener("mouseenter", () => {
 					if (isStacked[i]) return;
-					if (glowEl) gsap.to(glowEl, { opacity: 1, duration: 0.5, ease: 'power2.out', overwrite: true });
+					if (glowEl)
+						gsap.to(glowEl, {
+							opacity: 1,
+							duration: 0.5,
+							ease: "power2.out",
+							overwrite: true,
+						});
 				});
 
-				card.addEventListener('mouseleave', () => {
-					if (tiltEl) gsap.to(tiltEl, { rotateY: 0, rotateX: 0, duration: 0.8, ease: 'power3.out', overwrite: 'auto' });
-					if (imgEl)  gsap.to(imgEl,  { x: 0, y: 0,              duration: 0.8, ease: 'power3.out', overwrite: 'auto' });
-					if (glowEl) gsap.to(glowEl, { opacity: 0,              duration: 0.4, ease: 'power2.in',  overwrite: true  });
+				card.addEventListener("mouseleave", () => {
+					if (tiltEl)
+						gsap.to(tiltEl, {
+							rotateY: 0,
+							rotateX: 0,
+							duration: 0.8,
+							ease: "power3.out",
+							overwrite: "auto",
+						});
+					if (imgEl)
+						gsap.to(imgEl, {
+							x: 0,
+							y: 0,
+							duration: 0.8,
+							ease: "power3.out",
+							overwrite: "auto",
+						});
+					if (glowEl)
+						gsap.to(glowEl, {
+							opacity: 0,
+							duration: 0.4,
+							ease: "power2.in",
+							overwrite: true,
+						});
 				});
 
 				if (i === cards.length - 1) return;
@@ -129,34 +227,86 @@
 
 				ScrollTrigger.create({
 					trigger: nextCard,
-					start: 'top 88%',
+					start: "top 88%",
 					invalidateOnRefresh: true,
 					onEnter: () => {
 						isStacked[i] = true;
-						if (tiltEl) gsap.to(tiltEl, { rotateY: 0, rotateX: 0, duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
-						if (imgEl)  gsap.to(imgEl,  { x: 0, y: 0,              duration: 0.4, ease: 'power2.out', overwrite: 'auto' });
-						if (glowEl) gsap.to(glowEl, { opacity: 0,              duration: 0.3, ease: 'power2.in',  overwrite: true  });
+						if (tiltEl)
+							gsap.to(tiltEl, {
+								rotateY: 0,
+								rotateX: 0,
+								duration: 0.4,
+								ease: "power2.out",
+								overwrite: "auto",
+							});
+						if (imgEl)
+							gsap.to(imgEl, {
+								x: 0,
+								y: 0,
+								duration: 0.4,
+								ease: "power2.out",
+								overwrite: "auto",
+							});
+						if (glowEl)
+							gsap.to(glowEl, {
+								opacity: 0,
+								duration: 0.3,
+								ease: "power2.in",
+								overwrite: true,
+							});
 					},
-					onLeaveBack: () => { isStacked[i] = false; },
+					onLeaveBack: () => {
+						isStacked[i] = false;
+					},
 				});
 
 				const tl = gsap.timeline({
 					scrollTrigger: {
 						trigger: nextCard,
-						start: 'top 75%',
-						end: () => `top ${100 + (i + 1) * 24}px`,
+						start: "top 75%",
+						end: () => {
+							const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+							return `top ${isMobile ? 70 + (i + 1) * 20 : 120 + (i + 1) * 32}px`;
+						},
 						scrub: 0.6,
 						invalidateOnRefresh: true,
 					},
 				});
-				tl.to(card, {
-					scale: 0.96 - (cards.length - 1 - i) * 0.01,
-					rotateX: 8,
-					yPercent: -4,
-					transformOrigin: 'top center',
-					ease: 'none',
-				}, 0);
-				if (overlay) tl.to(overlay, { opacity: 0.55, ease: 'none' }, 0);
+
+				// Scrub the current card under the arriving card
+				tl.to(
+					card,
+					{
+						scale: 0.94,
+						rotateX: 8,
+						yPercent: -4,
+						transformOrigin: "top center",
+						ease: "none",
+					},
+					0,
+				);
+				if (overlay) tl.to(overlay, { opacity: 0.5, ease: "none" }, 0);
+
+				// Also scrub any earlier cards further down in stack depth
+				for (let prevIdx = 0; prevIdx < i; prevIdx++) {
+					const prevCard = cards[prevIdx];
+					const prevOverlay = prevCard.querySelector<HTMLElement>(".v2-overlay");
+					const depth = (i + 1) - prevIdx;
+					tl.to(
+						prevCard,
+						{
+							scale: Math.max(0.88, 0.94 - (depth - 1) * 0.06),
+							yPercent: -4 * depth,
+							rotateX: Math.min(12, 8 + (depth - 1) * 3),
+							transformOrigin: "top center",
+							ease: "none",
+						},
+						0,
+					);
+					if (prevOverlay) {
+						tl.to(prevOverlay, { opacity: Math.min(0.75, 0.5 + (depth - 1) * 0.2), ease: "none" }, 0);
+					}
+				}
 			});
 
 			ScrollTrigger.refresh();
@@ -169,7 +319,6 @@
 		// so cards are never left at opacity:0 when the user navigates back.
 		gsapCtx?.revert();
 	});
-
 </script>
 
 <!-- ── SECTION ────────────────────────────────────────────────────────────── -->
@@ -180,20 +329,33 @@
 	class="py-0 bg-[#f4f4f4] relative flex flex-col items-center"
 >
 	<!-- Section wordmark (decorative) -->
-	<div class="relative z-0 w-full text-center select-none pt-24 pb-12 px-6 flex flex-col items-center pointer-events-none">
+	<div
+		class="relative z-0 w-full text-center select-none pt-24 pb-12 px-6 flex flex-col items-center pointer-events-none"
+	>
 		<div class="pointer-events-auto">
-			<Chip theme="light" spin="always" class="mb-6" innerClass="px-6 py-2">
-				<span class="text-[11px] font-mono tracking-widest text-neutral-500 uppercase">Proof of Execution</span>
+			<Chip
+				theme="light"
+				spin="always"
+				class="mb-6"
+				innerClass="px-6 py-2"
+			>
+				<span
+					class="text-[11px] font-mono tracking-widest text-neutral-500 uppercase"
+					>Proof of Execution</span
+				>
 			</Chip>
 		</div>
-		<h3 class="text-[10vw] sm:text-[12vw] font-black tracking-[-0.05em] uppercase leading-none text-neutral-200/50">
+		<h3
+			class="text-[10vw] sm:text-[12vw] font-black tracking-[-0.05em] uppercase leading-none text-neutral-200/50"
+		>
 			Recent Works
 		</h3>
 	</div>
 
 	<!-- Card stack ─────────────────────────────────────────────────────────── -->
-	<div class="relative z-10 w-full max-w-[1320px] mx-auto px-6 pb-[5vh]" style="perspective: 1800px;">
-
+	<div
+		class="relative z-10 w-full max-w-[1320px] mx-auto px-6 pb-[5vh]"
+	>
 		{#each stackedProjects as project, i}
 			{@const a = accent(i)}
 			{@const m = cardMeta[i]}
@@ -203,9 +365,8 @@
 				Does NOT have overflow:hidden so sticky behaviour is unaffected.
 			-->
 			<div
-				class="v2-stack-card group sticky mb-[12vh] lg:mb-[40vh] cursor-pointer"
+				class="v2-stack-card group relative w-full {i === stackedProjects.length - 1 ? 'mb-0' : 'mb-[8vh] md:mb-[12vh] lg:mb-[35vh]'} cursor-pointer"
 				style="
-					top: calc(100px + {i * 24}px);
 					--card-idx: {i};
 					z-index: {i + 10};
 					will-change: transform;
@@ -214,8 +375,13 @@
 				role="link"
 				tabindex="0"
 				aria-label="View {project.title} case study"
-				onclick={(e) => { if (!(e.target as HTMLElement).closest('a')) goto(`/work/${project.slug}`); }}
-				onkeydown={(e) => { if (e.key === 'Enter') goto(`/work/${project.slug}`); }}
+				onclick={(e) => {
+					if (!(e.target as HTMLElement).closest("a"))
+						goto(`/work/${project.slug}`);
+				}}
+				onkeydown={(e) => {
+					if (e.key === "Enter") goto(`/work/${project.slug}`);
+				}}
 			>
 				<!-- Stacking dimmer overlay — GPU: opacity only -->
 				<div
@@ -249,28 +415,42 @@
 					<div
 						class="relative z-10 grid grid-cols-1 md:grid-cols-[1fr_320px] lg:grid-cols-[1fr_420px]"
 					>
-
 						<!-- LEFT: Editorial panel ──────────────────────────────── -->
-						<div class="flex flex-col justify-between p-7 sm:p-10 md:p-10 lg:p-14 md:border-r border-white/6">
-
+						<div
+							class="flex flex-col justify-between p-7 sm:p-10 md:p-10 lg:p-14 md:border-r border-white/6"
+						>
 							<!-- Top: meta + title + description -->
 							<div>
 								<!-- Role · Year with accent dot -->
-								<div class="flex items-center gap-3 mb-5 sm:mb-8">
+								<div
+									class="flex items-center gap-3 mb-5 sm:mb-8"
+								>
 									<span
 										class="w-1.5 h-1.5 rounded-full shrink-0"
 										style="background: {a.hex};"
 									></span>
-									<span class="text-[9px] font-mono tracking-[0.3em] text-neutral-500 uppercase">
+									<span
+										class="text-[9px] font-mono tracking-[0.3em] text-neutral-500 uppercase"
+									>
 										{m.role} · {m.year}
 									</span>
 								</div>
 
-								<h3 class="text-[2.2rem] lg:text-[2.7rem] font-black tracking-[-0.04em] text-white leading-[1.02] mb-5">
+								<h3
+									class="text-[1.8rem] sm:text-[2.2rem] lg:text-[2.7rem] font-black tracking-[-0.04em] text-white leading-[1.05] mb-4"
+								>
 									{project.title}
 								</h3>
 
-								<p class="text-sm text-neutral-400 leading-relaxed max-w-[40ch]">
+								<!-- Mobile Stat Metric (hidden on desktop) -->
+								<div class="md:hidden flex items-baseline gap-2 mb-4">
+									<span class="text-3xl font-black tracking-tight text-white">{m.hookStat}</span>
+									<span class="text-[10px] font-mono tracking-widest text-neutral-400 uppercase">{m.hookLabel}</span>
+								</div>
+
+								<p
+									class="text-sm text-neutral-400 leading-relaxed max-w-[40ch]"
+								>
 									{project.description}
 								</p>
 							</div>
@@ -287,7 +467,10 @@
 												background: rgba({a.rgb},0.08);
 											"
 										>
-											<span class="w-1 h-1 rounded-full shrink-0" style="background: rgba({a.rgb},0.55);"></span>
+											<span
+												class="w-1 h-1 rounded-full shrink-0"
+												style="background: rgba({a.rgb},0.55);"
+											></span>
 											{pill}
 										</span>
 									{/each}
@@ -299,16 +482,21 @@
 										class="v2-cta inline-flex items-center gap-2.5 px-6 py-3 rounded-full text-sm font-bold text-white border border-white/30 w-fit"
 									>
 										Explore Case
-										<ArrowRight class="size-4 transition-transform duration-300" />
+										<ArrowRight
+											class="size-4 transition-transform duration-300"
+										/>
 									</a>
-									<span class="v2-cta-ring" aria-hidden="true"></span>
+									<span class="v2-cta-ring" aria-hidden="true"
+									></span>
 								</div>
 							</div>
 						</div>
 
-						<!-- RIGHT: Image panel ──────────────────────────────────── -->
-						<div class="relative overflow-hidden min-h-[220px] sm:min-h-[280px] lg:min-h-[360px]" style="background: #141416;">
-
+						<!-- RIGHT: Image panel (hidden on mobile to prevent excessive height) -->
+						<div
+							class="hidden md:block relative overflow-hidden min-h-[280px] lg:min-h-[360px]"
+							style="background: #141416;"
+						>
 							<!-- Project screenshot — GPU: transform (parallax + scale on hover) -->
 							<img
 								src={m.image ?? project.thumbnail}
@@ -337,18 +525,23 @@
 							></div>
 
 							<!-- Stat overlay at bottom — GPU: filter drop-shadow for glow -->
-							<div class="absolute bottom-0 left-0 right-0 p-8 z-30">
+							<div
+								class="absolute bottom-0 left-0 right-0 p-8 z-30"
+							>
 								<p
 									class="text-[clamp(3.5rem,9vw,5.5rem)] font-black tracking-tighter leading-none text-white"
 									style="filter: drop-shadow(0 4px 28px rgba({a.rgb},0.6)) drop-shadow(0 0 48px rgba({a.rgb},0.35));"
-								>{m.hookStat}</p>
+								>
+									{m.hookStat}
+								</p>
 								<p
 									class="text-[9px] font-mono tracking-[0.28em] uppercase mt-2"
 									style="color: rgba(255,255,255,0.65);"
-								>{m.hookLabel}</p>
+								>
+									{m.hookLabel}
+								</p>
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
@@ -358,13 +551,11 @@
 	</div>
 </section>
 
-
 <style>
-	/* Sticky stacking — GPU composited */
+	/* 3D Stack Card — GSAP Pinning */
 	.v2-stack-card {
-		position: sticky;
-		top: calc(100px + var(--card-idx, 0) * 24px);
 		transform-style: preserve-3d;
+		perspective: 1400px;
 	}
 
 	/* CTA wrapper — positions the pulsing ring relative to the button */
@@ -385,8 +576,14 @@
 	}
 
 	@keyframes ring-expand {
-		0%   { transform: scale(1);    opacity: 0.55; }
-		100% { transform: scale(1.22); opacity: 0;    }
+		0% {
+			transform: scale(1);
+			opacity: 0.55;
+		}
+		100% {
+			transform: scale(1.22);
+			opacity: 0;
+		}
 	}
 
 	/* CTA hover — GPU: opacity on ::before fill, no background/color paint */
@@ -394,10 +591,13 @@
 		position: relative;
 		overflow: hidden;
 		isolation: isolate;
-		transition: transform 0.12s ease, border-color 0.2s ease, color 0.18s ease;
+		transition:
+			transform 0.12s ease,
+			border-color 0.2s ease,
+			color 0.18s ease;
 	}
 	.v2-cta::before {
-		content: '';
+		content: "";
 		position: absolute;
 		inset: 0;
 		border-radius: inherit;
@@ -433,5 +633,4 @@
 		backface-visibility: hidden;
 		-webkit-backface-visibility: hidden;
 	}
-
 </style>
