@@ -203,8 +203,9 @@
 				Does NOT have overflow:hidden so sticky behaviour is unaffected.
 			-->
 			<div
-				class="v2-stack-card group relative mb-[8vh] lg:mb-[35vh] cursor-pointer"
+				class="v2-stack-card group sticky mb-[12vh] lg:mb-[40vh] cursor-pointer"
 				style="
+					top: calc(100px + {i * 24}px);
 					--card-idx: {i};
 					z-index: {i + 10};
 					will-change: transform;
