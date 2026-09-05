@@ -358,7 +358,7 @@
 							<ArrowRight class="size-3.5" />
 						</button>
 						<a
-							href="/Hitanshu_Sahu___Resume_JUN_Updated.pdf"
+							href="/Hitanshu_Sahu___Resume_Aug_Updated.pdf"
 							target="_blank"
 							rel="noopener noreferrer"
 							class="hero-cta inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 border border-white/20 text-white rounded-full text-xs sm:text-sm font-bold tracking-wide hover:border-white/50 hover:bg-white/5 transition-all duration-200"
