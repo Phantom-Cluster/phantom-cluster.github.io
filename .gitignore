@@ -43,3 +43,12 @@ CLAUDE.md
 .claudeignore
 skills-lock.json
 *.code-workspace
+
+# Scratch / temp dev files — never commit
+scratch.js
+scratch.ts
+scratch/
+*.scratch.*
+
+# Local image backup — large, not needed in repo
+image_backups_q85/

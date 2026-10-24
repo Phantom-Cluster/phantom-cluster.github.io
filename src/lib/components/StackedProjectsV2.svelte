@@ -128,11 +128,13 @@
 				ScrollTrigger.create({
 					trigger: card,
 					start: () => {
-						const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+						const isMobile =
+							typeof window !== "undefined" &&
+							window.innerWidth < 768;
 						return `top ${isMobile ? 70 + i * 20 : 120 + i * 32}px`;
 					},
 					endTrigger: sectionEl,
-					end: 'bottom bottom',
+					end: "bottom bottom",
 					pin: true,
 					pinSpacing: false,
 					invalidateOnRefresh: true,
@@ -265,7 +267,9 @@
 						trigger: nextCard,
 						start: "top 75%",
 						end: () => {
-							const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+							const isMobile =
+								typeof window !== "undefined" &&
+								window.innerWidth < 768;
 							return `top ${isMobile ? 70 + (i + 1) * 20 : 120 + (i + 1) * 32}px`;
 						},
 						scrub: 0.6,
@@ -290,8 +294,9 @@
 				// Also scrub any earlier cards further down in stack depth
 				for (let prevIdx = 0; prevIdx < i; prevIdx++) {
 					const prevCard = cards[prevIdx];
-					const prevOverlay = prevCard.querySelector<HTMLElement>(".v2-overlay");
-					const depth = (i + 1) - prevIdx;
+					const prevOverlay =
+						prevCard.querySelector<HTMLElement>(".v2-overlay");
+					const depth = i + 1 - prevIdx;
 					tl.to(
 						prevCard,
 						{
@@ -304,7 +309,17 @@
 						0,
 					);
 					if (prevOverlay) {
-						tl.to(prevOverlay, { opacity: Math.min(0.75, 0.5 + (depth - 1) * 0.2), ease: "none" }, 0);
+						tl.to(
+							prevOverlay,
+							{
+								opacity: Math.min(
+									0.75,
+									0.5 + (depth - 1) * 0.2,
+								),
+								ease: "none",
+							},
+							0,
+						);
 					}
 				}
 			});
@@ -353,9 +368,7 @@
 	</div>
 
 	<!-- Card stack ─────────────────────────────────────────────────────────── -->
-	<div
-		class="relative z-10 w-full max-w-[1320px] mx-auto px-6 pb-[5vh]"
-	>
+	<div class="relative z-10 w-full max-w-[1320px] mx-auto px-6 pb-[5vh]">
 		{#each stackedProjects as project, i}
 			{@const a = accent(i)}
 			{@const m = cardMeta[i]}
@@ -365,7 +378,10 @@
 				Does NOT have overflow:hidden so sticky behaviour is unaffected.
 			-->
 			<div
-				class="v2-stack-card group relative w-full {i === stackedProjects.length - 1 ? 'mb-0' : 'mb-[8vh] md:mb-[12vh] lg:mb-[35vh]'} cursor-pointer"
+				class="v2-stack-card group relative w-full {i ===
+				stackedProjects.length - 1
+					? 'mb-0'
+					: 'mb-[8vh] md:mb-[12vh] lg:mb-[35vh]'} cursor-pointer"
 				style="
 					--card-idx: {i};
 					z-index: {i + 10};
@@ -443,9 +459,17 @@
 								</h3>
 
 								<!-- Mobile Stat Metric (hidden on desktop) -->
-								<div class="md:hidden flex items-baseline gap-2 mb-4">
-									<span class="text-3xl font-black tracking-tight text-white">{m.hookStat}</span>
-									<span class="text-[10px] font-mono tracking-widest text-neutral-400 uppercase">{m.hookLabel}</span>
+								<div
+									class="md:hidden flex items-baseline gap-2 mb-4"
+								>
+									<span
+										class="text-3xl font-black tracking-tight text-white"
+										>{m.hookStat}</span
+									>
+									<span
+										class="text-[10px] font-mono tracking-widest text-neutral-400 uppercase"
+										>{m.hookLabel}</span
+									>
 								</div>
 
 								<p
